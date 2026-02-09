@@ -18,7 +18,7 @@ GO
 
 CREATE VIEW VIEW_CountNumberEmployeesByDepartment
 AS 
-SELECT 		-- SumEmployeesByDeptLevel6 / SumEmployeesByDeptNeedRemoveZerosLevel5 / PivotingDeptNamePrepareForCountingEmployeesLevel4
+SELECT 																					-- SumEmployeesByDeptLevel6 / SumEmployeesByDeptNeedRemoveZerosLevel5 / PivotingDeptNamePrepareForCountingEmployeesLevel4
 SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Document Control' THEN 1 ELSE 0 END) AS dept_DocControl
 , SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Engineering' THEN 1 ELSE 0 END) AS dept_Engin
 , SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Executive' THEN 1 ELSE 0 END) AS dept_Exec
@@ -36,11 +36,11 @@ SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Document Control' THEN 1 ELSE 0 E
 , SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Shipping and Receiving' THEN 1 ELSE 0 END) AS dept_ShipReceiv
 , SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Tool Design' THEN 1 ELSE 0 END) AS dept_ToolDesign
 FROM (
-	SELECT OriginalTables.DepartmentName						-- PrepareForCountingEmployeesLevel3 / RemovingDuplicatesLevel2
+	SELECT OriginalTables.DepartmentName												-- PrepareForCountingEmployeesLevel3 / RemovingDuplicatesLevel2
 	, OriginalTables.BusinessEntityID
 	, COUNT(*) AS EmployeeCountByDepartment
 	FROM (
-		SELECT										-- OriginalTablesLevel1
+		SELECT																			-- OriginalTablesLevel1
 		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 		, Employee.BusinessEntityID	
 		, EmployeeDepartmentHistory.DepartmentID
@@ -50,11 +50,11 @@ FROM (
 			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-		WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+		WHERE Employee.BusinessEntityID <> 1											-- OriginalTablesLevel1
 	) AS OriginalTables
-	WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2
-	GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID			-- PrepareForCountingEmployeesLevel3
-) AS PivotDeptNames									-- SumEmployeesByDeptLevel6 / PivotingDeptNamePrepareForCountingEmployeesLevel4
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1								-- RemovingDuplicatesLevel2
+	GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID				-- PrepareForCountingEmployeesLevel3
+) AS PivotDeptNames																		-- SumEmployeesByDeptLevel6 / PivotingDeptNamePrepareForCountingEmployeesLevel4
 
 
 	-- OUTPUT
@@ -67,15 +67,14 @@ SELECT *
 FROM VIEW_CountNumberEmployeesByDepartment
 
 	-- OUTPUT
-dept_DocControl	dept_Engin	dept_Exec	dept_FacILMaint	dept_Finance	dept_HR	dept_IT	dept_Marketing	dept_Prod	dept_ProdControl	dept_Purch	dept_QA	dept_R_and_D	dept_Sales	dept_ShipReceiv	dept_ToolDesign
-5		6		1		7		10		6	10	9		179		6			12		6		4	18		6		4
+dept_DocControl		dept_Engin	dept_Exec	dept_FacILMaint		dept_Finance	dept_HR		dept_IT		dept_Marketing	dept_Prod	dept_ProdControl	dept_Purch		dept_QA		dept_R_and_D	dept_Sales		dept_ShipReceiv		dept_ToolDesign
+5					6			1			7					10				6			10			9				179			6					12				6			4				18				6					4
 (end of results)
 (1 row affected)
 
 
 
 Now we will proceed to reverse the pivoting.
-
 	Query #2: We use a Cartesian Product to reverse the pivoting by converting the columns into rows
 	---------
 SELECT Department.[Name]
@@ -100,23 +99,23 @@ FROM VIEW_CountNumberEmployeesByDepartment
 
 
 	-- OUTPUT
-Name				dept_DocControl	dept_Engin	dept_Exec	dept_FacILMaint	dept_Finance	dept_HR	dept_IT	dept_Marketing	dept_Prod	dept_ProdControl	dept_Purch	dept_QA	dept_R_and_D	dept_Sales	dept_ShipReceiv	dept_ToolDesign
-Document Control		5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Engineering			5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Executive			5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Facilities and Maintenance	5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Finance				5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Human Resources			5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Information Services		5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Marketing			5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Production			5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Production Control		5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Purchasing			5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Quality Assurance		5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Research and Development	5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Sales				5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Shipping and Receiving		5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
-Tool Design			5		6		1		7		10		6	10	9		179		6			12		6	4		18		6		4
+Name						dept_DocControl		dept_Engin		dept_Exec	dept_FacILMaint		dept_Finance	dept_HR		dept_IT		dept_Marketing	dept_Prod	dept_ProdControl	dept_Purch	dept_QA	dept_R_and_D	dept_Sales	dept_ShipReceiv		dept_ToolDesign
+Document Control			5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Engineering					5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Executive					5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Facilities and Maintenance	5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Finance						5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Human Resources				5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Information Services		5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Marketing					5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Production					5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Production Control			5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Purchasing					5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Quality Assurance			5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Research and Development	5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Sales						5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Shipping and Receiving		5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
+Tool Design					5					6				1			7					10				6			10			9				179			6					12			6		4				18			6					4
 (end of results)
 (16 rows affected)
 
@@ -142,25 +141,25 @@ Any combination of paired values between these 2 tables would look like a pair s
 
 Below is an example of how these combinations of paired values are created.
 
-	Table #1 		Table #2			===>
-column "Name"			column "dept_DocControl"		Combination of paired values
-=============================	========================	===>	============================
-Document Control			5				(Document Control, 5)
-Engineering				5				(Engineering, 5)
-Executive				5				(Executive, 5)
-Facilities and Maintenance		5				(Facilities and Maintenance, 5)
-Finance					5				(Finance, 5)
-Human Resources				5				(Human Resources, 5)
-Information Services			5				(Information Services, 5)
-Marketing				5				(Marketing, 5)
-Production				5				(Production, 5)
-Production Control			5				(Production Control, 5)
-Purchasing				5				(Purchasing, 5)
-Quality Assurance			5				(Quality Assurance, 5)
-Research and Development		5				(Research and Development, 5)
-Sales					5				(Sales, 5)
-Shipping and Receiving			5				(Shipping and Receiving, 5)
-Tool Design				5				(Tool Design, 5)
+	Table #1 						Table #2				======>
+column "Name"					column "dept_DocControl"				Combination of paired values
+==========================		========================	======>		============================
+Document Control				5										(Document Control, 5)
+Engineering						5										(Engineering, 5)
+Executive						5										(Executive, 5)
+Facilities and Maintenance		5										(Facilities and Maintenance, 5)
+Finance							5										(Finance, 5)
+Human Resources					5										(Human Resources, 5)
+Information Services			5										(Information Services, 5)
+Marketing						5										(Marketing, 5)
+Production						5										(Production, 5)
+Production Control				5										(Production Control, 5)
+Purchasing						5										(Purchasing, 5)
+Quality Assurance				5										(Quality Assurance, 5)
+Research and Development		5										(Research and Development, 5)
+Sales							5										(Sales, 5)
+Shipping and Receiving			5										(Shipping and Receiving, 5)
+Tool Design						5										(Tool Design, 5)
 
 	
 
@@ -169,44 +168,44 @@ Tool Design				5				(Tool Design, 5)
 	---------
 SELECT Department.[Name]
 , CASE Department.[Name]
-	WHEN 'Document Control' THEN VIEW_CountNumberEmployeesByDepartment.dept_DocControl
-	WHEN 'Engineering' THEN VIEW_CountNumberEmployeesByDepartment.dept_Engin
-	WHEN 'Executive' THEN VIEW_CountNumberEmployeesByDepartment.dept_Exec
-	WHEN 'Facilities and Maintenance' THEN VIEW_CountNumberEmployeesByDepartment.dept_FacILMaint
-	WHEN 'Finance' THEN VIEW_CountNumberEmployeesByDepartment.dept_Finance
-	WHEN 'Human Resources' THEN VIEW_CountNumberEmployeesByDepartment.dept_HR
-	WHEN 'Information Services' THEN VIEW_CountNumberEmployeesByDepartment.dept_IT
-	WHEN 'Marketing' THEN VIEW_CountNumberEmployeesByDepartment.dept_Marketing
-	WHEN 'Production' THEN VIEW_CountNumberEmployeesByDepartment.dept_Prod
-	WHEN 'Production Control' THEN VIEW_CountNumberEmployeesByDepartment.dept_ProdControl
-	WHEN 'Purchasing' THEN VIEW_CountNumberEmployeesByDepartment.dept_Purch
-	WHEN 'Quality Assurance' THEN VIEW_CountNumberEmployeesByDepartment.dept_QA
-	WHEN 'Research and Development' THEN VIEW_CountNumberEmployeesByDepartment.dept_R_and_D
-	WHEN 'Sales' THEN VIEW_CountNumberEmployeesByDepartment.dept_Sales
-	WHEN 'Shipping and Receiving' THEN VIEW_CountNumberEmployeesByDepartment.dept_ShipReceiv
-	WHEN 'Tool Design' THEN VIEW_CountNumberEmployeesByDepartment.dept_ToolDesign
+	WHEN 'Document Control' 			THEN VIEW_CountNumberEmployeesByDepartment.dept_DocControl
+	WHEN 'Engineering' 					THEN VIEW_CountNumberEmployeesByDepartment.dept_Engin
+	WHEN 'Executive' 					THEN VIEW_CountNumberEmployeesByDepartment.dept_Exec
+	WHEN 'Facilities and Maintenance' 	THEN VIEW_CountNumberEmployeesByDepartment.dept_FacILMaint
+	WHEN 'Finance' 						THEN VIEW_CountNumberEmployeesByDepartment.dept_Finance
+	WHEN 'Human Resources' 				THEN VIEW_CountNumberEmployeesByDepartment.dept_HR
+	WHEN 'Information Services' 		THEN VIEW_CountNumberEmployeesByDepartment.dept_IT
+	WHEN 'Marketing' 					THEN VIEW_CountNumberEmployeesByDepartment.dept_Marketing
+	WHEN 'Production' 					THEN VIEW_CountNumberEmployeesByDepartment.dept_Prod
+	WHEN 'Production Control' 			THEN VIEW_CountNumberEmployeesByDepartment.dept_ProdControl
+	WHEN 'Purchasing' 					THEN VIEW_CountNumberEmployeesByDepartment.dept_Purch
+	WHEN 'Quality Assurance' 			THEN VIEW_CountNumberEmployeesByDepartment.dept_QA
+	WHEN 'Research and Development' 	THEN VIEW_CountNumberEmployeesByDepartment.dept_R_and_D
+	WHEN 'Sales' 						THEN VIEW_CountNumberEmployeesByDepartment.dept_Sales
+	WHEN 'Shipping and Receiving' 		THEN VIEW_CountNumberEmployeesByDepartment.dept_ShipReceiv
+	WHEN 'Tool Design' 					THEN VIEW_CountNumberEmployeesByDepartment.dept_ToolDesign
 	END AS CountEmployeeByDept
 FROM VIEW_CountNumberEmployeesByDepartment
 , [AdventureWorks2022].[HumanResources].[Department]
 
 
 	-- OUTPUT
-Name				CountEmployeeByDept
-Document Control		5
-Engineering			6
-Executive			1
-Facilities and Maintenance	7
-Finance				10
-Human Resources			6
-Information Services		10
-Marketing			9
-Production			179
-Production Control		6
-Purchasing			12
-Quality Assurance		6
-Research and Development	4
-Sales				18
-Shipping and Receiving		6
-Tool Design			4
+Name							CountEmployeeByDept
+Document Control				5
+Engineering						6
+Executive						1
+Facilities and Maintenance		7
+Finance							10
+Human Resources					6
+Information Services			10
+Marketing						9
+Production						179
+Production Control				6
+Purchasing						12
+Quality Assurance				6
+Research and Development		4
+Sales							18
+Shipping and Receiving			6
+Tool Design						4
 (end of results)
 (16 rows affected)
