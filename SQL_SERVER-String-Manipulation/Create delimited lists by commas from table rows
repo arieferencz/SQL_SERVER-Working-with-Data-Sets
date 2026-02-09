@@ -16,7 +16,7 @@ SELECT Y.CountryRegionCode
 , STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) AS DelimitedListCityName
 FROM	
 	(
-	SELECT DISTINCT X.City	-- UniqueCityName
+	SELECT DISTINCT X.City											-- UniqueCityName
 	, X.CountryRegionCode
 	FROM
 		(
@@ -91,9 +91,9 @@ GROUP BY CountryRegionCode
 
 
 	-- OUTPUT
-CountryRegionCode	DelimitedListCityName
-AU			Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,Newcastle,St. Leonards,Lane Cove,Brisbane,Gold Coast,Hawthorne,Townsville,Seaford,Rockhampton,North Ryde,Hervey Bay,Findon,Cranbourne,Melbourne,Darlinghurst,Milsons Point,Springwood,Sunbury,Geelong,Caloundra,Malabar,Warrnambool,Hobart,Melton,Goulburn,Lavender Bay,North Sydney,Silverwater,Perth,Rhodes,Coffs Harbour,East Brisbane,Alexandria,Wollongong
-CA			Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,Weston,Ottawa,Edmonton,Dorval,Langford,Mississauga,Westminster,Aurora,Haney,Kanata,Winnipeg,Calgary,Surrey,Port Hammond,Nepean,Royal Oak,Ville De'anjou,Barrie,Sooke,Saint John,Vancouver,Scarborough,Outremont,Etobicoke,Markham,Richmond Hill,Kingston,Oak Bay,Sainte-Foy,Toronto,Sillery,Richmond,Brossard,N. Vancouver,Cliffside,Burnaby,North York,Metchosin,Pnot-Rouge,Chalk Riber
+CountryRegionCode		DelimitedListCityName
+AU						Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,Newcastle,St. Leonards,Lane Cove,Brisbane,Gold Coast,Hawthorne,Townsville,Seaford,Rockhampton,North Ryde,Hervey Bay,Findon,Cranbourne,Melbourne,Darlinghurst,Milsons Point,Springwood,Sunbury,Geelong,Caloundra,Malabar,Warrnambool,Hobart,Melton,Goulburn,Lavender Bay,North Sydney,Silverwater,Perth,Rhodes,Coffs Harbour,East Brisbane,Alexandria,Wollongong
+CA						Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,Weston,Ottawa,Edmonton,Dorval,Langford,Mississauga,Westminster,Aurora,Haney,Kanata,Winnipeg,Calgary,Surrey,Port Hammond,Nepean,Royal Oak,Ville De'anjou,Barrie,Sooke,Saint John,Vancouver,Scarborough,Outremont,Etobicoke,Markham,Richmond Hill,Kingston,Oak Bay,Sainte-Foy,Toronto,Sillery,Richmond,Brossard,N. Vancouver,Cliffside,Burnaby,North York,Metchosin,Pnot-Rouge,Chalk Riber
 	.......... TRUNCATED RESULTS ..........
 (6 rows affected)
 (end of results)
