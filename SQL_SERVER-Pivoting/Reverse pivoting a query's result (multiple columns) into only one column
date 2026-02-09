@@ -2,11 +2,11 @@ Exercise #1: Reverse pivoting a query's result having multiple columns into only
 
 
 Solution #1: We reverse the pivoting of multiple NUMERIC data type columns into only one column. 
+
 The columns whose records were reverse pivoted are:
 1) BusinessEntityID
 2) DepartmentID
 3) NationalIDNumber
-
 
 Tables used:
 1) [AdventureWorks2022].[HumanResources].[Employee]
@@ -78,20 +78,17 @@ RowNumberTranspose		NewPivotedOneColumn
 (end of results)
 (867 rows affected)
 
-
 -- https://blog.sqlauthority.com/2015/07/29/sql-server-error-msg-245-conversion-failed-when-converting-the-varchar-value-inactive-to-data-type-int/
 
 
 
 Below are the queries used step-by-step for this solution.
-
 We use the Cartesian Product to return 1 row for each column we have on our query. As mentioned before, we have 3 columns of employee's data:
 1) BusinessEntityID
 2) DepartmentID
 3) NationalIDNumber
 
 Below we can see an example for the transposition of the employee's data (from multiple columns into a single column) for BusinessEntityID = 2.
-
 
 BusinessEntityID	DepartmentID	NationalIDNumber	======>>>		Transposition		NewPivotedOneColumn
 ----------------------------------------------------					-------------		-------------------
