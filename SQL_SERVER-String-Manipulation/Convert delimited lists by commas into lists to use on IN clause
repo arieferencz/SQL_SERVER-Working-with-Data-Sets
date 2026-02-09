@@ -75,7 +75,7 @@ Berlin			Alderstr 3955
 London			1005 Valley Oak Plaza
 London			1019 Mt. Davidson Court
 .................................................... TRUNCATED RESULTS .....
- aNew York		123 Union Square South
+New York		123 Union Square South
 New York		2596 Big Canyon Road
 .................................................... TRUNCATED RESULTS .....
 York			2050 B Avenue I
@@ -119,6 +119,7 @@ The 117,684 rows resulted from the use of a Cartesian Product between Subquery Z
 Cartesian Product: has a dimension of 6 X 19,614, meaning 117,684 rows.
 Subquery Iteration: has a total of 19,614 rows.
 
+
 5.2) WHERE clause and the iteration:
 After adding the WHERE clause (WHERE Iteration.Position <= LEN(Z.DelimListCityName) at the end of Subquery SubstringOne, we reduce the OUTPUT from 117,684 rows to 5,657 rows.
 
@@ -159,7 +160,7 @@ Row #		SUBSTDelimCityName																CharacterLengthDelimitedLists		CountryR
 17			ale,Port Macquarie,South Melbourne,Sydney,Matravill.........,Wollongong,		421									AU
 18			le,Port Macquarie,South Melbourne,Sydney,Matraville.........,Wollongong,		421									AU
 19			e,Port Macquarie,South Melbourne,Sydney,Matraville,.........,Wollongong,		421									AU
-....................................................... TRUNCATED RESULTS ...............................................................
+....................................................... TRUNCATED RESULTS .......................................................................
 410			,Wollongong,																	421									AU
 411			Wollongong,																		421									AU
 412			ollongong,																		421									AU
@@ -172,10 +173,10 @@ Row #		SUBSTDelimCityName																CharacterLengthDelimitedLists		CountryR
 419			ng,																				421									AU
 420			g,																				421									AU
 421			,																				421									AU
-....................................................... TRUNCATED RESULTS ...............................................................
+....................................................... TRUNCATED RESULTS .......................................................................
 422			,Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,Chalk Riber,		449									CA	
 423			Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,,Chalk Riber,		449									CA	
-....................................................... TRUNCATED RESULTS ...............................................................
+....................................................... TRUNCATED RESULTS .......................................................................
 859			Chalk Riber,																	449									CA
 860			halk Riber,																		449									CA
 861			alk Riber,																		449									CA
@@ -188,7 +189,7 @@ Row #		SUBSTDelimCityName																CharacterLengthDelimitedLists		CountryR
 868			er,																				449									CA
 869			r,																				449									CA
 870			,																				449									CA
-....................................................... TRUNCATED RESULTS ...............................................................
+....................................................... TRUNCATED RESULTS .......................................................................
 (5657 rows affected)
 (end of results)
 
@@ -291,11 +292,11 @@ AddressID		City						StateProvinceID			StateProvinceCode		CountryRegionCode		Ter
 
 	Query #1.2: Creates subquery "Y" which removes duplicated City names from Subquery X using SELECT DISTINCT statement
 	----------
-SELECT DISTINCT X.City															-- UniqueCityName2 = Y
+SELECT DISTINCT X.City																-- UniqueCityName2 = Y
 	, X.CountryRegionCode
 FROM
 	(
-	SELECT 																		-- OriginalTables1 = X
+	SELECT 																			-- OriginalTables1 = X
 	PersonAddress.AddressID
 	, PersonAddress.City
 	, PersonAddress.StateProvinceID
@@ -307,8 +308,8 @@ FROM
 	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 		ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-		ON StateID.TerritoryID = SalesTerritory.TerritoryID						-- OriginalTables1 = X
-	) AS X																		-- UniqueCityName2 = Y
+		ON StateID.TerritoryID = SalesTerritory.TerritoryID							-- OriginalTables1 = X
+	) AS X																			-- UniqueCityName2 = Y
 
 
 	-- OUTPUT
@@ -319,7 +320,7 @@ Bendigo						AU
 San Mateo					US
 Saint Matthews				US
 Chalk Riber					CA
-............................................. TRUNCATED RESULTS .....
+................................................. TRUNCATED RESULTS .....
 Boulogne-Billancourt		FR
 Orly						FR
 Salem						US
@@ -623,7 +624,7 @@ Solution #2.1: We can also store the list of cities from SubstringTwo5 into vari
 WITH
 Subquery_X AS
 ( 
-	SELECT PersonAddress.AddressID					-- OriginalTables1 = X
+	SELECT PersonAddress.AddressID																															-- OriginalTables1 = X
 	, PersonAddress.City
 	, PersonAddress.StateProvinceID
 	, StateID.StateProvinceCode
@@ -634,36 +635,36 @@ Subquery_X AS
 	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 	ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-	ON StateID.TerritoryID = SalesTerritory.TerritoryID							-- OriginalTables1 = X
+	ON StateID.TerritoryID = SalesTerritory.TerritoryID																										-- OriginalTables1 = X
 ), 
 Subquery_Y AS
 (
-	SELECT DISTINCT Subquery_X.City					-- UniqueCityName2 = Y
+	SELECT DISTINCT Subquery_X.City																															-- UniqueCityName2 = Y
 		, Subquery_X.CountryRegionCode
-	FROM Subquery_X									-- UniqueCityName2 = Y
+	FROM Subquery_X																																			-- UniqueCityName2 = Y
 ), 
 Subquery_Z AS
 (
-	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName		-- DelimListCities3 = Z
+	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName													-- DelimListCities3 = Z
 	FROM Subquery_Y
-	GROUP BY Subquery_Y.CountryRegionCode					-- DelimitedListCities3 = Z 
+	GROUP BY Subquery_Y.CountryRegionCode																													-- DelimitedListCities3 = Z 
 ), 
 Iteration AS 
 (
-	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position			-- Iteration3
-	FROM [AdventureWorks2022].[Person].[Address]						-- Iteration3
+	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position																								-- Iteration3
+	FROM [AdventureWorks2022].[Person].[Address]																											-- Iteration3
 ), 
 SubstringOne4 AS 
 (
-	SELECT SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position, LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName	-- SubstringOne4
+	SELECT SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position, LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName								-- SubstringOne4
 	FROM Subquery_Z, Iteration
-	WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName)					-- SubstringOne4
+	WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName)																							-- SubstringOne4
 ),
 SubstringTwo5 AS 
 ( 
 	SELECT CitiesforINclause = SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) -- AS CityName		-- SubstringTwo5
 	FROM SubstringOne4
-	WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','					-- SubstringTwo5
+	WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','																			-- SubstringTwo5
 ) 
 SELECT AddressLine1
 FROM [AdventureWorks2022].[Person].[Address] 
