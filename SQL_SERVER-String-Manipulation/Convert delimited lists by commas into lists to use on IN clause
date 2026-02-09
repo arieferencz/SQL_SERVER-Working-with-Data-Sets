@@ -2,14 +2,12 @@ Exercise #1: Convert delimited lists separated by commas into a list of multiple
 
 
 Solution #1: We use a similar logic applied on Exercise "SQL_SERVER-String-Manipulation/Create delimited lists by commas from table rows" to column "DelimitedListCityName", to create a column with delimited lists of City names separated by commas and grouped by country (using column "CountryRegionCode").
-
 Path to exercise "Create delimited lists by commas from table rows": https://github.com/Arie2021jw/SQL_SERVER-String-Manipulation/blob/main/Create%20delimited%20lists%20by%20commas%20from%20table%20rows
 
 Tables used:
 1) [AdventureWorks2022].[Person].[Address]
 2) [AdventureWorks2022].[Person].[StateProvince]
 3) [AdventureWorks2022].[Sales].[SalesTerritory]
-
 
 Query #1: Retrieving values from column PersonAddress.City (horizontally) in a delimited list by commas, instead of vertically, using subqueries
 		+ 7 Subqueries
@@ -19,22 +17,23 @@ Query #1: Retrieving values from column PersonAddress.City (horizontally) in a d
 		+ Functions: SUBSTRING, CHARINDEX, LEN, STRING_AGG, CONVERT, NVARCHAR(max), CHAR
 		+ SELECT DISTINCT
 
+
 SELECT AddressLine1
 FROM [AdventureWorks2022].[Person].[Address] 
 WHERE City IN (
-    SELECT SUBSTRING(SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne.SUBSTDelimCityName, 2) - 2) AS CityName		-- SubstringTwo5
+    SELECT SUBSTRING(SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne.SUBSTDelimCityName, 2) - 2) AS CityName				-- SubstringTwo5
     FROM (
-	    SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName	-- SubstringOne4
+	    SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName			-- SubstringOne4
 	    FROM 
 		(	
-		SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName		-- DelimListCities3 = Z
+		SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName						-- DelimListCities3 = Z
 		FROM	
 			(
-			SELECT DISTINCT X.City				-- UniqueCityName2 = Y
+			SELECT DISTINCT X.City																							-- UniqueCityName2 = Y
 			    , X.CountryRegionCode
 			FROM
 				(
-				SELECT 					-- OriginalTables1 = X
+				SELECT 																										-- OriginalTables1 = X
 				PersonAddress.AddressID
 				, PersonAddress.City
 				, PersonAddress.StateProvinceID
@@ -46,16 +45,16 @@ WHERE City IN (
 				LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 					ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 				LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-					ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
-				) AS X										-- UniqueCityName2 = Y
+					ON StateID.TerritoryID = SalesTerritory.TerritoryID														-- OriginalTables1 = X
+				) AS X																										-- UniqueCityName2 = Y
 			) AS Y	
-			GROUP BY Y.CountryRegionCode					-- DelimitedListCities3 = Z 
+			GROUP BY Y.CountryRegionCode																					-- DelimitedListCities3 = Z 
 			) AS Z,
 			(
-			SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position	-- Iteration3
+			SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position														-- Iteration3
 			FROM [AdventureWorks2022].[Person].[Address]
-			) AS Iteration							-- Iteration3
-	    WHERE Iteration.Position <= LEN(Z.DelimListCityName)			-- SubstringOne4
+			) AS Iteration																									-- Iteration3
+	    WHERE Iteration.Position <= LEN(Z.DelimListCityName)																-- SubstringOne4
 	    ) AS SubstringOne
 	WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','
     )
@@ -63,26 +62,27 @@ ORDER BY City
 
 
 	-- OUTPUT
-City		AddressLine1
-Abingdon	New Millhouse, 2583 Milton Park
-Albany		1619 Mills Dr.
-Albany		2255 254th Avenue Se
-Albany		9098 Story Lane
-Albany		Heritage Mall
-.......................................... TRUNCATED RESULTS .........
-Berlin		8783 Detroit Ave.
-Berlin		Alderstr 3955
-.......................................... TRUNCATED RESULTS .........
-London		1005 Valley Oak Plaza
-London		1019 Mt. Davidson Court
-.......................................... TRUNCATED RESULTS .........
- aNew York	123 Union Square South
-New York	2596 Big Canyon Road
-.......................................... TRUNCATED RESULTS .........
-York		2050 B Avenue I
-Zeeland		855 East Main Avenue
+City			AddressLine1
+Abingdon		New Millhouse, 2583 Milton Park
+Albany			1619 Mills Dr.
+Albany			2255 254th Avenue Se
+Albany			9098 Story Lane
+Albany			Heritage Mall
+.................................................... TRUNCATED RESULTS .....
+Berlin			8783 Detroit Ave.
+Berlin			Alderstr 3955
+.................................................... TRUNCATED RESULTS .....
+London			1005 Valley Oak Plaza
+London			1019 Mt. Davidson Court
+.................................................... TRUNCATED RESULTS .....
+ aNew York		123 Union Square South
+New York		2596 Big Canyon Road
+.................................................... TRUNCATED RESULTS .....
+York			2050 B Avenue I
+Zeeland			855 East Main Avenue
 (19614 rows affected)
 (end of results)
+
 
 
 
@@ -124,74 +124,73 @@ After adding the WHERE clause (WHERE Iteration.Position <= LEN(Z.DelimListCityNa
 
 5,657 rows = sum of the character length for the delimited lists of all 6 countries.
 
-	CountryRegionCode	CharacterLengthDelimitedLists
-	AU			421
-	CA			449
-	DE			356
-	FR			378
-	GB			359
-	US			3694
-	------------------------------
-	Total			5,657
+	CountryRegionCode		CharacterLengthDelimitedLists
+	AU						421
+	CA						449
+	DE						356
+	FR						378
+	GB						359
+	US						3694
+	----------------------------------------------------
+	Total					5,657
 
 
 5.3) Function SUBSTRING and the iteration:
 For each of the 5,657 rows, this function returns a string having 1 character less than the previous row each time that the iteration passes through each row.
 For example, below we can see the values returned by this function for FirstName values for CountryRegionCode equals to AU and CA.
 
-Row #	SUBSTDelimCityName								CharacterLengthDelimitedLists	CountryRegionCode
-1	,Bendigo,Cloverdale,Port Macquarie,South Melbourne,.........,Wollongong,	421				AU
-2	Bendigo,Cloverdale,Port Macquarie,South Melbourne,S.........,Wollongong,	421				AU
-3	endigo,Cloverdale,Port Macquarie,South Melbourne,Sy.........,Wollongong,	421				AU
-4	ndigo,Cloverdale,Port Macquarie,South Melbourne,Syd.........,Wollongong,	421				AU
-5	digo,Cloverdale,Port Macquarie,South Melbourne,Sydn.........,Wollongong,	421				AU
-6	igo,Cloverdale,Port Macquarie,South Melbourne,Sydne.........,Wollongong,	421				AU
-7	go,Cloverdale,Port Macquarie,South Melbourne,Sydney.........,Wollongong,	421				AU
-8	o,Cloverdale,Port Macquarie,South Melbourne,Sydney,.........,Wollongong,	421				AU
-9	,Cloverdale,Port Macquarie,South Melbourne,Sydney,M.........,Wollongong,	421				AU
-10	Cloverdale,Port Macquarie,South Melbourne,Sydney,Ma.........,Wollongong,	421				AU
-11	loverdale,Port Macquarie,South Melbourne,Sydney,Mat.........,Wollongong,	421				AU
-12	overdale,Port Macquarie,South Melbourne,Sydney,Matr.........,Wollongong,	421				AU
-13	verdale,Port Macquarie,South Melbourne,Sydney,Matra.........,Wollongong,	421				AU
-14	erdale,Port Macquarie,South Melbourne,Sydney,Matrav.........,Wollongong,	421				AU
-15	rdale,Port Macquarie,South Melbourne,Sydney,Matravi.........,Wollongong,	421				AU
-16	dale,Port Macquarie,South Melbourne,Sydney,Matravil.........,Wollongong,	421				AU
-17	ale,Port Macquarie,South Melbourne,Sydney,Matravill.........,Wollongong,	421				AU
-18	le,Port Macquarie,South Melbourne,Sydney,Matraville.........,Wollongong,	421				AU
-19	e,Port Macquarie,South Melbourne,Sydney,Matraville,.........,Wollongong,	421				AU
+Row #		SUBSTDelimCityName																CharacterLengthDelimitedLists		CountryRegionCode
+1			,Bendigo,Cloverdale,Port Macquarie,South Melbourne,.........,Wollongong,		421									AU
+2			Bendigo,Cloverdale,Port Macquarie,South Melbourne,S.........,Wollongong,		421									AU
+3			endigo,Cloverdale,Port Macquarie,South Melbourne,Sy.........,Wollongong,		421									AU
+4			ndigo,Cloverdale,Port Macquarie,South Melbourne,Syd.........,Wollongong,		421									AU
+5			digo,Cloverdale,Port Macquarie,South Melbourne,Sydn.........,Wollongong,		421									AU
+6			igo,Cloverdale,Port Macquarie,South Melbourne,Sydne.........,Wollongong,		421									AU
+7			go,Cloverdale,Port Macquarie,South Melbourne,Sydney.........,Wollongong,		421									AU
+8			o,Cloverdale,Port Macquarie,South Melbourne,Sydney,.........,Wollongong,		421									AU
+9			,Cloverdale,Port Macquarie,South Melbourne,Sydney,M.........,Wollongong,		421									AU
+10			Cloverdale,Port Macquarie,South Melbourne,Sydney,Ma.........,Wollongong,		421									AU
+11			loverdale,Port Macquarie,South Melbourne,Sydney,Mat.........,Wollongong,		421									AU
+12			overdale,Port Macquarie,South Melbourne,Sydney,Matr.........,Wollongong,		421									AU
+13			verdale,Port Macquarie,South Melbourne,Sydney,Matra.........,Wollongong,		421									AU
+14			erdale,Port Macquarie,South Melbourne,Sydney,Matrav.........,Wollongong,		421									AU
+15			rdale,Port Macquarie,South Melbourne,Sydney,Matravi.........,Wollongong,		421									AU
+16			dale,Port Macquarie,South Melbourne,Sydney,Matravil.........,Wollongong,		421									AU
+17			ale,Port Macquarie,South Melbourne,Sydney,Matravill.........,Wollongong,		421									AU
+18			le,Port Macquarie,South Melbourne,Sydney,Matraville.........,Wollongong,		421									AU
+19			e,Port Macquarie,South Melbourne,Sydney,Matraville,.........,Wollongong,		421									AU
 ....................................................... TRUNCATED RESULTS ...............................................................
-410	,Wollongong,									421				AU
-411	Wollongong,									421				AU
-412	ollongong,									421				AU
-413	llongong,									421				AU
-414	longong,									421				AU
-415	ongong,										421				AU
-416	ngong,										421				AU
-417	gong,										421				AU
-418	ong,										421				AU
-419	ng,										421				AU
-420	g,										421				AU
-421	,										421				AU
+410			,Wollongong,																	421									AU
+411			Wollongong,																		421									AU
+412			ollongong,																		421									AU
+413			llongong,																		421									AU
+414			longong,																		421									AU
+415			ongong,																			421									AU
+416			ngong,																			421									AU
+417			gong,																			421									AU
+418			ong,																			421									AU
+419			ng,																				421									AU
+420			g,																				421									AU
+421			,																				421									AU
 ....................................................... TRUNCATED RESULTS ...............................................................
-422	,Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,Chalk Riber,	449				CA	
-423	Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,,Chalk Riber,	449				CA	
+422			,Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,Chalk Riber,		449									CA	
+423			Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,,Chalk Riber,		449									CA	
 ....................................................... TRUNCATED RESULTS ...............................................................
-859	Chalk Riber,									449				CA
-860	halk Riber,									449				CA
-861	alk Riber,									449				CA
-862	lk Riber,									449				CA
-863	k Riber,									449				CA
-864	 Riber,										449				CA
-865	Riber,										449				CA
-866	iber,										449				CA
-867	ber,										449				CA
-868	er,										449				CA
-869	r,										449				CA
-870	,										449				CA
+859			Chalk Riber,																	449									CA
+860			halk Riber,																		449									CA
+861			alk Riber,																		449									CA
+862			lk Riber,																		449									CA
+863			k Riber,																		449									CA
+864	 		Riber,																			449									CA
+865			Riber,																			449									CA
+866			iber,																			449									CA
+867			ber,																			449									CA
+868			er,																				449									CA
+869			r,																				449									CA
+870			,																				449									CA
 ....................................................... TRUNCATED RESULTS ...............................................................
 (5657 rows affected)
 (end of results)
-
 
 
 6) Subquery "SubstringTwo": 
@@ -203,28 +202,29 @@ Parameter #2 (start): starts extracting at position 2
 Parameter #3 (length): number of characters to extract = CHARINDEX(',', SubstringOne.SUBSTDelimCityName, 2) - 2
 
 
-Row #	SUBSTDelimCityName			osition2ndComma		LengthParam3	lenSUBSTDelimCityName	CityName
-1	,Bendigo,Cloverdale,Port .....		9			7		421			Bendigo
-2	Bendigo,Cloverdale,Port M.....		8			6		420			endigo		<--- This row will be filtered out by WHERE clause, see 6.1) below
-3	endigo,Cloverdale,Port Ma.....		7			5		419			ndigo		<--- This row will be filtered out by WHERE clause, see 6.1) below
-4	ndigo,Cloverdale,Port Mac.....		6			4		418			digo		<--- This row will be filtered out by WHERE clause, see 6.1) below
-5	digo,Cloverdale,Port Macq.....		5			3		417			igo		<--- This row will be filtered out by WHERE clause, see 6.1) below
-6	igo,Cloverdale,Port Macqu.....		4			2		416			go		<--- This row will be filtered out by WHERE clause, see 6.1) below
-7	go,Cloverdale,Port Macqua.....		3			1		415			o		<--- This row will be filtered out by WHERE clause, see 6.1) below
-8	o,Cloverdale,Port Macquar.....		2			0		414					<--- This row will be filtered out by WHERE clause, see 6.1) below
-9	,Cloverdale,Port Macquari.....		12			10		413			Cloverdale
-10	Cloverdale,Port Macquarie.....		11			9		412			loverdale 	<--- This row will be filtered out by WHERE clause, see 6.1) below
-11	loverdale,Port Macquarie,.....		10			8		411			overdale  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-12	overdale,Port Macquarie,S.....		9			7		410			verdale	  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-13	verdale,Port Macquarie,So.....		8			6		409			erdale	  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-14	erdale,Port Macquarie,Sou.....		7			5		408			rdale	 	<--- This row will be filtered out by WHERE clause, see 6.1) below
-15	rdale,Port Macquarie,Sout.....		6			4		407			dale	  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-16	dale,Port Macquarie,South.....		5			3		406			ale	  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-17	ale,Port Macquarie,South .....		4			2		405			le	  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-18	le,Port Macquarie,South M.....		3			1		404			e	  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-19	e,Port Macquarie,South Me.....		2			0		403				  	<--- This row will be filtered out by WHERE clause, see 6.1) below
-20	,Port Macquarie,South Mel.....		16			14		402			Port Macquarie
-....................................................... TRUNCATED RESULTS ...............................................................
+
+Row #		SUBSTDelimCityName						Position2ndComma		LengthParam3		lenSUBSTDelimCityName		CityName
+1			,Bendigo,Cloverdale,Port .....			9						7					421							Bendigo
+2			Bendigo,Cloverdale,Port M.....			8						6					420							endigo				<--- This row will be filtered out by WHERE clause, see 6.1) below
+3			endigo,Cloverdale,Port Ma.....			7						5					419							ndigo				<--- This row will be filtered out by WHERE clause, see 6.1) below
+4			ndigo,Cloverdale,Port Mac.....			6						4					418							digo				<--- This row will be filtered out by WHERE clause, see 6.1) below
+5			digo,Cloverdale,Port Macq.....			5						3					417							igo					<--- This row will be filtered out by WHERE clause, see 6.1) below
+6			igo,Cloverdale,Port Macqu.....			4						2					416							go					<--- This row will be filtered out by WHERE clause, see 6.1) below
+7			go,Cloverdale,Port Macqua.....			3						1					415							o					<--- This row will be filtered out by WHERE clause, see 6.1) below
+8			o,Cloverdale,Port Macquar.....			2						0					414												<--- This row will be filtered out by WHERE clause, see 6.1) below
+9			,Cloverdale,Port Macquari.....			12						10					413							Cloverdale
+10			Cloverdale,Port Macquarie.....			11						9					412							loverdale 			<--- This row will be filtered out by WHERE clause, see 6.1) below
+11			loverdale,Port Macquarie,.....			10						8					411							overdale  			<--- This row will be filtered out by WHERE clause, see 6.1) below
+12			overdale,Port Macquarie,S.....			9						7					410							verdale	  			<--- This row will be filtered out by WHERE clause, see 6.1) below
+13			verdale,Port Macquarie,So.....			8						6					409							erdale	  			<--- This row will be filtered out by WHERE clause, see 6.1) below
+14			erdale,Port Macquarie,Sou.....			7						5					408							rdale	 			<--- This row will be filtered out by WHERE clause, see 6.1) below
+15			rdale,Port Macquarie,Sout.....			6						4					407							dale	  			<--- This row will be filtered out by WHERE clause, see 6.1) below
+16			dale,Port Macquarie,South.....			5						3					406							ale	  				<--- This row will be filtered out by WHERE clause, see 6.1) below
+17			ale,Port Macquarie,South .....			4						2					405							le	  				<--- This row will be filtered out by WHERE clause, see 6.1) below
+18			le,Port Macquarie,South M.....			3						1					404							e	  				<--- This row will be filtered out by WHERE clause, see 6.1) below
+19			e,Port Macquarie,South Me.....			2						0					403								  				<--- This row will be filtered out by WHERE clause, see 6.1) below
+20			,Port Macquarie,South Mel.....			16						14					402							Port Macquarie
+....................................................... TRUNCATED RESULTS ................................................................
 (5657 rows affected)
 (end of results)
 
@@ -254,8 +254,7 @@ Below are the queries used step-by-step for this solution.
 
 	Query #1.1: Creates subquery "X" from tables [AdventureWorks2022].[Person].[Address], [AdventureWorks2022].[Person].[StateProvince] and [AdventureWorks2022].[Sales].[SalesTerritory]
 	----------
-
-SELECT PersonAddress.AddressID					-- OriginalTables1 = X
+SELECT PersonAddress.AddressID													-- OriginalTables1 = X
 , PersonAddress.City
 , PersonAddress.StateProvinceID
 , StateID.StateProvinceCode
@@ -269,21 +268,20 @@ LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
 ON StateID.TerritoryID = SalesTerritory.TerritoryID	
 
 
-
 	-- OUTPUT
-AddressID	City			StateProvinceID		StateProvinceCode	CountryRegionCode	TerritoryID	TerritoryName
-532		Ottawa			57			ON 			CA			6		Canada
-497		Burnaby			7			BC 			CA			6		Canada
-29781		Dunkerque		145			59			FR			7		France
-24231		Verrieres Le Buisson	177			91			FR			7		France
-19637		Verrieres Le Buisson	177			91			FR			7		France
-................ TRUNCATED RESULTS .......
-15589		Sulzbach Taunus		70			SL 			DE			8		Germany
-19731		Berlin			19			HE 			DE			8		Germany
-15768		Neunkirchen		70			SL 			DE			8		Germany
-17393		Paderborn		20			HH 			DE			8		Germany
-29769		Berlin			20			HH 			DE			8		Germany
-18050		München			53			NW 			DE			8		Germany
+AddressID		City						StateProvinceID			StateProvinceCode		CountryRegionCode		TerritoryID		TerritoryName
+532				Ottawa						57						ON 						CA						6				Canada
+497				Burnaby						7						BC 						CA						6				Canada
+29781			Dunkerque					145						59						FR						7				France
+24231			Verrieres Le Buisson		177						91						FR						7				France
+19637			Verrieres Le Buisson		177						91						FR						7				France
+............................................................ TRUNCATED RESULTS ....................................................................
+15589			Sulzbach Taunus				70						SL 						DE						8				Germany
+19731			Berlin						19						HE 						DE						8				Germany
+15768			Neunkirchen					70						SL 						DE						8				Germany
+17393			Paderborn					20						HH 						DE						8				Germany
+29769			Berlin						20						HH 						DE						8				Germany
+18050			München						53						NW 						DE						8				Germany
 (19614 rows affected)
 (end of results)
 
@@ -293,12 +291,11 @@ AddressID	City			StateProvinceID		StateProvinceCode	CountryRegionCode	TerritoryI
 
 	Query #1.2: Creates subquery "Y" which removes duplicated City names from Subquery X using SELECT DISTINCT statement
 	----------
-
-SELECT DISTINCT X.City				-- UniqueCityName2 = Y
+SELECT DISTINCT X.City															-- UniqueCityName2 = Y
 	, X.CountryRegionCode
 FROM
 	(
-	SELECT 					-- OriginalTables1 = X
+	SELECT 																		-- OriginalTables1 = X
 	PersonAddress.AddressID
 	, PersonAddress.City
 	, PersonAddress.StateProvinceID
@@ -310,43 +307,41 @@ FROM
 	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 		ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-		ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
-	) AS X										-- UniqueCityName2 = Y
+		ON StateID.TerritoryID = SalesTerritory.TerritoryID						-- OriginalTables1 = X
+	) AS X																		-- UniqueCityName2 = Y
 
 
 	-- OUTPUT
-City			CountryRegionCode
-Southfield		US
-Seattle			US
-Bendigo			AU
-San Mateo		US
-Saint Matthews		US
-Chalk Riber		CA
-................ TRUNCATED RESULTS .......
-Boulogne-Billancourt	FR
-Orly			FR
-Salem			US
-Brampton		CA
-Daly City		US
-Great Falls		US
+City						CountryRegionCode
+Southfield					US
+Seattle						US
+Bendigo						AU
+San Mateo					US
+Saint Matthews				US
+Chalk Riber					CA
+............................................. TRUNCATED RESULTS .....
+Boulogne-Billancourt		FR
+Orly						FR
+Salem						US
+Brampton					CA
+Daly City					US
+Great Falls					US
 (579 rows affected)
 (end of results)
 
 
 
 
-
 	Query #1.3: Creates subquery "Z" which generates delimited lists by commas from column PersonAddress.City
 	----------
-
-SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName		-- DelimListCities3 = Z
+SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName			-- DelimListCities3 = Z
 FROM	
 (
-	SELECT DISTINCT X.City				-- UniqueCityName2 = Y
+	SELECT DISTINCT X.City																				-- UniqueCityName2 = Y
 		, X.CountryRegionCode
 	FROM
 		(
-		SELECT 					-- OriginalTables1 = X
+		SELECT 																							-- OriginalTables1 = X
 		PersonAddress.AddressID
 		, PersonAddress.City
 		, PersonAddress.StateProvinceID
@@ -358,10 +353,10 @@ FROM
 		LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 			ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 		LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-		ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
-		) AS X										-- UniqueCityName2 = Y
+		ON StateID.TerritoryID = SalesTerritory.TerritoryID												-- OriginalTables1 = X
+		) AS X																							-- UniqueCityName2 = Y
 	) AS Y	
-GROUP BY Y.CountryRegionCode					-- DelimitedListCities3 = Z 
+GROUP BY Y.CountryRegionCode																			-- DelimitedListCities3 = Z 
 
 
 	-- OUTPUT
@@ -377,21 +372,19 @@ DelimListCityName
 
 
 
-
 	Query #1.4: Creates subquery "SubstringOne" which returns a string having 1 character less than the previous row each time that the iteration passes through each row.
 	----------
-
-SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName	-- SubstringOne4
+SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName			-- SubstringOne4
 FROM 
 (	
-SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName			-- DelimListCities3 = Z
+SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName						-- DelimListCities3 = Z
 FROM	
 	(
-	SELECT DISTINCT X.City				-- UniqueCityName2 = Y
+	SELECT DISTINCT X.City																							-- UniqueCityName2 = Y
 		, X.CountryRegionCode
 	FROM
 		(
-		SELECT 					-- OriginalTables1 = X
+		SELECT 																										-- OriginalTables1 = X
 		PersonAddress.AddressID
 		, PersonAddress.City
 		, PersonAddress.StateProvinceID
@@ -403,16 +396,16 @@ FROM
 		LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 			ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 		LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-			ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
-		) AS X										-- UniqueCityName2 = Y
+			ON StateID.TerritoryID = SalesTerritory.TerritoryID														-- OriginalTables1 = X
+		) AS X																										-- UniqueCityName2 = Y
 	) AS Y	
-	GROUP BY Y.CountryRegionCode					-- DelimitedListCities3 = Z 
+	GROUP BY Y.CountryRegionCode																					-- DelimitedListCities3 = Z 
 	) AS Z,
 	(
-	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position	-- Iteration3
+	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position														-- Iteration3
 	FROM [AdventureWorks2022].[Person].[Address]
-	) AS Iteration							-- Iteration3
-WHERE Iteration.Position <= LEN(Z.DelimListCityName)			-- SubstringOne4
+	) AS Iteration																									-- Iteration3
+WHERE Iteration.Position <= LEN(Z.DelimListCityName)																-- SubstringOne4
 
 
 	-- OUTPUT
@@ -436,7 +429,7 @@ dale,Port Macquarie,South Melbourne,Sydney,Matravil.........,Wollongong,
 ale,Port Macquarie,South Melbourne,Sydney,Matravill.........,Wollongong,
 le,Port Macquarie,South Melbourne,Sydney,Matraville.........,Wollongong,
 e,Port Macquarie,South Melbourne,Sydney,Matraville,.........,Wollongong,
-........................................................................... TRUNCATED RESULTS ..............
+............................................................................... TRUNCATED RESULTS .....
 ,Wollongong,								
 Wollongong,								
 ollongong,								
@@ -449,10 +442,9 @@ ong,
 ng,									
 g,									
 ,									
-........................................................................... TRUNCATED RESULTS ..............
+............................................................................... TRUNCATED RESULTS .....
 (5657 rows affected)
 (end of results)
-
 
 
 
@@ -461,19 +453,19 @@ g,
 		The OUTPUT returned is a list of multiple values (each on a separate row) that can be passed to the IN clause and used in the WHERE clause.
 	----------
 
-SELECT SUBSTRING(SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne.SUBSTDelimCityName, 2) - 2) AS CityName		-- SubstringTwo5
+SELECT SUBSTRING(SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne.SUBSTDelimCityName, 2) - 2) AS CityName			-- SubstringTwo5
 FROM (
-	SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName	-- SubstringOne4
+	SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName		-- SubstringOne4
 	FROM 
 	(	
-	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName		-- DelimListCities3 = Z
+	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName					-- DelimListCities3 = Z
 	FROM	
 		(
-		SELECT DISTINCT X.City				-- UniqueCityName2 = Y
+		SELECT DISTINCT X.City																						-- UniqueCityName2 = Y
 			, X.CountryRegionCode
 		FROM
 			(
-			SELECT 					-- OriginalTables1 = X
+			SELECT 																									-- OriginalTables1 = X
 			PersonAddress.AddressID
 			, PersonAddress.City
 			, PersonAddress.StateProvinceID
@@ -485,18 +477,18 @@ FROM (
 			LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 				ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 			LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-				ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
-			) AS X										-- UniqueCityName2 = Y
+				ON StateID.TerritoryID = SalesTerritory.TerritoryID													-- OriginalTables1 = X
+			) AS X																									-- UniqueCityName2 = Y
 		) AS Y	
-		GROUP BY Y.CountryRegionCode					-- DelimitedListCities3 = Z 
+		GROUP BY Y.CountryRegionCode																				-- DelimitedListCities3 = Z 
 		) AS Z,
 		(
-		SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position	-- Iteration3
+		SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position													-- Iteration3
 		FROM [AdventureWorks2022].[Person].[Address]
-		) AS Iteration							-- Iteration3
-	WHERE Iteration.Position <= LEN(Z.DelimListCityName)			-- SubstringOne4
+		) AS Iteration																								-- Iteration3
+	WHERE Iteration.Position <= LEN(Z.DelimListCityName)															-- SubstringOne4
 	) AS SubstringOne
-WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','			-- SubstringTwo5
+WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','										-- SubstringTwo5
 
 
 	-- OUTPUT
@@ -508,7 +500,7 @@ South Melbourne
 Sydney
 Matraville
 Newcastle
-................ TRUNCATED RESULTS ................
+....................... TRUNCATED RESULTS .....
 Saginaw
 Lincoln Acres
 Racine
@@ -519,7 +511,6 @@ Elk Grove
 Carson
 (579 rows affected)
 (end of results)
-
 
 
 
@@ -539,7 +530,7 @@ Solution #2: As an alternative for solution #1, below we show how we can solve t
 WITH
 Subquery_X AS
 ( 
-	SELECT PersonAddress.AddressID								-- OriginalTables1 = X
+	SELECT PersonAddress.AddressID																											-- OriginalTables1 = X
 	, PersonAddress.City
 	, PersonAddress.StateProvinceID
 	, StateID.StateProvinceCode
@@ -550,66 +541,66 @@ Subquery_X AS
 	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 	ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-	ON StateID.TerritoryID = SalesTerritory.TerritoryID					-- OriginalTables1 = X
+	ON StateID.TerritoryID = SalesTerritory.TerritoryID																						-- OriginalTables1 = X
 ), 
 Subquery_Y AS
 (
-	SELECT DISTINCT Subquery_X.City					-- UniqueCityName2 = Y
+	SELECT DISTINCT Subquery_X.City																											-- UniqueCityName2 = Y
 		, Subquery_X.CountryRegionCode
-	FROM Subquery_X							-- UniqueCityName2 = Y
+	FROM Subquery_X																															-- UniqueCityName2 = Y
 ), 
 Subquery_Z AS
 (
-	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName		-- DelimListCities3 = Z
+	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName									-- DelimListCities3 = Z
 	FROM Subquery_Y
-	GROUP BY Subquery_Y.CountryRegionCode					-- DelimitedListCities3 = Z 
+	GROUP BY Subquery_Y.CountryRegionCode																									-- DelimitedListCities3 = Z 
 ), 
 Iteration AS 
 (
-	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position			-- Iteration3
-	FROM [AdventureWorks2022].[Person].[Address]					-- Iteration3
+	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position																				-- Iteration3
+	FROM [AdventureWorks2022].[Person].[Address]																							-- Iteration3
 ), 
 SubstringOne4 AS 
 (
-	SELECT SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position, LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName	-- SubstringOne4
+	SELECT SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position, LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName				-- SubstringOne4
 	FROM Subquery_Z, Iteration
-	WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName)					-- SubstringOne4
+	WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName)																			-- SubstringOne4
 ),
 SubstringTwo5 AS 
 ( 
-	SELECT SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) AS CityName		-- SubstringTwo5
+	SELECT SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) AS CityName				-- SubstringTwo5
 	FROM SubstringOne4
-	WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','								-- SubstringTwo5
+	WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','															-- SubstringTwo5
 ) 
 SELECT AddressLine1
 FROM [AdventureWorks2022].[Person].[Address] 
 WHERE City IN	(
-		SELECT SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) AS CityName	-- SubstringTwo5
+		SELECT SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) AS CityName			-- SubstringTwo5
 		FROM SubstringOne4
 		WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','
-		)																-- SubstringTwo5
+		)																																	-- SubstringTwo5
 ORDER BY City
 
 
 	-- OUTPUT
-City		AddressLine1
-Abingdon	New Millhouse, 2583 Milton Park
-Albany		1619 Mills Dr.
-Albany		2255 254th Avenue Se
-Albany		9098 Story Lane
-Albany		Heritage Mall
+City			AddressLine1
+Abingdon		New Millhouse, 2583 Milton Park
+Albany			1619 Mills Dr.
+Albany			2255 254th Avenue Se
+Albany			9098 Story Lane
+Albany			Heritage Mall
 .......................................... TRUNCATED RESULTS .........
-Berlin		8783 Detroit Ave.
-Berlin		Alderstr 3955
+Berlin			8783 Detroit Ave.
+Berlin			Alderstr 3955
 .......................................... TRUNCATED RESULTS .........
-London		1005 Valley Oak Plaza
-London		1019 Mt. Davidson Court
+London			1005 Valley Oak Plaza
+London			1019 Mt. Davidson Court
 .......................................... TRUNCATED RESULTS .........
-New York	123 Union Square South
-New York	2596 Big Canyon Road
+New York		123 Union Square South
+New York		2596 Big Canyon Road
 .......................................... TRUNCATED RESULTS .........
-York		2050 B Avenue I
-Zeeland		855 East Main Avenue
+York			2050 B Avenue I
+Zeeland			855 East Main Avenue
 (19614 rows affected)
 (end of results)
 
