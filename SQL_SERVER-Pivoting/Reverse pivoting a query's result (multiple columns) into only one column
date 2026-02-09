@@ -8,9 +8,6 @@ The columns whose records were reverse pivoted are:
 3) NationalIDNumber
 
 
-Important Note: 
-
-
 Tables used:
 1) [AdventureWorks2022].[HumanResources].[Employee]
 2) [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory]
@@ -19,23 +16,23 @@ Tables used:
 
 	Query #1: We reverse the pivoting of multiple NUMERIC data type columns into only one column using a Cartesian Product, (window) function ROW_NUMBER and a CASE statement
 	---------
-SELECT X.RowNumberTranspose				-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+SELECT X.RowNumberTranspose																	-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 , CASE X.RowNumberTranspose
 		WHEN 1 THEN X.BusinessEntityID
 		WHEN 2 THEN X.DepartmentID
 		WHEN 3 THEN X.NationalIDNumber
 		END AS NewPivotedOneColumn
 FROM (
-		SELECT RemovingDuplicates.BusinessEntityID			-- RepeatedRowsLevel3
+		SELECT RemovingDuplicates.BusinessEntityID											-- RepeatedRowsLevel3
 		, RemovingDuplicates.DepartmentID
 		, RemovingDuplicates.NationalIDNumber
 		, ROW_NUMBER() OVER (PARTITION BY RemovingDuplicates.BusinessEntityID ORDER BY RemovingDuplicates.BusinessEntityID) AS RowNumberTranspose
 		FROM (
-			SELECT OriginalTables.BusinessEntityID			-- RemovingDuplicatesLevel2
+			SELECT OriginalTables.BusinessEntityID											-- RemovingDuplicatesLevel2
 			, OriginalTables.DepartmentID	
 			, OriginalTables.NationalIDNumber
 			FROM (
-				SELECT							-- OriginalTablesLevel1
+				SELECT																		-- OriginalTablesLevel1
 				ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 				, Employee.BusinessEntityID	
 				, EmployeeDepartmentHistory.DepartmentID
@@ -45,42 +42,41 @@ FROM (
 					ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 				LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 					ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-				WHERE Employee.BusinessEntityID <> 1			-- OriginalTablesLevel1
+				WHERE Employee.BusinessEntityID <> 1										-- OriginalTablesLevel1
 			) AS OriginalTables
-			WHERE OriginalTables.RowNumberRemovingDuplicates = 1		-- RemovingDuplicatesLevel2
+			WHERE OriginalTables.RowNumberRemovingDuplicates = 1							-- RemovingDuplicatesLevel2
 			) AS RemovingDuplicates,
 			(
-			SELECT SalesOrderDetailID AS Position				-- IterationLevel2
+			SELECT SalesOrderDetailID AS Position											-- IterationLevel2
 			FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
-			WHERE SalesOrderDetailID < 4					-- IterationLevel2
-			) AS Iteration							-- RepeatedRowsLevel3
-) AS X									-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+			WHERE SalesOrderDetailID < 4													-- IterationLevel2
+			) AS Iteration																	-- RepeatedRowsLevel3
+) AS X																						-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 
 
 	-- OUTPUT
-RowNumberTranspose	NewPivotedOneColumn
-1			2
-2			1
-3			245797967
-1			3
-2			1
-3			509647174
-1			4
-2			2
-3			112457891
+RowNumberTranspose		NewPivotedOneColumn
+1						2
+2						1
+3						245797967
+1						3
+2						1
+3						509647174
+1						4
+2						2
+3						112457891
 ...........................................TRUNCATED RESULTS ......
-1			288
-2			3
-3			954276278
-1			289
-2			3
-3			668991357
-1			290
-2			3
-3			134219713
+1						288
+2						3
+3						954276278
+1						289
+2						3
+3						668991357
+1						290
+2						3
+3						134219713
 (end of results)
 (867 rows affected)
-
 
 
 -- https://blog.sqlauthority.com/2015/07/29/sql-server-error-msg-245-conversion-failed-when-converting-the-varchar-value-inactive-to-data-type-int/
@@ -88,8 +84,6 @@ RowNumberTranspose	NewPivotedOneColumn
 
 
 Below are the queries used step-by-step for this solution.
-
-
 
 We use the Cartesian Product to return 1 row for each column we have on our query. As mentioned before, we have 3 columns of employee's data:
 1) BusinessEntityID
@@ -99,20 +93,21 @@ We use the Cartesian Product to return 1 row for each column we have on our quer
 Below we can see an example for the transposition of the employee's data (from multiple columns into a single column) for BusinessEntityID = 2.
 
 
-BusinessEntityID	DepartmentID	NationalIDNumber	Transposition		NewPivotedOneColumn
---------------------------------------------------------	-------------		-------------------
-2			1		245797967					2			<--- column BusinessEntityID
-								  ======>>>		1			<--- column DepartmentID
-											245797967		<--- column NationalIDNumber
+BusinessEntityID	DepartmentID	NationalIDNumber	======>>>		Transposition		NewPivotedOneColumn
+----------------------------------------------------					-------------		-------------------
+2					1				245797967							2					<--- column BusinessEntityID
+								  						======>>>		1					<--- column DepartmentID
+																		245797967			<--- column NationalIDNumber
+
 
 
 	Query #1.1: We remove the duplicated BusinessEntityIDs for the employees that changed departments, in order to retrieve the list of (unique BusinessEntityIDs) employees
 	----------- 
-	SELECT OriginalTables.BusinessEntityID			-- RemovingDuplicatesLevel2
+	SELECT OriginalTables.BusinessEntityID													-- RemovingDuplicatesLevel2
 	, OriginalTables.DepartmentID	
 	, OriginalTables.NationalIDNumber
 	FROM (
-		SELECT										-- OriginalTablesLevel1
+		SELECT																				-- OriginalTablesLevel1
 		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 		, Employee.BusinessEntityID	
 		, EmployeeDepartmentHistory.DepartmentID
@@ -122,24 +117,24 @@ BusinessEntityID	DepartmentID	NationalIDNumber	Transposition		NewPivotedOneColum
 			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-		WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+		WHERE Employee.BusinessEntityID <> 1												-- OriginalTablesLevel1
 	) AS OriginalTables
-	WHERE OriginalTables.RowNumberRemovingDuplicates = 1		-- RemovingDuplicatesLevel2
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1									-- RemovingDuplicatesLevel2
 
 
 	-- OUTPUT
-BusinessEntityID	DepartmentID	NationalIDNumber
-2			1		245797967
-3			1		509647174
-4			2		112457891
-5			1		695256908
-6			1		998320692
+BusinessEntityID		DepartmentID		NationalIDNumber
+2						1					245797967
+3						1					509647174
+4						2					112457891
+5						1					695256908
+6						1					998320692
 ..........................................................TRUNCATED RESULTS ......
-286			3		758596752
-287			3		982310417
-288			3		954276278
-289			3		668991357
-290			3		134219713
+286						3					758596752
+287						3					982310417
+288						3					954276278
+289						3					668991357
+290						3					134219713
 (end of results)
 (289 rows affected)
 
@@ -147,16 +142,16 @@ BusinessEntityID	DepartmentID	NationalIDNumber
 
 	Query #1.2: We use the Cartesian Product and (window) function ROW_NUMBER to create column "RowNumberTranspose" that will retrieve 3 duplicated rows for each employee's data
 	----------- 
-SELECT RemovingDuplicates.BusinessEntityID				-- RepeatedRowsLevel3
+SELECT RemovingDuplicates.BusinessEntityID													-- RepeatedRowsLevel3
 , RemovingDuplicates.DepartmentID
 , RemovingDuplicates.NationalIDNumber
 , ROW_NUMBER() OVER (PARTITION BY RemovingDuplicates.BusinessEntityID ORDER BY RemovingDuplicates.BusinessEntityID) AS RowNumberTranspose
 FROM (
-	SELECT OriginalTables.BusinessEntityID			-- RemovingDuplicatesLevel2
+	SELECT OriginalTables.BusinessEntityID													-- RemovingDuplicatesLevel2
 	, OriginalTables.DepartmentID	
 	, OriginalTables.NationalIDNumber
 	FROM (
-		SELECT										-- OriginalTablesLevel1
+		SELECT																				-- OriginalTablesLevel1
 		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 		, Employee.BusinessEntityID	
 		, EmployeeDepartmentHistory.DepartmentID
@@ -166,38 +161,38 @@ FROM (
 			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-		WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+		WHERE Employee.BusinessEntityID <> 1												-- OriginalTablesLevel1
 	) AS OriginalTables
-	WHERE OriginalTables.RowNumberRemovingDuplicates = 1		-- RemovingDuplicatesLevel2
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1									-- RemovingDuplicatesLevel2
 	) AS RemovingDuplicates,
 	(
-	SELECT SalesOrderDetailID AS Position						-- IterationLevel2
+	SELECT SalesOrderDetailID AS Position													-- IterationLevel2
 	FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
-	WHERE SalesOrderDetailID < 4								-- IterationLevel2
-	) AS Iteration												-- RepeatedRowsLevel3
+	WHERE SalesOrderDetailID < 4															-- IterationLevel2
+	) AS Iteration																			-- RepeatedRowsLevel3
 
 
 	-- OUTPUT
-BusinessEntityID	DepartmentID	NationalIDNumber	RowNumberTranspose
-2			1		245797967		1
-2			1		245797967		2
-2			1		245797967		3
-3			1		509647174		1
-3			1		509647174		2
-3			1		509647174		3
-4			2		112457891		1
-4			2		112457891		2
-4			2		112457891		3
+BusinessEntityID		DepartmentID		NationalIDNumber		RowNumberTranspose
+2						1					245797967				1
+2						1					245797967				2
+2						1					245797967				3
+3						1					509647174				1
+3						1					509647174				2
+3						1					509647174				3
+4						2					112457891				1
+4						2					112457891				2
+4						2					112457891				3
 ...............................................................................TRUNCATED RESULTS ......
-288			3		954276278		1
-288			3		954276278		2
-288			3		954276278		3
-289			3		668991357		1
-289			3		668991357		2
-289			3		668991357		3
-290			3		134219713		1
-290			3		134219713		2
-290			3		134219713		3
+288						3					954276278				1
+288						3					954276278				2
+288						3					954276278				3
+289						3					668991357				1
+289						3					668991357				2
+289						3					668991357				3
+290						3					134219713				1
+290						3					134219713				2
+290						3					134219713				3
 (end of results)
 (867 rows affected)
 
@@ -219,8 +214,8 @@ Solution #2: This is an alternative for Solution #1 using Common Table Expressio
 WITH 
 OriginalTables AS 
 (
-	SELECT								-- OriginalTablesLevel1
-	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+	SELECT																					-- OriginalTablesLevel1
+	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 	, Employee.BusinessEntityID	
 	, EmployeeDepartmentHistory.DepartmentID
 	, Employee.NationalIDNumber
@@ -229,62 +224,62 @@ OriginalTables AS
 		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-	WHERE Employee.BusinessEntityID <> 1				-- OriginalTablesLevel1
+	WHERE Employee.BusinessEntityID <> 1													-- OriginalTablesLevel1
 ),
 RemovingDuplicates AS 
 (
-	SELECT OriginalTables.BusinessEntityID				-- RemovingDuplicatesLevel2
+	SELECT OriginalTables.BusinessEntityID													-- RemovingDuplicatesLevel2
 	, OriginalTables.DepartmentID	
 	, OriginalTables.NationalIDNumber
 	FROM OriginalTables
-	WHERE OriginalTables.RowNumberRemovingDuplicates = 1		-- RemovingDuplicatesLevel2
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1									-- RemovingDuplicatesLevel2
 ),
 Iteration AS 
 (
-	SELECT SalesOrderDetailID AS Position				-- IterationLevel2
+	SELECT SalesOrderDetailID AS Position													-- IterationLevel2
 	FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
-	WHERE SalesOrderDetailID < 4					-- IterationLevel2
+	WHERE SalesOrderDetailID < 4															-- IterationLevel2
 ),
 
 RepeatedRows AS 
 (
-	SELECT RemovingDuplicates.BusinessEntityID			-- RepeatedRowsLevel3
+	SELECT RemovingDuplicates.BusinessEntityID												-- RepeatedRowsLevel3
 	, RemovingDuplicates.DepartmentID
 	, RemovingDuplicates.NationalIDNumber
 	, ROW_NUMBER() OVER (PARTITION BY RemovingDuplicates.BusinessEntityID ORDER BY RemovingDuplicates.BusinessEntityID) AS RowNumberTranspose
 	FROM RemovingDuplicates,
-	Iteration							-- RepeatedRowsLevel3
+	Iteration																				-- RepeatedRowsLevel3
 )
-SELECT RepeatedRows.RowNumberTranspose					-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+SELECT RepeatedRows.RowNumberTranspose														-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 , CASE RepeatedRows.RowNumberTranspose
 		WHEN 1 THEN RepeatedRows.BusinessEntityID
 		WHEN 2 THEN RepeatedRows.DepartmentID
 		WHEN 3 THEN RepeatedRows.NationalIDNumber
 		END AS NewPivotedOneColumn
-FROM RepeatedRows							-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+FROM RepeatedRows																			-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 
 
 	-- OUTPUT
-RowNumberTranspose	NewPivotedOneColumn
-1			2
-2			1
-3			245797967
-1			3
-2			1
-3			509647174
-1			4
-2			2
-3			112457891
+RowNumberTranspose		NewPivotedOneColumn
+1						2
+2						1
+3						245797967
+1						3
+2						1
+3						509647174
+1						4
+2						2
+3						112457891
 ...........................................TRUNCATED RESULTS ......
-1			288
-2			3
-3			954276278
-1			289
-2			3
-3			668991357
-1			290
-2			3
-3			134219713
+1						288
+2						3
+3						954276278
+1						289
+2						3
+3						668991357
+1						290
+2						3
+3						134219713
 (end of results)
 (867 rows affected)
 
@@ -296,12 +291,11 @@ We get the same results as in Query #1.
 
 
 As mentioned above, Solution #1 can be used to reverse pivoting on columns of NUMERIC data type but CANNOT be used for columns of other data types such as VARCHAR or DATE.
-
 To illustrate this we will proceed with 2 attempts, Query #3, Attempt #1 for VARCHAR data type using column "DepartmentName" and Query #3, Attempt #2 for DATE data type using column "HireDate". 
 
 	Query #3, Attempt #1: We reverse the pivoting for 4 columns including VARCHAR data type using column "DepartmentName"
 	---------------------
-SELECT X.RowNumberTranspose						-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+SELECT X.RowNumberTranspose																	-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 , CASE X.RowNumberTranspose
 		WHEN 1 THEN X.BusinessEntityID
 		WHEN 2 THEN X.DepartmentID
@@ -309,18 +303,18 @@ SELECT X.RowNumberTranspose						-- PivotingIntoOneColumnOnlyNumericColumnsLevel
 		WHEN 4 THEN X.NationalIDNumber
 		END AS NewPivotedOneColumn
 FROM (
-		SELECT RemovingDuplicates.BusinessEntityID							-- RepeatedRowsLevel3
+		SELECT RemovingDuplicates.BusinessEntityID											-- RepeatedRowsLevel3
 		, RemovingDuplicates.DepartmentID
 		, RemovingDuplicates.NationalIDNumber
 		, RemovingDuplicates.DepartmentName
 		, ROW_NUMBER() OVER (PARTITION BY RemovingDuplicates.BusinessEntityID ORDER BY RemovingDuplicates.BusinessEntityID) AS RowNumberTranspose
 		FROM (
-			SELECT OriginalTables.BusinessEntityID							-- RemovingDuplicatesLevel2
+			SELECT OriginalTables.BusinessEntityID											-- RemovingDuplicatesLevel2
 			, OriginalTables.DepartmentID	
 			, OriginalTables.DepartmentName
 			, OriginalTables.NationalIDNumber
 			FROM (
-				SELECT										-- OriginalTablesLevel1
+				SELECT																		-- OriginalTablesLevel1
 				ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 				, Employee.BusinessEntityID	
 				, EmployeeDepartmentHistory.DepartmentID
@@ -331,22 +325,22 @@ FROM (
 					ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 				LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 					ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-				WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+				WHERE Employee.BusinessEntityID <> 1										-- OriginalTablesLevel1
 			) AS OriginalTables
-			WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2
+			WHERE OriginalTables.RowNumberRemovingDuplicates = 1							-- RemovingDuplicatesLevel2
 			) AS RemovingDuplicates,
 			(
-			SELECT SalesOrderDetailID AS Position							-- IterationLevel2
+			SELECT SalesOrderDetailID AS Position											-- IterationLevel2
 			FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
-			WHERE SalesOrderDetailID < 5								-- IterationLevel2
-			) AS Iteration										-- RepeatedRowsLevel3
-) AS X									-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+			WHERE SalesOrderDetailID < 5													-- IterationLevel2
+			) AS Iteration																	-- RepeatedRowsLevel3
+) AS X																						-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 
 
 	-- OUTPUT
-RowNumberTranspose	NewPivotedOneColumn
-1			2
-2			1
+RowNumberTranspose		NewPivotedOneColumn
+1						2
+2						1
 
 Msg 245, Level 16, State 1, Line 3
 Conversion failed when converting the nvarchar value 'Engineering' to data type int.
@@ -365,7 +359,7 @@ All expressions (CASE, WHEN, THEN, ELSE) used as arguments for a CASE statement 
 
 	Query #3, Attempt #2: We reverse the pivoting for 4 columns including VARCHAR data type using column "HireDate"
 	---------------------
-SELECT X.RowNumberTranspose						-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+SELECT X.RowNumberTranspose																	-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 , CASE X.RowNumberTranspose
 		WHEN 1 THEN X.BusinessEntityID
 		WHEN 2 THEN X.DepartmentID
@@ -373,18 +367,18 @@ SELECT X.RowNumberTranspose						-- PivotingIntoOneColumnOnlyNumericColumnsLevel
 		WHEN 4 THEN X.HireDate
 		END AS NewPivotedOneColumn
 FROM (
-		SELECT RemovingDuplicates.BusinessEntityID							-- RepeatedRowsLevel3
+		SELECT RemovingDuplicates.BusinessEntityID											-- RepeatedRowsLevel3
 		, RemovingDuplicates.DepartmentID
 		, RemovingDuplicates.NationalIDNumber
 		, RemovingDuplicates.HireDate
 		, ROW_NUMBER() OVER (PARTITION BY RemovingDuplicates.BusinessEntityID ORDER BY RemovingDuplicates.BusinessEntityID) AS RowNumberTranspose
 		FROM (
-			SELECT OriginalTables.BusinessEntityID							-- RemovingDuplicatesLevel2
+			SELECT OriginalTables.BusinessEntityID											-- RemovingDuplicatesLevel2
 			, OriginalTables.DepartmentID	
 			, OriginalTables.NationalIDNumber
 			, OriginalTables.HireDate
 			FROM (
-				SELECT										-- OriginalTablesLevel1
+				SELECT																		-- OriginalTablesLevel1
 				ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 				, Employee.BusinessEntityID	
 				, EmployeeDepartmentHistory.DepartmentID
@@ -395,16 +389,16 @@ FROM (
 					ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 				LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 					ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-				WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+				WHERE Employee.BusinessEntityID <> 1										-- OriginalTablesLevel1
 			) AS OriginalTables
-			WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2
+			WHERE OriginalTables.RowNumberRemovingDuplicates = 1							-- RemovingDuplicatesLevel2
 			) AS RemovingDuplicates,
 			(
-			SELECT SalesOrderDetailID AS Position							-- IterationLevel2
+			SELECT SalesOrderDetailID AS Position											-- IterationLevel2
 			FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
-			WHERE SalesOrderDetailID < 5								-- IterationLevel2
-			) AS Iteration										-- RepeatedRowsLevel3
-) AS X									-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
+			WHERE SalesOrderDetailID < 5													-- IterationLevel2
+			) AS Iteration																	-- RepeatedRowsLevel3
+) AS X																						-- PivotingIntoOneColumnOnlyNumericColumnsLevel4
 
 
 	-- OUTPUT
