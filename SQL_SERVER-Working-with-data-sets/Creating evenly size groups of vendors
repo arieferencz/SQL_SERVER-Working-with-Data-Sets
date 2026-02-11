@@ -7,7 +7,6 @@ Tables used:
 1) [AdventureWorks2022].[Purchasing].[PurchaseOrderHeader]
 2) [AdventureWorks2022].[Purchasing].[Vendor]
 
-
 	Query #1: After calculating the historical purchasing amount for each vendor we divide them using  function NTILE
 	---------
 SELECT PurchaseOrderHeader.VendorID
@@ -22,38 +21,38 @@ GROUP BY PurchaseOrderHeader.VendorID, Vendor.[Name]
 
 
 	-- OUTPUT
-VendorID	VendorName			TotalPurchasesAmount		GroupsRowNumber		Groups_Plus
-1576	Superior Bicycles			5,034,266.70			0.142857		1
-1684	Professional Athletic Consultants	3,379,946.30			0.285714		1
-1696	Chicago City Saddles			3,347,165.20			0.428571		1
-1680	Jackson Authority			2,821,333.50			0.571428		1
-1578	Vision Cycles, Inc.			2,777,684.90			0.714285		1
-1632	Sport Fan Co.				2,675,889.20			0.857142		1
-1678	Proseware, Inc.				2,593,901.30			1			1	<--- Group 1 has 7 vendors
-1658	Crowley Sport				2,472,770.10			1.142857		2
-1506	Greenwood Athletic Company		2,472,770.10			1.285714		2
+VendorID		VendorName							TotalPurchasesAmount		GroupsRowNumber			Groups_Plus
+1576		Superior Bicycles						5,034,266.70				0.142857				1
+1684		Professional Athletic Consultants		3,379,946.30				0.285714				1
+1696		Chicago City Saddles					3,347,165.20				0.428571				1
+1680		Jackson Authority						2,821,333.50				0.571428				1
+1578		Vision Cycles, Inc.						2,777,684.90				0.714285				1
+1632		Sport Fan Co.							2,675,889.20				0.857142				1
+1678		Proseware, Inc.							2,593,901.30				1						1			<--- Group 1 has 7 vendors
+1658		Crowley Sport							2,472,770.10				1.142857				2
+1506		Greenwood Athletic Company				2,472,770.10				1.285714				2
 .................................................................................................................. TRUNCATED RESULTS .....
-1646	Electronic Bike Repair & Supplies	2,154,773.40			1.857142		2
-1538	Vista Road Bikes			2,090,857.50			2			2	<--- Group 2 has 7 vendors
-1652	Victory Bikes				2,052,173.60			2.142857		3
-1638	Inline Accessories			1,952,375.30			2.285714		3
+1646		Electronic Bike Repair & Supplies		2,154,773.40				1.857142				2
+1538		Vista Road Bikes						2,090,857.50				2						2			<--- Group 2 has 7 vendors
+1652		Victory Bikes							2,052,173.60				2.142857				3
+1638		Inline Accessories						1,952,375.30				2.285714				3
 .................................................................................................................. TRUNCATED RESULTS .....
-1624	Competition Bike Training Systems	1,594,705.60			2.857142		3
-1526	International Bicycles			1,589,173			3			3	<--- Group 3 has 7 vendors
-1530	Comfort Road Bicycles			1,582,013.10			3.142857		4
-1498	Trikes, Inc.				1,461,653.90			3.285714		4
+1624		Competition Bike Training Systems		1,594,705.60				2.857142				3
+1526		International Bicycles					1,589,173					3						3			<--- Group 3 has 7 vendors
+1530		Comfort Road Bicycles					1,582,013.10				3.142857				4
+1498		Trikes, Inc.							1,461,653.90				3.285714				4
 .................................................................................................................. TRUNCATED RESULTS .....
-1690	Bloomington Multisport			8,244				10.857142		11
-1510	International				8,061.10			11			11	<--- Group 11 has 7 vendors
-1648	Wide World Importers			8,025.60			11.142857		12
-1612	Midwest Sport, Inc.			7,328.70			11.285714		12
-1688	Wood Fitness				6,947.60			11.428571		12
-1618	Metro Sport Equipment			6,324.50			11.571428		12
-1566	Burnett Road Warriors			5,780				11.714285		12
-1592	Lindell					5,412.60			11.857142		12
-1520	G & K Bicycle Corp.			5,036.10			12			12	<--- Group 12 has 7 vendors
-1548	Consumer Cycles				3,378.20			12.142857		13
-1662	Northern Bike Travel			2,048.40			12.285714		13	<--- Group 13 has 2 vendors
+1690		Bloomington Multisport					8,244						10.857142				11
+1510		International							8,061.10					11						11			<--- Group 11 has 7 vendors
+1648		Wide World Importers					8,025.60					11.142857				12
+1612		Midwest Sport, Inc.						7,328.70					11.285714				12
+1688		Wood Fitness							6,947.60					11.428571				12
+1618		Metro Sport Equipment					6,324.50					11.571428				12
+1566		Burnett Road Warriors					5,780						11.714285				12
+1592		Lindell									5,412.60					11.857142				12
+1520		G & K Bicycle Corp.						5,036.10					12						12			<--- Group 12 has 7 vendors
+1548		Consumer Cycles							3,378.20					12.142857				13
+1662		Northern Bike Travel					2,048.40					12.285714				13			<--- Group 13 has 2 vendors
 (end of results)
 (86 rows affected)
 
