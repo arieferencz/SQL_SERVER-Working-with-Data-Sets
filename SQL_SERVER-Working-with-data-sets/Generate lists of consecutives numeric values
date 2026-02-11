@@ -9,18 +9,18 @@ Tables used:
 
 	Query #1: We create a list of consecutive numeric values starting from zero using the UNION operator
 	---------
-SELECT 0 AS Position							-- FirstRowWithZeroLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- FirstRowWithZeroLevel1
+SELECT 0 AS Position											-- FirstRowWithZeroLevel1
+FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- FirstRowWithZeroLevel1
 UNION 
-SELECT BusinessEntityID AS Position					-- RowTwoOnwardsLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- RowTwoOnwardsLevel1
+SELECT BusinessEntityID AS Position								-- RowTwoOnwardsLevel1
+FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- RowTwoOnwardsLevel1
 ORDER BY Position;
 
 
-SELECT 0 AS Position							-- FirstRowWithZeroLevel1
+SELECT 0 AS Position											-- FirstRowWithZeroLevel1
 FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- FirstRowWithZeroLevel1
 UNION
-SELECT SalesOrderDetailID AS Position                       		-- RowTwoOnwardsLevel1
+SELECT SalesOrderDetailID AS Position                       	-- RowTwoOnwardsLevel1
 FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- RowTwoOnwardsLevel1
 ORDER BY Position;
 
@@ -32,7 +32,7 @@ Position
 2
 3
 4
-...........TRUNCATED RESULTS ......
+.............. TRUNCATED RESULTS .....
 20774
 20775
 20776
@@ -48,7 +48,7 @@ Position
 2
 3
 4
-...........TRUNCATED RESULTS ......
+.............. TRUNCATED RESULTS .....
 121314
 121315
 121316
@@ -67,18 +67,18 @@ c) UNION operator removes duplicated records. These 2 examples have no duplicate
 
 	Query #1.1: We create a list of consecutive numeric values starting from one using the UNION operator
 	-----------
-SELECT 1 AS Position							-- FirstRowWithOneLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- FirstRowWithOneLevel1
+SELECT 1 AS Position											-- FirstRowWithOneLevel1
+FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- FirstRowWithOneLevel1
 UNION 
-SELECT BusinessEntityID AS Position					-- RowTwoOnwardsLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- RowTwoOnwardsLevel1
+SELECT BusinessEntityID AS Position								-- RowTwoOnwardsLevel1
+FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- RowTwoOnwardsLevel1
 ORDER BY Position;
 
 
-SELECT 1 AS Position							-- FirstRowWithOneLevel1
+SELECT 1 AS Position											-- FirstRowWithOneLevel1
 FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- FirstRowWithOneLevel1
 UNION
-SELECT SalesOrderDetailID AS Position					-- RowTwoOnwardsLevel1
+SELECT SalesOrderDetailID AS Position							-- RowTwoOnwardsLevel1
 FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- RowTwoOnwardsLevel1
 ORDER BY Position;
 
@@ -89,7 +89,7 @@ Position
 2
 3
 4
-...........TRUNCATED RESULTS ......
+.............. TRUNCATED RESULTS .....
 20774
 20775
 20776
@@ -104,7 +104,7 @@ Position
 2
 3
 4
-...........TRUNCATED RESULTS ......
+.............. TRUNCATED RESULTS .....
 121314
 121315
 121316
@@ -126,30 +126,30 @@ SELECT InitialList.Position
 , InitialList.Position * Iteration.Position AS CartesianProductDim1X20777
 FROM 
 	(
-	SELECT BusinessEntityID AS Position					-- OneRowWithNumberOneLevel1
+	SELECT BusinessEntityID AS Position							-- OneRowWithNumberOneLevel1
 	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- OneRowWithNumberOneLevel1
 	WHERE BusinessEntityID < 2
 	) AS InitialList,
 	(
-	SELECT BusinessEntityID AS Position					-- 20777RowsStartingAt1Level1
+	SELECT BusinessEntityID AS Position							-- 20777RowsStartingAt1Level1
 	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- 20777RowsStartingAt1Level1
 	) AS Iteration
 ORDER BY CartesianProductDim1X20777
 
 
 	-- OUTPUT
-Position	CartesianProductDim1X20777
-1		1
-1		2
-1		3
-1		4
-1		5
-...........TRUNCATED RESULTS ......
-1		20773
-1		20774
-1		20775
-1		20776
-1		20777
+Position		CartesianProductDim1X20777
+1				1
+1				2
+1				3
+1				4
+1				5
+......................................... TRUNCATED RESULTS ......
+1				20773
+1				20774
+1				20775
+1				20776
+1				20777
 (end of results)
 (20777 rows affected)
 
@@ -166,31 +166,31 @@ SELECT ROW_NUMBER() OVER (ORDER BY Iteration.Position) AS RowNumber
 , InitialList.Position * Iteration.Position AS CartesianProductDim2X20777
 FROM 
 	(
-	SELECT BusinessEntityID AS Position				-- TwoRowsWithNumbersOneAndTwoLevel1
-	FROM [AdventureWorks2022].[Person].[BusinessEntity]		-- TwoRowsWithNumbersOneAndTwoLevel1
+	SELECT BusinessEntityID AS Position							-- TwoRowsWithNumbersOneAndTwoLevel1
+	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- TwoRowsWithNumbersOneAndTwoLevel1
 	WHERE BusinessEntityID < 3
 	) AS InitialList,
 	(
-	SELECT BusinessEntityID AS Position				-- 20777RowsStartingAt1Level1
-	FROM [AdventureWorks2022].[Person].[BusinessEntity]		-- 20777RowsStartingAt1Level1
+	SELECT BusinessEntityID AS Position							-- 20777RowsStartingAt1Level1
+	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- 20777RowsStartingAt1Level1
 	) AS Iteration
 ORDER BY Iteration.Position ASC
 
 
 	-- OUTPUT
-RowNumber	CartesianProductDim2X20777
-1		1
-2		2
-3		2
-4		4
-5		3
-...........TRUNCATED RESULTS ......
-41549		20775
-41550		41550
-41551		20776
-41552		41552
-41553		20777
-41554		41554
+RowNumber		CartesianProductDim2X20777
+1				1
+2				2
+3				2
+4				4
+5				3
+......................................... TRUNCATED RESULTS ......
+41549			20775
+41550			41550
+41551			20776
+41552			41552
+41553			20777
+41554			41554
 (end of results)
 (41554 rows affected)
 
@@ -247,7 +247,7 @@ RowNumber
 3
 4
 5
-...........TRUNCATED RESULTS ......
+.............. TRUNCATED RESULTS .....
 19995
 19996
 19997
@@ -264,7 +264,7 @@ RowNumber
 3
 4
 5
-...........TRUNCATED RESULTS ......
+.............. TRUNCATED RESULTS .....
 99995
 99996
 99997
