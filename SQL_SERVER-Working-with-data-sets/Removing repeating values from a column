@@ -11,7 +11,7 @@ Tables used:
 
 	Query #1: We create a new column for DepartmentName that shows each department name only once
 	---------
-SELECT UniqueDepartmentName.NewDepartmentName								-- UniqueDepartmentNameLevel4
+SELECT UniqueDepartmentName.NewDepartmentName													-- UniqueDepartmentNameLevel4
 ,  UniqueDepartmentName.FirstName
 ,  UniqueDepartmentName.MiddleName
 ,  UniqueDepartmentName.LastName
@@ -27,14 +27,14 @@ FROM (
 	, RemovingDepartmentNames.MiddleName
 	, RemovingDepartmentNames.LastName
 		FROM (
-		SELECT OriginalTables.BusinessEntityID							-- RemovingDuplicatesLevel2
+		SELECT OriginalTables.BusinessEntityID													-- RemovingDuplicatesLevel2
 		, OriginalTables.DepartmentID	
 		, OriginalTables.DepartmentName
 		, OriginalTables.FirstName
 		, OriginalTables.MiddleName
 		, OriginalTables.LastName
 		FROM (
-			SELECT										-- OriginalTablesLevel1
+			SELECT																				-- OriginalTablesLevel1
 			ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 			, Employee.BusinessEntityID	
 			, EmployeeDepartmentHistory.DepartmentID
@@ -49,38 +49,38 @@ FROM (
 				ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
 			LEFT JOIN [AdventureWorks2022].[Person].[Person] AS Person
 				ON Employee.BusinessEntityID = Person.BusinessEntityID
-			WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+			WHERE Employee.BusinessEntityID <> 1												-- OriginalTablesLevel1
 		) AS OriginalTables
-		WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2
-	) AS RemovingDepartmentNames									-- RemovingDepartmentNamesLevel3
-) AS UniqueDepartmentName										-- UniqueDepartmentNameLevel4
+		WHERE OriginalTables.RowNumberRemovingDuplicates = 1									-- RemovingDuplicatesLevel2
+	) AS RemovingDepartmentNames																-- RemovingDepartmentNamesLevel3
+) AS UniqueDepartmentName																		-- UniqueDepartmentNameLevel4
 ORDER BY UniqueDepartmentName.DepartmentID, UniqueDepartmentName.FirstName
 
 
 	-- OUTPUT
-NewDepartmentName	FirstName	MiddleName	LastName
-Engineering		Gail		A		Erickson
-			Jossef		H		Goldberg
-			Michael		I		Sullivan
-.................................................................. TRUNCATED RESULTS ...
-			Terri		Lee		Duffy	
-			Janice		M		Galvin		<--- Last employee from DepartmentName = Engineering
-Tool Design		Ovidiu		V		Cracium
-			Rob				Walters
-			Thierry		B		D'Hers
-			Amy		E		Alberts		<--- Last employee from DepartmentName = Tool Design
-Sales			Brian		S		Welcker
-			David		R		Campbell
-			Garrett		R		Vargas
-.................................................................. TRUNCATED RESULTS ...
-			Syed		E		Abbas
-			Tete		A		Mensa-Annan
-			Tsvi		Michael		Reiter		<--- Last employee from DepartmentName = Sales
-.................................................................. TRUNCATED RESULTS ...
-Shipping and Receiving	Pilar		G		Ackerman
-			Susan		W		Eaton
-			Vamsi		N		Kuppa		<--- Last employee from DepartmentName = Shipping and Receiving
-Executive		Laura		F		Norman		<--- DepartmentName = Executive has only 1 employee
+NewDepartmentName			FirstName		MiddleName			LastName
+Engineering					Gail			A					Erickson
+							Jossef			H					Goldberg
+							Michael			I					Sullivan
+............................................................................... TRUNCATED RESULTS .....
+							Terri			Lee					Duffy	
+							Janice			M					Galvin				<--- Last employee from DepartmentName = 'Engineering'
+Tool Design					Ovidiu			V					Cracium
+							Rob									Walters
+							Thierry			B					D'Hers
+							Amy				E					Alberts				<--- Last employee from DepartmentName = 'Tool Design'
+Sales						Brian			S					Welcker
+							David			R					Campbell
+							Garrett			R					Vargas
+............................................................................... TRUNCATED RESULTS .....
+							Syed			E					Abbas
+							Tete			A					Mensa-Annan
+							Tsvi			Michael				Reiter				<--- Last employee from DepartmentName = 'Sales'
+............................................................................... TRUNCATED RESULTS .....
+Shipping and Receiving		Pilar			G					Ackerman
+							Susan			W					Eaton
+							Vamsi			N					Kuppa				<--- Last employee from DepartmentName = 'Shipping and Receiving'
+Executive					Laura			F					Norman				<--- Last employee from DepartmentName = 'Executive' 					<--- This department has only 1 employee
 (end of results)
 (289 rows affected)
 
@@ -91,14 +91,14 @@ Below are the queries used step-by-step for this solution.
 
 	Query #1.1: We remove the duplicated BusinessEntityIDs for the employees that changed departments, in order to retrieve the list of (unique BusinessEntityIDs) employees
 	-----------
-SELECT OriginalTables.BusinessEntityID					-- RemovingDuplicatesLevel2
+SELECT OriginalTables.BusinessEntityID															-- RemovingDuplicatesLevel2
 , OriginalTables.DepartmentID	
 , OriginalTables.DepartmentName
 , OriginalTables.FirstName
 , OriginalTables.MiddleName
 , OriginalTables.LastName
 FROM (
-SELECT									-- OriginalTablesLevel1
+SELECT																							-- OriginalTablesLevel1
 ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 , Employee.BusinessEntityID	
 , EmployeeDepartmentHistory.DepartmentID
@@ -113,33 +113,33 @@ LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
 LEFT JOIN [AdventureWorks2022].[Person].[Person] AS Person
 	ON Employee.BusinessEntityID = Person.BusinessEntityID
-WHERE Employee.BusinessEntityID <> 1					-- OriginalTablesLevel1
+WHERE Employee.BusinessEntityID <> 1															-- OriginalTablesLevel1
 ) AS OriginalTables
-WHERE OriginalTables.RowNumberRemovingDuplicates = 1			-- RemovingDuplicatesLevel2
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1											-- RemovingDuplicatesLevel2
 
 
 	-- OUTPUT
-BusinessEntityID	DepartmentID	DepartmentName			FirstName	MiddleName	LastName
-2			1		Engineering			Terri		Lee		Duffy
-3			1		Engineering			Roberto				Tamburello
-4			2		Tool Design			Rob				Walters
-5			1		Engineering			Gail		A		Erickson
-6			1		Engineering			Jossef		H		Goldberg
-7			6		Research and Development	Dylan		A		Miller
-8			6		Research and Development	Diane		L		Margheim
-................................................................................................................. TRUNCATED RESULTS ......
-140			7		Production			Prasanna	E		Samarawickrama
-141			7		Production			Min		G		Su
-142			7		Production			Olinda		C		Turner
-................................................................................................................. TRUNCATED RESULTS ......
-226			8		Production Control		Brian		P		LaMee
-227			14		Facilities and Maintenance	Gary		E.		Altman
-228			14		Facilities and Maintenance	Christian	E		Kleinerman
-................................................................................................................. TRUNCATED RESULTS ......
-287			3		Sales				Amy		E		Alberts
-288			3		Sales				Rachel		B		Valdez
-289			3		Sales				Jae		B		Pak
-290			3		Sales				Ranjit		R		Varkey Chudukatil
+BusinessEntityID		DepartmentID		DepartmentName					FirstName		MiddleName		LastName
+2						1					Engineering						Terri			Lee				Duffy
+3						1					Engineering						Roberto							Tamburello
+4						2					Tool Design						Rob								Walters
+5						1					Engineering						Gail			A				Erickson
+6						1					Engineering						Jossef			H				Goldberg
+7						6					Research and Development		Dylan			A				Miller
+8						6					Research and Development		Diane			L				Margheim
+............................................................................................................................ TRUNCATED RESULTS ......
+140						7					Production						Prasanna		E				Samarawickrama
+141						7					Production						Min				G				Su
+142						7					Production						Olinda			C				Turner
+............................................................................................................................ TRUNCATED RESULTS ......
+226						8					Production Control				Brian			P				LaMee
+227						14					Facilities and Maintenance		Gary			E.				Altman
+228						14					Facilities and Maintenance		Christian		E				Kleinerman
+............................................................................................................................ TRUNCATED RESULTS ......
+287						3					Sales							Amy				E				Alberts
+288						3					Sales							Rachel			B				Valdez
+289						3					Sales							Jae				B				Pak
+290						3					Sales							Ranjit			R				Varkey Chudukatil
 (end of results)
 (289 rows affected)
 
@@ -147,7 +147,7 @@ BusinessEntityID	DepartmentID	DepartmentName			FirstName	MiddleName	LastName
 
 	Query #1.2: We create a new column "NewDepartmentName" that shows the department name only once
 	-----------
-SELECT										-- RemovingDepartmentNamesLevel3
+SELECT																							-- RemovingDepartmentNamesLevel3
 LAG(RemovingDepartmentNames.DepartmentName) OVER (ORDER BY RemovingDepartmentNames.DepartmentName) AS LAGDepartmentNumber
 , RemovingDepartmentNames.DepartmentName
 , CASE	WHEN LAG(RemovingDepartmentNames.DepartmentName) OVER (ORDER BY RemovingDepartmentNames.DepartmentName) = RemovingDepartmentNames.DepartmentName THEN ''
@@ -157,14 +157,14 @@ LAG(RemovingDepartmentNames.DepartmentName) OVER (ORDER BY RemovingDepartmentNam
 , RemovingDepartmentNames.MiddleName
 , RemovingDepartmentNames.LastName
 FROM (
-	SELECT OriginalTables.BusinessEntityID					-- RemovingDuplicatesLevel2
+	SELECT OriginalTables.BusinessEntityID														-- RemovingDuplicatesLevel2
 	, OriginalTables.DepartmentID	
 	, OriginalTables.DepartmentName
 	, OriginalTables.FirstName
 	, OriginalTables.MiddleName
 	, OriginalTables.LastName
 	FROM (
-		SELECT								-- OriginalTablesLevel1
+		SELECT																					-- OriginalTablesLevel1
 		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 		, Employee.BusinessEntityID	
 		, EmployeeDepartmentHistory.DepartmentID
@@ -179,37 +179,37 @@ FROM (
 			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
 		LEFT JOIN [AdventureWorks2022].[Person].[Person] AS Person
 			ON Employee.BusinessEntityID = Person.BusinessEntityID
-		WHERE Employee.BusinessEntityID <> 1				-- OriginalTablesLevel1
+		WHERE Employee.BusinessEntityID <> 1													-- OriginalTablesLevel1
 	) AS OriginalTables
-	WHERE OriginalTables.RowNumberRemovingDuplicates = 1			-- RemovingDuplicatesLevel2
-) AS RemovingDepartmentNames							-- RemovingDepartmentNamesLevel3
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1										-- RemovingDuplicatesLevel2
+) AS RemovingDepartmentNames																	-- RemovingDepartmentNamesLevel3
 
 
 	-- OUTPUT
-LAGDepartmentNumber		DepartmentName			NewDepartmentName		FirstName	MiddleName	LastName
-NULL				Document Control		Document Control		Zainal		T		Arifin
-Document Control		Document Control						Tengiz		N		Kharatishvili
-Document Control		Document Control						Sean		N		Chai
-Document Control		Document Control						Karen		R		Berge
-Document Control		Document Control						Chris		K		Norred			<--- Last employee from DepartmentName = Document Control
-Document Control		Engineering			Engineering			Gail		A		Erickson	
-................................................................................................................. TRUNCATED RESULTS .............
-Engineering			Engineering							Roberto				Tamburello		<--- Last employee from DepartmentName = Engineering
-Engineering			Executive			Executive			Laura		F		Norman			<--- DepartmentName = Executive has only 1 employee
-Executive			Facilities and Maintenance	Facilities and Maintenance	Gary		E.		Altman
-Facilities and Maintenance	Facilities and Maintenance					Christian	E		Kleinerman
-................................................................................................................. TRUNCATED RESULTS .............
-Sales				Sales								Ranjit		R		Varkey Chudukatil	<--- Last employee from DepartmentName = Sales
-Sales				Shipping and Receiving		Shipping and Receiving		Pilar		G		Ackerman
-Shipping and Receiving		Shipping and Receiving						Susan		W		Eaton
-Shipping and Receiving		Shipping and Receiving						Vamsi		N		Kuppa
-Shipping and Receiving		Shipping and Receiving						Kim		T		Ralls
-Shipping and Receiving		Shipping and Receiving						Matthias	T		Berndt
-Shipping and Receiving		Shipping and Receiving						Jimmy		T		Bischoff		<--- Last employee from DepartmentName = Shipping and Receiving	
-Shipping and Receiving		Tool Design			Tool Design			Ovidiu		V		Cracium
-Tool Design			Tool Design							Thierry		B		D'Hers
-Tool Design			Tool Design							Janice		M		Galvin
-Tool Design			Tool Design							Rob				Walters			<--- Last employee from DepartmentName = Tool Design
+LAGDepartmentNumber				DepartmentName						NewDepartmentName				FirstName			MiddleName		LastName
+NULL							Document Control					Document Control				Zainal				T				Arifin
+Document Control				Document Control													Tengiz				N				Kharatishvili
+Document Control				Document Control													Sean				N				Chai
+Document Control				Document Control													Karen				R				Berge
+Document Control				Document Control													Chris				K				Norred					<--- Last employee from DepartmentName = 'Document Control'
+Document Control				Engineering							Engineering						Gail				A				Erickson	
+........................................................................................................................................................... TRUNCATED RESULTS .....
+Engineering						Engineering															Roberto								Tamburello				<--- Last employee from DepartmentName = 'Engineering'
+Engineering						Executive							Executive						Laura				F				Norman					<--- Last employee from DepartmentName = 'Executive'	<--- This department has only 1 employee
+Executive						Facilities and Maintenance			Facilities and Maintenance		Gary				E.				Altman
+Facilities and Maintenance		Facilities and Maintenance											Christian			E				Kleinerman
+........................................................................................................................................................... TRUNCATED RESULTS .....
+Sales							Sales																Ranjit				R				Varkey Chudukatil		<--- Last employee from DepartmentName = 'Sales'
+Sales							Shipping and Receiving				Shipping and Receiving			Pilar				G				Ackerman
+Shipping and Receiving			Shipping and Receiving												Susan				W				Eaton
+Shipping and Receiving			Shipping and Receiving												Vamsi				N				Kuppa
+Shipping and Receiving			Shipping and Receiving												Kim					T				Ralls
+Shipping and Receiving			Shipping and Receiving												Matthias			T				Berndt
+Shipping and Receiving			Shipping and Receiving												Jimmy				T				Bischoff			<--- Last employee from DepartmentName = 'Shipping and Receiving'
+Shipping and Receiving			Tool Design							Tool Design						Ovidiu				V				Cracium
+Tool Design						Tool Design															Thierry				B				D'Hers
+Tool Design						Tool Design															Janice				M				Galvin
+Tool Design						Tool Design															Rob									Walters				<--- Last employee from DepartmentName = 'Tool Design'
 (end of results)
 (289 rows affected)
 
