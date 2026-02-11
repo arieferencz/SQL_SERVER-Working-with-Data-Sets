@@ -11,9 +11,9 @@ Tables used:
 5) [AdventureWorks2022].[Person].[StateProvince]
 6) [AdventureWorks2022].[Sales].[SalesTerritory]
 
-
-Query #1: We retrieve the records for Person.BusinessEntityID having multiple addresses. 
-	+ Subquery, HAVING COUNT(*) > 1
+	Query #1: We retrieve the records for Person.BusinessEntityID having multiple addresses. 
+		+ Subquery, HAVING COUNT(*) > 1
+	---------
 
 SELECT Person.BusinessEntityID
 , Person.FirstName
@@ -59,18 +59,18 @@ ORDER BY Person.BusinessEntityID
 
 
 	-- OUTPUT
-BusinessEntityID	FirstName	MiddleName	LastName	AddressID	AddressLine1		AddressLine2	PostalCode	PhoneNumber	City		StateProvinceID		StateProvinceCode	StateProvinceName	TerritoryName	CountryRegionCode
-2996            	Amanda		S	        Cook	    	238	        4098 Woodcrest Dr.	NULL	        98201		252-555-0177	Everett  	79	            	WA 	              	Washington	      	Northwest	US
-2996	            	Amanda		S		Cook	    	12018	      	9187 Vista Del Sol	NULL	        98201	      	252-555-0177	Everett	    	79	            	WA 	              	Washington	      	Northwest	US
-4073		        Miguel		NULL	      	Miller	  	17	        6696 Anchor Drive	NULL	        98011	      	397-555-0155	Bothell	    	79	            	WA 	              	Washington	      	Northwest	US
-4073		        Miguel		NULL	      	Miller	  	13107	      	4293 Concord Ct.	NULL	        98201	      	397-555-0155	Everett	    	79	            	WA 	              	Washington	      	Northwest	US
-4388		        Osarumwense	Uwaifiokun	Agbonile	18	        1873 Lion Circle	NULL	        98011	      	592-555-0152	Bothell	    	79	            	WA 	              	Washington	      	Northwest	US
-4388		        Osarumwense	Uwaifiokun	Agbonile	13423	      	3858 Vista Diablo	Unit C	      	98027	      	592-555-0152	Issaquah	79	            	WA 	              	Washington	      	Northwest	US
-5124		        Karl		V	        Xie	      	15	        4912 La Vuelta	    	NULL	        98011	      	508-555-0163	Bothell	    	79	            	WA 	              	Washington	      	Northwest	US
-5124		        Karl		V	        Xie	      	14159	      	4039 Elkwood Dr.	NULL	        98107	      	508-555-0163	Ballard	    	79	            	WA 	              	Washington	      	Northwest	US
-5479		        Luis		NULL	      	Shan	    	11384	      	500 35th Ave NE	    	NULL	        90012	      	716-555-0173	Los Angeles	9	              	CA 	              	California	      	Southwest	US
-5479	            Luis		NULL	      	Shan	    	14514	      	3993 Jabber Place	NULL	        90012	      	716-555-0173	Los Angeles	9	              	CA 	              	California	      	Southwest	US
-	.......... TRUNCATED RESULTS ..........
+BusinessEntityID	FirstName		MiddleName		LastName	AddressID	AddressLine1			AddressLine2	PostalCode	PhoneNumber		City			StateProvinceID		StateProvinceCode	StateProvinceName	TerritoryName	CountryRegionCode
+2996            	Amanda			S	        	Cook	    238	        4098 Woodcrest Dr.		NULL	        98201		252-555-0177	Everett  		79	            	WA 	              	Washington	      	Northwest		US
+2996	            Amanda			S				Cook	    12018		9187 Vista Del Sol		NULL	        98201	    252-555-0177	Everett	    	79	            	WA 	              	Washington	      	Northwest		US
+4073		        Miguel			NULL	      	Miller	  	17	        6696 Anchor Drive		NULL	        98011	    397-555-0155	Bothell	    	79	            	WA 	              	Washington	      	Northwest		US
+4073		        Miguel			NULL	      	Miller	  	13107		4293 Concord Ct.		NULL	        98201	    397-555-0155	Everett	    	79	            	WA 	              	Washington	      	Northwest		US
+4388		        Osarumwense		Uwaifiokun		Agbonile	18	        1873 Lion Circle		NULL	        98011	    592-555-0152	Bothell	    	79	            	WA 	              	Washington	      	Northwest		US
+4388		        Osarumwense		Uwaifiokun		Agbonile	13423		3858 Vista Diablo		Unit C	      	98027	    592-555-0152	Issaquah		79	            	WA 	              	Washington	      	Northwest		US
+5124		        Karl			V				Xie	      	15	        4912 La Vuelta	    	NULL	        98011	    508-555-0163	Bothell	    	79	            	WA 	              	Washington	      	Northwest		US
+5124		        Karl			V	        	Xie	      	14159		4039 Elkwood Dr.		NULL	        98107	    508-555-0163	Ballard	    	79	            	WA 	              	Washington	      	Northwest		US
+5479		        Luis			NULL	      	Shan	    11384		500 35th Ave NE	    	NULL	        90012	    716-555-0173	Los Angeles		9	              	CA 	              	California	      	Southwest		US
+5479	            Luis			NULL	      	Shan	    14514		3993 Jabber Place		NULL	        90012	    716-555-0173	Los Angeles		9	              	CA 	              	California	      	Southwest		US
+...................................................................................................................... TRUNCATED RESULTS ......................................................................................................................
 (48 rows affected)
 (end of results)
 
