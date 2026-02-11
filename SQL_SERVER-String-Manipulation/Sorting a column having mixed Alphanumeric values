@@ -7,11 +7,11 @@ Tables used:
 1) [AdventureWorks2022].[Person].[Person]
 2) [AdventureWorks2022].[Person].[PersonPhone]
 
-
 	Query #1: Table with column AlphaNumericText and columns for sorting by numeric or character
     		+ Functions: REPLACE, PATINDEX, SUBSTRING, CONCATENATION, COALESCE, LEN
     		+ Subquery: CASE statement, INNER JOIN
 	    	+ NULL values
+	---------
 
 SELECT X.FirstName
 , X.MiddleName
@@ -40,15 +40,15 @@ FROM (
     ) AS X
 
 	-- OUTPUT
-FirstName   MiddleName	LastName	FullName		PhoneNumber	AlphaNumericText	                NumStartPosition	SortFirst3Numbers	SortSecond3Numbers	SortLast4Numbers	SortCharPortion
-Ken	    J	        Sánchez	      	Ken J Sánchez		697-555-0142	Ken J Sánchez 697-555-0142	      	15	               	697	              	555	                142	                Ken J Sánchez
-Terri	    Lee	        Duffy	        Terri Lee Duffy		819-555-0175	Terri Lee Duffy 819-555-0175	    	17	               	819	              	555	                175	                Terri Lee Duffy
-Roberto	    NULL	Tamburello	Roberto Tamburello	212-555-0187	Roberto Tamburello 212-555-0187		20	               	212	              	555	                187	                Roberto Tamburello
-Rob	    NULL	Walters	      	Rob Walters	        612-555-0100	Rob Walters 612-555-0100	        13	               	612	              	555	                100	                Rob Walters
-Gail	    A	        Erickson	Gail A Erickson		849-555-0139	Gail A Erickson 849-555-0139	    	17	               	849	              	555	                139	                Gail A Erickson
-Jossef	    H	        Goldberg	Jossef H Goldberg	122-555-0189	Jossef H Goldberg 122-555-0189	  	19	               	122	              	555	                189	                Jossef H Goldberg
-Dylan	    A	        Miller	      	Dylan A Miller		181-555-0156	Dylan A Miller 181-555-0156	      	16	               	181	              	555	                156	                Dylan A Miller
-	.......... TRUNCATED RESULTS ..........
+FirstName		MiddleName		LastName		FullName				PhoneNumber		AlphaNumericText	                NumStartPosition	SortFirst3Numbers	SortSecond3Numbers	SortLast4Numbers	SortCharPortion
+Ken				J	        	Sánchez	      	Ken J Sánchez			697-555-0142	Ken J Sánchez 697-555-0142	      	15	               	697	              	555	                142	                Ken J Sánchez
+Terri	    	Lee	        	Duffy	        Terri Lee Duffy			819-555-0175	Terri Lee Duffy 819-555-0175	    17	               	819	              	555	                175	                Terri Lee Duffy
+Roberto	    	NULL			Tamburello		Roberto Tamburello		212-555-0187	Roberto Tamburello 212-555-0187		20	               	212	              	555	                187	                Roberto Tamburello
+Rob	    		NULL			Walters	      	Rob Walters	        	612-555-0100	Rob Walters 612-555-0100	        13	               	612	              	555	                100	                Rob Walters
+Gail	    	A	        	Erickson		Gail A Erickson			849-555-0139	Gail A Erickson 849-555-0139	    17	               	849	              	555	                139	                Gail A Erickson
+Jossef	    	H	        	Goldberg		Jossef H Goldberg		122-555-0189	Jossef H Goldberg 122-555-0189	  	19	               	122	              	555	                189	                Jossef H Goldberg
+Dylan	    	A	        	Miller	      	Dylan A Miller			181-555-0156	Dylan A Miller 181-555-0156	      	16	               	181	              	555	                156	                Dylan A Miller
+....................................................................................................... TRUNCATED RESULTS .....................................................................................................
 (19972 rows affected)
 (end of results)
 
@@ -57,6 +57,7 @@ Dylan	    A	        Miller	      	Dylan A Miller		181-555-0156	Dylan A Miller 18
 
 Solution #1.1: Sorting by (1) numeric portion.
 	Query #1.1: Sorts column AlphaNumericText by the first 3 digits of phone number (column SortFirst3Numbers, Query #1)
+	----------
 
 SELECT X.AlphaNumericText 
 FROM (
@@ -104,6 +105,7 @@ a) a subquery to create the mixed AlphaNumericText.
 b) functions SUBSTRING, PATINDEX to create column "SortNumPortion" for sorting.
 
 	Query #1.2: Sorts column AlphaNumericText by the fullname
+	-----------
 SELECT X.AlphaNumericText 
 FROM (
     SELECT  E.FirstName
@@ -147,7 +149,7 @@ Zoe W Watson 166-555-0180
 
 Solution #2: As an alternative to solution #1, we create a VIEW with only 1 column (called "AlphaNumericText") for values of fullnames and phone numbers.
 	Query #2: Create a VIEW with only 1 column, "AlphaNumericText"
-
+	---------
 IF OBJECT_ID(N'VIEW_MixedAlphaNumeric_FullnamePhonenumbers',N'V') IS NOT NULL
 DROP VIEW VIEW_MixedAlphaNumeric_FullnamePhonenumbers
 GO
@@ -178,7 +180,7 @@ Commands completed successfully.
 
 Solution #2.1: Use Query #2.1 below to sort our view by the (1) numeric portion.
 	Query #2.1: Sorts the view's results by the first 3 digits of the phone number
-
+	-----------
 SELECT AlphaNumericText
 FROM [AdventureWorks2022].[dbo].[VIEW_MixedAlphaNumeric_FullnamePhonenumbers]
 ORDER BY SUBSTRING(AlphaNumericText, PATINDEX('%[0-9]%',AlphaNumericText), 3)
@@ -192,6 +194,7 @@ We get the same results as in Query #1.1.
 Solution #2.2: Use Query #2.1 below to sort our view by the (2) character portion.
 
 	Query #2.2: Sorts the view's results by the fullname
+	-----------
 SELECT AlphaNumericText
 FROM [AdventureWorks2022].[dbo].[VIEW_MixedAlphaNumeric_FullnamePhonenumbers]
 ORDER BY SUBSTRING(AlphaNumericText, 1, LEN(AlphaNumericText))
@@ -209,6 +212,7 @@ Solution #3: We use functions TRANSLATE, REPLACE and REPLICATE to separate numer
 	    	+ Functions: TRANSLATE, REPLACE, REPLICATE, LOWER, PATINDEX, SUBSTRING, CONCATENATION, COALESCE, LEN, LTRIM
 		    + Subquery: CASE statement, INNER JOIN
 	    	+ NULL values
+	---------
 
 SELECT X.FirstName
 , X.MiddleName
@@ -238,21 +242,22 @@ FROM (
 	) AS X
 
 	-- OUTPUT
-FirstName	MiddleName	LastName	FullName		PhoneNumber		AlphaNumericText			SortNumericOnly		SortFirst3Numbers	SortSecond3Numbers	SortLast4Numbers	SortCharacterOnly
-Ken		J		Sánchez		Ken J Sánchez		697-555-0142		Ken J Sánchez 697-555-0142		6975550142		697			555			142			Ken J Sánchez
-Terri		Lee		Duffy		Terri Lee Duffy		819-555-0175		Terri Lee Duffy 819-555-0175		8195550175		819			555			175			Terri Lee Duffy
-Roberto		NULL		Tamburello	Roberto Tamburello	212-555-0187		Roberto Tamburello 212-555-0187		2125550187		212			555			187			Roberto Tamburello
-Rob		NULL		Walters		Rob Walters		612-555-0100		Rob Walters 612-555-0100		6125550100		612			555			100			Rob Walters
-Gail		A		Erickson	Gail A Erickson		849-555-0139		Gail A Erickson 849-555-0139		8495550139		849			555			139			Gail A Erickson
-Jossef		H		Goldberg	Jossef H Goldberg	122-555-0189		Jossef H Goldberg 122-555-0189		1225550189		122			555			189			Jossef H Goldberg
-Dylan		A		Miller		Dylan A Miller		181-555-0156		Dylan A Miller 181-555-0156		1815550156		181			555			156			Dylan A Miller
-Diane		L		Margheim	Diane L Margheim	815-555-0138		Diane L Margheim 815-555-0138		8155550138		815			555		        138			Diane L Margheim
+FirstName		MiddleName		LastName		FullName				PhoneNumber			AlphaNumericText					SortNumericOnly		SortFirst3Numbers	SortSecond3Numbers		SortLast4Numbers		SortCharacterOnly
+Ken				J				Sánchez			Ken J Sánchez			697-555-0142		Ken J Sánchez 697-555-0142			6975550142			697					555						142						Ken J Sánchez
+Terri			Lee				Duffy			Terri Lee Duffy			819-555-0175		Terri Lee Duffy 819-555-0175		8195550175			819					555						175						Terri Lee Duffy
+Roberto			NULL			Tamburello		Roberto Tamburello		212-555-0187		Roberto Tamburello 212-555-0187		2125550187			212					555						187						Roberto Tamburello
+Rob				NULL			Walters			Rob Walters				612-555-0100		Rob Walters 612-555-0100			6125550100			612					555						100						Rob Walters
+Gail			A				Erickson		Gail A Erickson			849-555-0139		Gail A Erickson 849-555-0139		8495550139			849					555						139						Gail A Erickson
+Jossef			H				Goldberg		Jossef H Goldberg		122-555-0189		Jossef H Goldberg 122-555-0189		1225550189			122					555						189						Jossef H Goldberg
+Dylan			A				Miller			Dylan A Miller			181-555-0156		Dylan A Miller 181-555-0156			1815550156			181					555						156						Dylan A Miller
+Diane			L				Margheim		Diane L Margheim		815-555-0138		Diane L Margheim 815-555-0138		8155550138			815					555						138						Diane L Margheim
 
 
 
 
 Solution #3.1: Use Query #3.1 below to sort column AlphaNumericText only by (1) numeric data
 	Query #3.1: Sorts column AlphaNumericText by all 10 digits of the phone number
+	-----------
 
 SELECT X.AlphaNumericText 
 FROM (
@@ -302,6 +307,7 @@ Solution #3.2: Use Query #3.2 below to sort column AlphaNumericText only by the 
 	Query #3.2: Table with column AlphaNumericText and columns for sorting only by character data
 		+ Functions: TRANSLATE, REPLACE, REPLICATE, LOWER, PATINDEX, SUBSTRING, CONCATENATION, COALESCE, LEN, LTRIM
 		+ Subquery: CASE statement, INNER JOIN
+	-----------
 
 SELECT X.AlphaNumericText
 FROM (
@@ -330,6 +336,7 @@ We get the same results as in Query #1.2 and Query #2.2.
 
 Solution #4: We use the VIEW from Solution #2 to separate numeric from character data.
 	Query #4.1: Sorts the view's results by all 10 digits of the phone number (numeric data only)
+	-----------
 
 SELECT AlphaNumericText
 FROM [AdventureWorks2022].[dbo].[VIEW_MixedAlphaNumeric_FullnamePhonenumbers]
@@ -342,6 +349,7 @@ We get the same results as in Query #3.1.
 
 
 	Query #4.2: Sorts the view's results by the fullname (character data only)
+	-----------
 
 SELECT AlphaNumericText
 FROM [AdventureWorks2022].[dbo].[VIEW_MixedAlphaNumeric_FullnamePhonenumbers]
