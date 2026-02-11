@@ -24,6 +24,8 @@ WHERE clause: We compare the values from these 2 columns in the WHERE clause to 
 		+ CASE statement
 		+ NULL values
       		+ Functions: TRANSLATE, REPLACE, COALESCE, LOWER, REPLICATE, LEN
+	---------
+
 SELECT X.FullName
 FROM (
     SELECT  E.FirstName
@@ -44,7 +46,7 @@ FullName
 Ken J Sánchez
 Terri Lee Duffy
 Roberto Tamburello
-.......... TRUNCATED RESULTS
+.................. TRUNCATED RESULTS.....
 (19393 rows affected)
 (end of results)
 
