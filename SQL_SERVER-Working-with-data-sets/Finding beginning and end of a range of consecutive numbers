@@ -59,50 +59,50 @@ FROM (
 
 
 	-- OUTPUT
-RowNumber		StartDate			BusinessEntityID		JobTitle							NewGroup
-1				2006-06-30			28						Production Technician - WC60		1
-2				2007-01-26			17						Marketing Assistant					2
-3				2007-11-11			3						Engineering Manager					3
-4				2007-12-11			12						Tool Designer						4
-5				2007-12-26			40						Production Supervisor - WC60		5
-6				2008-01-06			48						Production Technician - WC10		6
-7				2008-01-06			5						Design Engineer						6
-8				2008-01-07			49						Production Technician - WC10		7
-9				2008-01-24			6						Design Engineer						8
-10				2008-01-31			2						Vice President of Engineering		9
-......................................................................................................... TRUNCATED RESULTS .....
-196				2009-03-01			247						Accounts Payable Specialist			98
-197				2009-03-02			21						Marketing Specialist				99
-198				2009-03-02			96						Production Technician - WC50		99
-199				2009-03-03			77						Production Technician - WC30		100
-200				2009-03-03			226						Scheduling Assistant				100
-201				2009-03-03			178						Production Technician - WC30		100
-202				2009-03-04			120						Production Technician - WC50		101
-203				2009-03-05			67						Production Technician - WC60		102
-204				2009-03-05			179						Production Technician - WC30		102
-205				2009-03-05			192						Production Supervisor - WC40		102
-206				2009-03-06			164						Production Technician - WC45		103
-207				2009-03-06			221						Control Specialist					103
-208				2009-03-07			158						Production Technician - WC20		104
-209				2009-03-07			37						Production Technician - WC60		104
-210				2009-03-08			204						Production Technician - WC40		105
-211				2009-03-08			248						Accountant							105
-212				2009-05-03			10						Research and Development Manager	106
-......................................................................................................... TRUNCATED RESULTS .....
-271				2011-05-31			275						Sales Representative				158
-272				2011-05-31			276						Sales Representative				158
-273				2011-05-31			277						Sales Representative				158
-274				2011-05-31			278						Sales Representative				158
-275				2011-05-31			279						Sales Representative				158
-276				2011-05-31			280						Sales Representative				158
-277				2011-05-31			281						Sales Representative				158
-278				2011-05-31			282						Sales Representative				158
-279				2011-05-31			283						Sales Representative				158
-.........................................................................................................TRUNCATED RESULTS ......
-286				2013-03-14			285						Pacific Sales Manager				164
-287				2013-05-30			286						Sales Representative				165
-288				2013-05-30			288						Sales Representative				165
-289				2013-11-14			234						Chief Financial Officer				166
+RowNumber		StartDate			BusinessEntityID		JobTitle								NewGroup
+1				2006-06-30			28						Production Technician - WC60			1
+2				2007-01-26			17						Marketing Assistant						2
+3				2007-11-11			3						Engineering Manager						3
+4				2007-12-11			12						Tool Designer							4
+5				2007-12-26			40						Production Supervisor - WC60			5
+6				2008-01-06			48						Production Technician - WC10			6
+7				2008-01-06			5						Design Engineer							6
+8				2008-01-07			49						Production Technician - WC10			7
+9				2008-01-24			6						Design Engineer							8
+10				2008-01-31			2						Vice President of Engineering			9
+............................................................................................................... TRUNCATED RESULTS .....
+196				2009-03-01			247						Accounts Payable Specialist				98
+197				2009-03-02			21						Marketing Specialist					99
+198				2009-03-02			96						Production Technician - WC50			99
+199				2009-03-03			77						Production Technician - WC30			100
+200				2009-03-03			226						Scheduling Assistant					100
+201				2009-03-03			178						Production Technician - WC30			100
+202				2009-03-04			120						Production Technician - WC50			101
+203				2009-03-05			67						Production Technician - WC60			102
+204				2009-03-05			179						Production Technician - WC30			102
+205				2009-03-05			192						Production Supervisor - WC40			102
+206				2009-03-06			164						Production Technician - WC45			103
+207				2009-03-06			221						Control Specialist						103
+208				2009-03-07			158						Production Technician - WC20			104
+209				2009-03-07			37						Production Technician - WC60			104
+210				2009-03-08			204						Production Technician - WC40			105
+211				2009-03-08			248						Accountant								105
+212				2009-05-03			10						Research and Development Manager		106
+............................................................................................................... TRUNCATED RESULTS .....
+271				2011-05-31			275						Sales Representative					158
+272				2011-05-31			276						Sales Representative					158
+273				2011-05-31			277						Sales Representative					158
+274				2011-05-31			278						Sales Representative					158
+275				2011-05-31			279						Sales Representative					158
+276				2011-05-31			280						Sales Representative					158
+277				2011-05-31			281						Sales Representative					158
+278				2011-05-31			282						Sales Representative					158
+279				2011-05-31			283						Sales Representative					158
+............................................................................................................... TRUNCATED RESULTS ......
+286				2013-03-14			285						Pacific Sales Manager					164
+287				2013-05-30			286						Sales Representative					165
+288				2013-05-30			288						Sales Representative					165
+289				2013-11-14			234						Chief Financial Officer					166
 (end of results)
 (289 rows affected)
 
@@ -149,7 +149,7 @@ RowNumber		BusinessEntityID		JobTitle							DepartmentID		DepartmentName			Start
 5				40						Production Supervisor - WC60		7					Production				2007-12-26
 6				48						Production Technician - WC10		7					Production				2008-01-06
 7				5						Design Engineer						1					Engineering				2008-01-06
-................................................................................................................................... TRUNCATED RESULTS ......
+........................................................................................................................................ TRUNCATED RESULTS ......
 284				250						Purchasing Manager					5					Purchasing				2012-07-15
 285				284						Sales Representative				3					Sales					2012-09-30
 286				285						Pacific Sales Manager				3					Sales					2013-03-14
@@ -192,37 +192,37 @@ WHERE OriginalTables.RowNumberRemovingDuplicates = 1														-- RemovingDup
 
 
 	-- OUTPUT
-RowNumber		PreviousStartDate		StartDate			DatediffStartDate	BusinessEntityID				JobTitle				DepartmentID	DepartmentName
-1				NULL					2006-06-30			NULL			28			Production Technician - WC60		7		Production
-2				2006-06-30				2007-01-26			210			17			Marketing Assistant			4		Marketing
-3				2007-01-26				2007-11-11			289			3			Engineering Manager			1		Engineering
-4				2007-11-11				2007-12-11			30			12			Tool Designer				2		Tool Design
-5				2007-12-11				2007-12-26			15			40			Production Supervisor - WC60		7		Production
-6				2007-12-26				2008-01-06			11			48			Production Technician - WC10		7		Production
-7				2008-01-06				2008-01-06			0			5			Design Engineer				1		Engineering
-8				2008-01-06				2008-01-07			1			49			Production Technician - WC10		7		Production
-...................................................................................................................................................................................TRUNCATED RESULTS ......
-18				2008-03-28				2008-12-01	248			72			Production Technician - WC30		7		Production
-19				2008-12-01				2008-12-01	0			26			Production Control Manager		8		Production Control
-20				2008-12-01				2008-12-02	1			167			Production Technician - WC30		7		Production
-21				2008-12-02				2008-12-02	0			206			Production Technician - WC45		7		Production
-22				2008-12-02				2008-12-02	0			207			Production Technician - WC45		7		Production
-23				2008-12-02				2008-12-03	1			102			Production Supervisor - WC10		7		Production
-...................................................................................................................................................................................TRUNCATED RESULTS ......
-271				2011-02-15				2011-05-31	105			275			Sales Representative			3		Sales
-272				2011-05-31				2011-05-31	0			276			Sales Representative			3		Sales
-273				2011-05-31				2011-05-31	0			277			Sales Representative			3		Sales
-274				2011-05-31				2011-05-31	0			278			Sales Representative			3		Sales
-275				2011-05-31				2011-05-31	0			279			Sales Representative			3		Sales
-276				2011-05-31				2011-05-31	0			280			Sales Representative			3		Sales
-277				2011-05-31				2011-05-31	0			281			Sales Representative			3		Sales
-278				2011-05-31				2011-05-31	0			282			Sales Representative			3		Sales
-279				2011-05-31				2011-05-31	0			283			Sales Representative			3		Sales
-280				2011-05-31				2011-09-01	93			224			Scheduling Assistant			8		Production Control
-...................................................................................................................................................................................TRUNCATED RESULTS ......
-287				2013-03-14				2013-05-30	77			286			Sales Representative			3		Sales
-288				2013-05-30				2013-05-30	0			288			Sales Representative			3		Sales
-289				2013-05-30				2013-11-14	168			234			Chief Financial Officer			16		Executive
+RowNumber		PreviousStartDate		StartDate			DatediffStartDate		BusinessEntityID		JobTitle								DepartmentID		DepartmentName
+1				NULL					2006-06-30			NULL					28						Production Technician - WC60			7					Production
+2				2006-06-30				2007-01-26			210						17						Marketing Assistant						4					Marketing
+3				2007-01-26				2007-11-11			289						3						Engineering Manager						1					Engineering
+4				2007-11-11				2007-12-11			30						12						Tool Designer							2					Tool Design
+5				2007-12-11				2007-12-26			15						40						Production Supervisor - WC60			7					Production
+6				2007-12-26				2008-01-06			11						48						Production Technician - WC10			7					Production
+7				2008-01-06				2008-01-06			0						5						Design Engineer							1					Engineering
+8				2008-01-06				2008-01-07			1						49						Production Technician - WC10			7					Production
+............................................................................................................................................................................................. TRUNCATED RESULTS .....
+18				2008-03-28				2008-12-01			248						72						Production Technician - WC30			7					Production
+19				2008-12-01				2008-12-01			0						26						Production Control Manager				8					Production Control
+20				2008-12-01				2008-12-02			1						167						Production Technician - WC30			7					Production
+21				2008-12-02				2008-12-02			0						206						Production Technician - WC45			7					Production
+22				2008-12-02				2008-12-02			0						207						Production Technician - WC45			7					Production
+23				2008-12-02				2008-12-03			1						102						Production Supervisor - WC10			7					Production
+............................................................................................................................................................................................. TRUNCATED RESULTS .....
+271				2011-02-15				2011-05-31			105						275						Sales Representative					3					Sales
+272				2011-05-31				2011-05-31			0						276						Sales Representative					3					Sales
+273				2011-05-31				2011-05-31			0						277						Sales Representative					3					Sales
+274				2011-05-31				2011-05-31			0						278						Sales Representative					3					Sales
+275				2011-05-31				2011-05-31			0						279						Sales Representative					3					Sales
+276				2011-05-31				2011-05-31			0						280						Sales Representative					3					Sales
+277				2011-05-31				2011-05-31			0						281						Sales Representative					3					Sales
+278				2011-05-31				2011-05-31			0						282						Sales Representative					3					Sales
+279				2011-05-31				2011-05-31			0						283						Sales Representative					3					Sales
+280				2011-05-31				2011-09-01			93						224						Scheduling Assistant					8					Production Control
+............................................................................................................................................................................................. TRUNCATED RESULTS .....
+287				2013-03-14				2013-05-30			77						286						Sales Representative					3					Sales
+288				2013-05-30				2013-05-30			0						288						Sales Representative					3					Sales
+289				2013-05-30				2013-11-14			168						234						Chief Financial Officer					16					Executive
 (end of results)
 (289 rows affected)
 
@@ -235,7 +235,7 @@ a) "1" means the start of a new group with a different StartDate (compared to th
 b) "0" means the same group with the same StartDate from the previous row
 	-----------
 
-SELECT DatediffHireDates.RowNumber						-- DatediffHireDatesLevel4
+SELECT DatediffHireDates.RowNumber																			-- DatediffHireDatesLevel4
 , DatediffHireDates.PreviousStartDate
 , DatediffHireDates.StartDate
 , DatediffHireDates.DatediffStartDate
@@ -246,7 +246,7 @@ SELECT DatediffHireDates.RowNumber						-- DatediffHireDatesLevel4
 , DatediffHireDates.BusinessEntityID
 , DatediffHireDates.JobTitle
 FROM (
-	SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber		-- CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+	SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber								-- CalculateNumDaysBetweenConsecutiveStartDatesLevel3
 	, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate) AS PreviousStartDate
 	, OriginalTables.StartDate
 	, DATEDIFF(DAY, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate), OriginalTables.StartDate) AS DatediffStartDate
@@ -255,7 +255,7 @@ FROM (
 	, OriginalTables.DepartmentID
 	, OriginalTables.DepartmentName
 	FROM (
-		SELECT												-- OriginalTablesLevel1
+		SELECT																								-- OriginalTablesLevel1
 		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 		, Employee.BusinessEntityID	
 		, Employee.JobTitle
@@ -268,58 +268,57 @@ FROM (
 			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-		WHERE Employee.BusinessEntityID <> 1								-- OriginalTablesLevel1
+		WHERE Employee.BusinessEntityID <> 1																-- OriginalTablesLevel1
 	) AS OriginalTables
-	WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2 / CalculateNumDaysBetweenConsecutiveStartDatesLevel3
-) AS DatediffHireDates								-- DatediffHireDatesLevel4
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1													-- RemovingDuplicatesLevel2 / CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+) AS DatediffHireDates																						-- DatediffHireDatesLevel4
 
 
 	-- OUTPUT
-RowNumber	PreviousStartDate	StartDate	DatediffStartDate	StartDateGroup	BusinessEntityID	JobTitle
-1		NULL			2006-06-30	NULL			1		28			Production Technician - WC60
-2		2006-06-30		2007-01-26	210			1		17			Marketing Assistant
-3		2007-01-26		2007-11-11	289			1		3			Engineering Manager
-4		2007-11-11		2007-12-11	30			1		12			Tool Designer
-5		2007-12-11		2007-12-26	15			1		40			Production Supervisor - WC60
-6		2007-12-26		2008-01-06	11			1		48			Production Technician - WC10
-7		2008-01-06		2008-01-06	0			0		5			Design Engineer
-8		2008-01-06		2008-01-07	1			1		49			Production Technician - WC10
-........................................................................................................................................................TRUNCATED RESULTS ......
-61		2008-12-21		2008-12-22	1			1		87			Production Supervisor - WC10
-62		2008-12-22		2008-12-22	0			0		129			Production Technician - WC40
-63		2008-12-22		2008-12-23	1			1		154			Production Technician - WC20
-64		2008-12-23		2008-12-23	0			0		272			Application Specialist
-65		2008-12-23		2008-12-24	1			1		196			Production Technician - WC40
-66		2008-12-24		2008-12-24	0			0		59			Production Technician - WC50
-67		2008-12-24		2008-12-25	1			1		113			Production Technician - WC50
-68		2008-12-25		2008-12-25	0			0		249			Finance Manager
-69		2008-12-25		2008-12-25	0			0		239			Benefits Specialist
-70		2008-12-25		2008-12-26	1			1		124			Stocker
-71		2008-12-26		2008-12-26	0			0		147			Production Technician - WC30
-72		2008-12-26		2008-12-27	1			1		93			Production Supervisor - WC50
-73		2008-12-27		2008-12-27	0			0		42			Production Technician - WC60
-74		2008-12-27		2008-12-27	0			0		188			Production Technician - WC45
-75		2008-12-27		2008-12-28	1			1		182			Production Technician - WC20
-76		2008-12-28		2008-12-28	0			0		216			Quality Assurance Technician
-77		2008-12-28		2008-12-29	1			1		32			Production Technician - WC60
-78		2008-12-29		2008-12-29	0			0		8			Research and Development Engineer
-79		2008-12-29		2008-12-31	2			1		197			Production Technician - WC40
-........................................................................................................................................................TRUNCATED RESULTS ......
-271		2011-02-15		2011-05-31	105			1		275			Sales Representative
-272		2011-05-31		2011-05-31	0			0		276			Sales Representative
-273		2011-05-31		2011-05-31	0			0		277			Sales Representative
-274		2011-05-31		2011-05-31	0			0		278			Sales Representative
-275		2011-05-31		2011-05-31	0			0		279			Sales Representative
-276		2011-05-31		2011-05-31	0			0		280			Sales Representative
-277		2011-05-31		2011-05-31	0			0		281			Sales Representative
-278		2011-05-31		2011-05-31	0			0		282			Sales Representative
-279		2011-05-31		2011-05-31	0			0		283			Sales Representative
-280		2011-05-31		2011-09-01	93			1		224			Scheduling Assistant
-........................................................................................................................................................TRUNCATED RESULTS ......
-286		2012-09-30		2013-03-14	165			1		285			Pacific Sales Manager
-287		2013-03-14		2013-05-30	77			1		286			Sales Representative
-288		2013-05-30		2013-05-30	0			0		288			Sales Representative
-289		2013-05-30		2013-11-14	168			1		234			Chief Financial Officer
+RowNumber		PreviousStartDate		StartDate			DatediffStartDate		StartDateGroup			BusinessEntityID		JobTitle
+1				NULL					2006-06-30			NULL					1						28						Production Technician - WC60
+2				2006-06-30				2007-01-26			210						1						17						Marketing Assistant
+3				2007-01-26				2007-11-11			289						1						3						Engineering Manager
+4				2007-11-11				2007-12-11			30						1						12						Tool Designer
+5				2007-12-11				2007-12-26			15						1						40						Production Supervisor - WC60
+6				2007-12-26				2008-01-06			11						1						48						Production Technician - WC10
+7				2008-01-06				2008-01-06			0						0						5						Design Engineer
+8				2008-01-06				2008-01-07			1						1						49						Production Technician - WC10
+................................................................................................................................................................... TRUNCATED RESULTS ......
+61				2008-12-21				2008-12-22			1						1						87						Production Supervisor - WC10
+62				2008-12-22				2008-12-22			0						0						129						Production Technician - WC40
+63				2008-12-22				2008-12-23			1						1						154						Production Technician - WC20
+64				2008-12-23				2008-12-23			0						0						272						Application Specialist
+65				2008-12-23				2008-12-24			1						1						196						Production Technician - WC40
+66				2008-12-24				2008-12-24			0						0						59						Production Technician - WC50
+67				2008-12-24				2008-12-25			1						1						113						Production Technician - WC50
+68				2008-12-25				2008-12-25			0						0						249						Finance Manager
+69				2008-12-25				2008-12-25			0						0						239						Benefits Specialist
+70				2008-12-25				2008-12-26			1						1						124						Stocker
+71				2008-12-26				2008-12-26			0						0						147						Production Technician - WC30
+72				2008-12-26				2008-12-27			1						1						93						Production Supervisor - WC50
+73				2008-12-27				2008-12-27			0						0						42						Production Technician - WC60
+74				2008-12-27				2008-12-27			0						0						188						Production Technician - WC45
+75				2008-12-27				2008-12-28			1						1						182						Production Technician - WC20
+76				2008-12-28				2008-12-28			0						0						216						Quality Assurance Technician
+77				2008-12-28				2008-12-29			1						1						32						Production Technician - WC60
+78				2008-12-29				2008-12-29			0						0						8						Research and Development Engineer
+79				2008-12-29				2008-12-31			2						1						197						Production Technician - WC40
+................................................................................................................................................................... TRUNCATED RESULTS ......
+271				2011-02-15				2011-05-31			105						1						275						Sales Representative
+272				2011-05-31				2011-05-31			0						0						276						Sales Representative
+273				2011-05-31				2011-05-31			0						0						277						Sales Representative
+275				2011-05-31				2011-05-31			0						0						279						Sales Representative
+276				2011-05-31				2011-05-31			0						0						280						Sales Representative
+277				2011-05-31				2011-05-31			0						0						281						Sales Representative
+278				2011-05-31				2011-05-31			0						0						282						Sales Representative
+279				2011-05-31				2011-05-31			0						0						283						Sales Representative
+280				2011-05-31				2011-09-01			93						1						224						Scheduling Assistant
+................................................................................................................................................................... TRUNCATED RESULTS ......
+286				2012-09-30				2013-03-14			165						1						285						Pacific Sales Manager
+287				2013-03-14				2013-05-30			77						1						286						Sales Representative
+288				2013-05-30				2013-05-30			0						0						288						Sales Representative
+289				2013-05-30				2013-11-14			168						1						234						Chief Financial Officer
 (end of results)
 (289 rows affected)
 
@@ -328,13 +327,13 @@ RowNumber	PreviousStartDate	StartDate	DatediffStartDate	StartDateGroup	BusinessE
 
 	Query #1.4: We add column "NewGroup" and use the window functions SUM to group together the employees having the same StartDate
 	-----------
-SELECT StartDateGroupNumber.RowNumber				-- EmployeesGroupedByHiringDateLevel5
+SELECT StartDateGroupNumber.RowNumber																		-- EmployeesGroupedByHiringDateLevel5
 , StartDateGroupNumber.StartDate
 , StartDateGroupNumber.BusinessEntityID
 , StartDateGroupNumber.JobTitle
 , SUM(StartDateGroupNumber.StartDateGroup) OVER (ORDER BY StartDateGroupNumber.RowNumber) AS NewGroup
 FROM (
-	SELECT DatediffHireDates.RowNumber					-- DatediffHireDatesLevel4
+	SELECT DatediffHireDates.RowNumber																		-- DatediffHireDatesLevel4
 	, DatediffHireDates.PreviousStartDate
 	, DatediffHireDates.StartDate
 	, DatediffHireDates.DatediffStartDate
@@ -345,7 +344,7 @@ FROM (
 	, DatediffHireDates.BusinessEntityID
 	, DatediffHireDates.JobTitle
 	FROM (
-		SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber		-- RemovingDuplicatesLevel2
+		SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber							-- RemovingDuplicatesLevel2
 		, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate) AS PreviousStartDate
 		, OriginalTables.StartDate
 		, DATEDIFF(DAY, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate), OriginalTables.StartDate) AS DatediffStartDate
@@ -354,7 +353,7 @@ FROM (
 		, OriginalTables.DepartmentID
 		, OriginalTables.DeparmentName
 		FROM (
-			SELECT												-- OriginalTablesLevel1
+			SELECT																							-- OriginalTablesLevel1
 			ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 			, Employee.BusinessEntityID	
 			, Employee.JobTitle
@@ -367,40 +366,40 @@ FROM (
 				ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 			LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 				ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-			WHERE Employee.BusinessEntityID <> 1								-- OriginalTablesLevel1
+			WHERE Employee.BusinessEntityID <> 1															-- OriginalTablesLevel1
 		) AS OriginalTables
-		WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2 / CalculateNumDaysBetweenConsecutiveStartDatesLevel3
-	) AS DatediffHireDates							-- DatediffHireDatesLevel4
-) AS StartDateGroupNumber					-- EmployeesGroupedByHiringDateLevel5
+		WHERE OriginalTables.RowNumberRemovingDuplicates = 1												-- RemovingDuplicatesLevel2 / CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+	) AS DatediffHireDates																					-- DatediffHireDatesLevel4
+) AS StartDateGroupNumber																					-- EmployeesGroupedByHiringDateLevel5
 
 
 	-- OUTPUT
-RowNumber	StartDate	BusinessEntityID	JobTitle				NewGroup
-1		2006-06-30	28			Production Technician - WC60		1
-2		2007-01-26	17			Marketing Assistant			2
-3		2007-11-11	3			Engineering Manager			3
-4		2007-12-11	12			Tool Designer				4
-5		2007-12-26	40			Production Supervisor - WC60		5
-6		2008-01-06	48			Production Technician - WC10		6
-7		2008-01-06	5			Design Engineer				6
-8		2008-01-07	49			Production Technician - WC10		7
+RowNumber		StartDate			BusinessEntityID		JobTitle								NewGroup
+1				2006-06-30			28						Production Technician - WC60			1
+2				2007-01-26			17						Marketing Assistant						2
+3				2007-11-11			3						Engineering Manager						3
+4				2007-12-11			12						Tool Designer							4
+5				2007-12-26			40						Production Supervisor - WC60			5
+6				2008-01-06			48						Production Technician - WC10			6
+7				2008-01-06			5						Design Engineer							6
+8				2008-01-07			49						Production Technician - WC10			7
 .........................................................................................................TRUNCATED RESULTS ......
-270		2011-02-15	273			Vice President of Sales			157
-271		2011-05-31	275			Sales Representative			158
-272		2011-05-31	276			Sales Representative			158
-273		2011-05-31	277			Sales Representative			158
-274		2011-05-31	278			Sales Representative			158
-275		2011-05-31	279			Sales Representative			158
-276		2011-05-31	280			Sales Representative			158
-277		2011-05-31	281			Sales Representative			158
-278		2011-05-31	282			Sales Representative			158
-279		2011-05-31	283			Sales Representative			158
-280		2011-09-01	224			Scheduling Assistant			159
+270				2011-02-15			273						Vice President of Sales					157
+271				2011-05-31			275						Sales Representative					158
+272				2011-05-31			276						Sales Representative					158
+273				2011-05-31			277						Sales Representative					158
+274				2011-05-31			278						Sales Representative					158
+275				2011-05-31			279						Sales Representative					158
+276				2011-05-31			280						Sales Representative					158
+277				2011-05-31			281						Sales Representative					158
+278				2011-05-31			282						Sales Representative					158
+279				2011-05-31			283						Sales Representative					158
+280				2011-09-01			224						Scheduling Assistant					159
 .........................................................................................................TRUNCATED RESULTS ......
-286		2013-03-14	285			Pacific Sales Manager			164
-287		2013-05-30	286			Sales Representative			165
-288		2013-05-30	288			Sales Representative			165
-289		2013-11-14	234			Chief Financial Officer			166
+286				2013-03-14			285						Pacific Sales Manager					164
+287				2013-05-30			286						Sales Representative					165
+288				2013-05-30			288						Sales Representative					165
+289				2013-11-14			234						Chief Financial Officer					166
 (end of results)
 (289 rows affected)
 
