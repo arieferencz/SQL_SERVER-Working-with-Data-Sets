@@ -1,274 +1,308 @@
-Exercise #1: Generate lists of consecutives numeric values using UNION operator, a Cartesian Product and Common Table Expression (CTEs).
+# Generate lists of consecutive numeric values
 
+## 🎯 Exercise
+Generate lists of consecutive numeric values (1, 2, 3, 4, ...) using three different approaches: the `UNION` operator, a Cartesian Product, and Common Table Expressions (CTEs).
 
-Solution #1: We create lists of consecutive numeric values using the UNION operator.
+---
 
-Tables used: 
-1) [AdventureWorks2022].[Person].[BusinessEntity]	
-2) [AdventureWorks2022].[Sales].[SalesOrderDetail]
+## 💡 Solution 1 — Using the `UNION` operator
 
-	Query #1: We create a list of consecutive numeric values starting from zero using the UNION operator
-	---------
-SELECT 0 AS Position											-- FirstRowWithZeroLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- FirstRowWithZeroLevel1
-UNION 
-SELECT BusinessEntityID AS Position								-- RowTwoOnwardsLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- RowTwoOnwardsLevel1
-ORDER BY Position;
+### Approach
+We use `UNION` to combine a single row containing `0` (or `1`) with all existing ID values from a table — effectively prepending a starting value to an already-consecutive sequence. Since `UNION` removes duplicates, the result is a clean ordered list.
 
+### Tables used
 
-SELECT 0 AS Position											-- FirstRowWithZeroLevel1
-FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- FirstRowWithZeroLevel1
-UNION
-SELECT SalesOrderDetailID AS Position                       	-- RowTwoOnwardsLevel1
-FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- RowTwoOnwardsLevel1
-ORDER BY Position;
+| Schema | Table |
+|---|---|
+| `Person` | `BusinessEntity` |
+| `Sales` | `SalesOrderDetail` |
 
+---
 
-	-- OUTPUT #1:
-Position
-0
-1
-2
-3
-4
-.............. TRUNCATED RESULTS .....
-20774
-20775
-20776
-20777
-(end of results)
-(20778 rows affected)
+### Query 1 — List starting from zero
 
-
-	-- OUTPUT #2:
-Position
-0
-1
-2
-3
-4
-.............. TRUNCATED RESULTS .....
-121314
-121315
-121316
-121317
-(end of results)
-(121318 rows affected)
-
-
-	Comments on above results:
-a) Column "BusinessEntityID" from Table [AdventureWorks2022].[Person].[BusinessEntity] has 20,777 rows with unique consecutive values starting from 1 until 20,777.
-b) Column "SalesOrderDetailID" from Table [AdventureWorks2022].[Person].[BusinessEntity] has 121,317 rows with unique consecutive values starting from 1 until 121,317.
-c) UNION operator removes duplicated records. These 2 examples have no duplicates.
-
-
-
-
-	Query #1.1: We create a list of consecutive numeric values starting from one using the UNION operator
-	-----------
-SELECT 1 AS Position											-- FirstRowWithOneLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- FirstRowWithOneLevel1
-UNION 
-SELECT BusinessEntityID AS Position								-- RowTwoOnwardsLevel1
-FROM [AdventureWorks2022].[Person].[BusinessEntity]				-- RowTwoOnwardsLevel1
-ORDER BY Position;
-
-
-SELECT 1 AS Position											-- FirstRowWithOneLevel1
-FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- FirstRowWithOneLevel1
-UNION
-SELECT SalesOrderDetailID AS Position							-- RowTwoOnwardsLevel1
-FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]			-- RowTwoOnwardsLevel1
-ORDER BY Position;
-
-
-	-- OUTPUT #1:
-Position
-1
-2
-3
-4
-.............. TRUNCATED RESULTS .....
-20774
-20775
-20776
-20777
-(end of results)
-(20777 rows affected)
-
-
-	-- OUTPUT #2:
-Position
-1
-2
-3
-4
-.............. TRUNCATED RESULTS .....
-121314
-121315
-121316
-121317
-(end of results)
-(121317 rows affected)
-
-
-	Comments on above results:
-a) UNION operator removes the duplicated record of 1 from both queries.
-The number of rows affected from both queries from Query #1.1 is one less than those from Query #1. 
-
-
-
-
-	Query #2: We create a list of consecutive numeric values starting from one using a Cartesian Product
-	---------
-SELECT InitialList.Position
-, InitialList.Position * Iteration.Position AS CartesianProductDim1X20777
-FROM 
-	(
-	SELECT BusinessEntityID AS Position							-- OneRowWithNumberOneLevel1
-	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- OneRowWithNumberOneLevel1
-	WHERE BusinessEntityID < 2
-	) AS InitialList,
-	(
-	SELECT BusinessEntityID AS Position							-- 20777RowsStartingAt1Level1
-	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- 20777RowsStartingAt1Level1
-	) AS Iteration
-ORDER BY CartesianProductDim1X20777
-
-
-	-- OUTPUT
-Position		CartesianProductDim1X20777
-1				1
-1				2
-1				3
-1				4
-1				5
-......................................... TRUNCATED RESULTS ......
-1				20773
-1				20774
-1				20775
-1				20776
-1				20777
-(end of results)
-(20777 rows affected)
-
-
-	Comments on above results:
-The new table resulting from the Cartesian Product has a dimension of 20,777 rows = 1 X 20777.
-20,777 rows = number of rows on column "BusinessEntityID" from [AdventureWorks2022].[Person].[BusinessEntity].
-
-
-
-	Query #2.1: We create a list of consecutive numeric values starting from one using a Cartesian Product
-	---------
-SELECT ROW_NUMBER() OVER (ORDER BY Iteration.Position) AS RowNumber
-, InitialList.Position * Iteration.Position AS CartesianProductDim2X20777
-FROM 
-	(
-	SELECT BusinessEntityID AS Position							-- TwoRowsWithNumbersOneAndTwoLevel1
-	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- TwoRowsWithNumbersOneAndTwoLevel1
-	WHERE BusinessEntityID < 3
-	) AS InitialList,
-	(
-	SELECT BusinessEntityID AS Position							-- 20777RowsStartingAt1Level1
-	FROM [AdventureWorks2022].[Person].[BusinessEntity]			-- 20777RowsStartingAt1Level1
-	) AS Iteration
-ORDER BY Iteration.Position ASC
-
-
-	-- OUTPUT
-RowNumber		CartesianProductDim2X20777
-1				1
-2				2
-3				2
-4				4
-5				3
-......................................... TRUNCATED RESULTS ......
-41549			20775
-41550			41550
-41551			20776
-41552			41552
-41553			20777
-41554			41554
-(end of results)
-(41554 rows affected)
-
-
-	Comments on above results:
-As mentioned before, 20,777 rows = number of rows on column "BusinessEntityID" from [AdventureWorks2022].[Person].[BusinessEntity].
-The new table resulting from the Cartesian Product has a dimension of 41,554 rows = 2 X 20777.
-We use function ROW_NUMBER to create unique consecutive numbers starting from 1 until 41,554.
-
-
-We can increase the number of rows resulting from the Cartesian Product by increasing the number in the WHERE clause from subquery "InitialList".
-In Query #2 we used "WHERE BusinessEntityID < 2", producing 20,777 rows.
-In Query #2.1 we used "WHERE BusinessEntityID < 3", producing 41,554 rows.
-We can increase the resulting number of rows up to 431,683,729 rows, which is 20,777 X 20,777.
-
-
-
-
-	Query #3: We create a list of consecutive numeric values starting from one using Common Table Expression (CTEs)
-	---------
-WITH 
-ConsecutiveNumbers AS 
-(
-SELECT 1 AS RowNumber
-UNION ALL
-SELECT BusinessEntityID + 1 AS RowNumber
+```sql
+-- Using BusinessEntity (20,777 rows)
+SELECT 0 AS Position
 FROM [AdventureWorks2022].[Person].[BusinessEntity]
-WHERE BusinessEntityID + 1 < 20000
-)
-SELECT * 
-FROM ConsecutiveNumbers
-ORDER BY RowNumber;
+UNION
+SELECT BusinessEntityID AS Position
+FROM [AdventureWorks2022].[Person].[BusinessEntity]
+ORDER BY Position;
 
-
-
-WITH 
-ConsecutiveNumbers AS 
-(
-SELECT 1 AS RowNumber
-UNION ALL
-SELECT SalesOrderDetailID + 1 AS RowNumber
+-- Using SalesOrderDetail (121,317 rows)
+SELECT 0 AS Position
 FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
-WHERE SalesOrderDetailID + 1 < 100000
+UNION
+SELECT SalesOrderDetailID AS Position
+FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
+ORDER BY Position;
+```
+
+**Output 1 — BusinessEntity (truncated):**
+
+```
+Position
+0
+1
+2
+3
+4
+...
+20775
+20776
+20777
+(20778 rows affected)
+```
+
+**Output 2 — SalesOrderDetail (truncated):**
+
+```
+Position
+0
+1
+2
+3
+4
+...
+121315
+121316
+121317
+(121318 rows affected)
+```
+
+> **Note:** `UNION` removes duplicate records. Since `BusinessEntityID` already starts at 1 and the prepended value is `0`, there are no duplicates — hence the total row count is `N + 1` (one extra row for the `0`).
+
+---
+
+### Query 1.1 — List starting from one
+
+```sql
+-- Using BusinessEntity
+SELECT 1 AS Position
+FROM [AdventureWorks2022].[Person].[BusinessEntity]
+UNION
+SELECT BusinessEntityID AS Position
+FROM [AdventureWorks2022].[Person].[BusinessEntity]
+ORDER BY Position;
+
+-- Using SalesOrderDetail
+SELECT 1 AS Position
+FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
+UNION
+SELECT SalesOrderDetailID AS Position
+FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
+ORDER BY Position;
+```
+
+**Output 1 — BusinessEntity (truncated):**
+
+```
+Position
+1
+2
+3
+4
+...
+20775
+20776
+20777
+(20777 rows affected)
+```
+
+**Output 2 — SalesOrderDetail (truncated):**
+
+```
+Position
+1
+2
+3
+4
+...
+121315
+121316
+121317
+(121317 rows affected)
+```
+
+> **Note:** Because `BusinessEntityID` already starts at `1`, the prepended `1` is a duplicate and `UNION` removes it. The total row count is therefore `N` — one fewer than Query 1.
+
+---
+
+## 💡 Solution 2 — Using a Cartesian Product
+
+### Approach
+We create a Cartesian Product between a small `InitialList` subquery (containing 1 or more rows) and the full `BusinessEntity` table. Multiplying `InitialList.Position × Iteration.Position` generates a list of consecutive multiples. The size of the result is controlled by how many rows are in `InitialList`.
+
+---
+
+### Query 2 — Cartesian Product of dimension 1 × 20,777
+
+```sql
+SELECT
+    InitialList.Position
+  , InitialList.Position * Iteration.Position AS CartesianProductDim1X20777
+FROM (
+    SELECT BusinessEntityID AS Position
+    FROM [AdventureWorks2022].[Person].[BusinessEntity]
+    WHERE BusinessEntityID < 2              -- 1 row: Position = 1
+) AS InitialList,
+(
+    SELECT BusinessEntityID AS Position
+    FROM [AdventureWorks2022].[Person].[BusinessEntity]  -- 20,777 rows
+) AS Iteration
+ORDER BY CartesianProductDim1X20777
+```
+
+**Output (truncated):**
+
+```
+Position  CartesianProductDim1X20777
+1         1
+1         2
+1         3
+1         4
+1         5
+...
+1         20775
+1         20776
+1         20777
+(20777 rows affected)
+```
+
+> Since `InitialList` contains only `Position = 1`, multiplying `1 × Iteration.Position` simply returns `Iteration.Position` — producing a list from 1 to 20,777.
+
+---
+
+### Query 2.1 — Cartesian Product of dimension 2 × 20,777
+
+```sql
+SELECT
+    ROW_NUMBER() OVER (ORDER BY Iteration.Position) AS RowNumber
+  , InitialList.Position * Iteration.Position AS CartesianProductDim2X20777
+FROM (
+    SELECT BusinessEntityID AS Position
+    FROM [AdventureWorks2022].[Person].[BusinessEntity]
+    WHERE BusinessEntityID < 3              -- 2 rows: Position = 1 and 2
+) AS InitialList,
+(
+    SELECT BusinessEntityID AS Position
+    FROM [AdventureWorks2022].[Person].[BusinessEntity]  -- 20,777 rows
+) AS Iteration
+ORDER BY Iteration.Position ASC
+```
+
+**Output (truncated):**
+
+```
+RowNumber  CartesianProductDim2X20777
+1          1
+2          2
+3          2
+4          4
+5          3
+...
+41553      20777
+41554      41554
+(41554 rows affected)
+```
+
+> `InitialList` now contains `Position = 1` and `Position = 2`. The Cartesian Product produces `2 × 20,777 = 41,554` rows. `ROW_NUMBER()` is used to generate unique consecutive numbers from 1 to 41,554.
+
+### Scaling the Cartesian Product
+
+By changing the `WHERE BusinessEntityID < N` clause in `InitialList`, you control the total number of rows:
+
+| `WHERE BusinessEntityID <` | Rows in InitialList | Total rows produced |
+|---|---|---|
+| `< 2` | 1 | 20,777 |
+| `< 3` | 2 | 41,554 |
+| `< 11` | 10 | 207,770 |
+| `< 20778` | 20,777 | 431,683,729 (max) |
+
+---
+
+## 💡 Solution 3 — Using CTEs
+
+### Approach
+We use a CTE with `UNION ALL` to build a consecutive list by starting at `1` and adding `1` to each existing ID value. A `WHERE` clause in the recursive part controls the upper limit of the list.
+
+---
+
+### Query 3 — CTE-based consecutive list
+
+```sql
+-- Up to 19,999 using BusinessEntity
+WITH ConsecutiveNumbers AS
+(
+    SELECT 1 AS RowNumber
+    UNION ALL
+    SELECT BusinessEntityID + 1 AS RowNumber
+    FROM [AdventureWorks2022].[Person].[BusinessEntity]
+    WHERE BusinessEntityID + 1 < 20000
 )
-SELECT * 
+SELECT *
 FROM ConsecutiveNumbers
 ORDER BY RowNumber;
 
+-- Up to 99,999 using SalesOrderDetail
+WITH ConsecutiveNumbers AS
+(
+    SELECT 1 AS RowNumber
+    UNION ALL
+    SELECT SalesOrderDetailID + 1 AS RowNumber
+    FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
+    WHERE SalesOrderDetailID + 1 < 100000
+)
+SELECT *
+FROM ConsecutiveNumbers
+ORDER BY RowNumber;
+```
 
-	-- OUTPUT #1:
+**Output 1 — BusinessEntity (truncated):**
+
+```
 RowNumber
 1
 2
 3
 4
 5
-.............. TRUNCATED RESULTS .....
-19995
-19996
+...
 19997
 19998
 19999
-(end of results)
-(19999 rows affected)	
+(19999 rows affected)
+```
 
+**Output 2 — SalesOrderDetail (truncated):**
 
-	-- OUTPUT #2:
+```
 RowNumber
 1
 2
 3
 4
 5
-.............. TRUNCATED RESULTS .....
-99995
-99996
+...
 99997
 99998
 99999
-(end of results)
 (99999 rows affected)
+```
+
+---
+
+## 🔍 Comparison of the three approaches
+
+| Approach | How it works | Max rows | Flexibility |
+|---|---|---|---|
+| `UNION` operator | Prepends a starting value to an existing consecutive ID column | Limited to the number of rows in the source table | Simple — change the source table to change the range |
+| Cartesian Product | Multiplies two subqueries to generate a larger sequence | Up to `N × N` rows (e.g. 20,777 × 20,777 = 431M) | Scale by adjusting the `WHERE` clause in `InitialList` |
+| CTE with `UNION ALL` | Starts at 1 and increments using existing IDs | Limited to the number of rows in the source table | Control upper limit with `WHERE` clause |
+
+---
+
+## 🔗 Back to repository
+
+[← Back to SQL_SERVER-Working-with-Data-Sets](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets)
