@@ -23,6 +23,9 @@ We assign each employee a numeric `EmployeeCode` and `ManagerCode` based on thei
 ### T-SQL code
 
 ```sql
+USE AdventureWorks2022;
+GO
+
 WITH 
 OriginalTablesLevel1 AS 
 (
@@ -97,7 +100,7 @@ LEFT JOIN (
     WHERE RowNumberEmployeeCode = 1
 ) AS B
 ON A.ManagerCode = B.EmployeeCode
-ORDER BY A.BusinessEntityID
+ORDER BY A.BusinessEntityID;
 ```
 
 ---
