@@ -19,7 +19,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 
 | Exercise | Description |
 |---|---|
-| [Finding the manager for each employee](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Hierarchical-Parent-Child-relationship/Finding%20the%20manager%20for%20each%20employee%20(Parent-Child%20relationship)) | Uses CTEs and self-joins to retrieve each employee's manager based on organisational hierarchy |
+| [Finding the manager for each employee](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Hierarchical-Parent-Child-relationship/Finding%20the%20manager%20for%20each%20employee%20(Parent-Child%20relationship).md) | Uses CTEs and self-joins to retrieve each employee's manager based on organisational hierarchy |
 
 ---
 
@@ -27,7 +27,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 
 | Exercise | Description |
 |---|---|
-| [Pivoting employee count by department name](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Pivoting%20employee%20count%20by%20department%20name) | Transforms department rows into columns using PIVOT |
+| [Pivoting employee count by department name](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Pivoting%20employee%20count%20by%20department%20name.md) | Transforms department rows into columns using PIVOT |
 | [Pivoting multiple department names under same group name](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Pivoting%20multiple%20department%20names%20under%20same%20group%20name) | Groups and pivots departments sharing the same group name |
 | [Pivoting query results for year-to-year comparison of sales](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Pivoting%20query%20results%20for%20year-to-year%20comparison%20of%20sales) | Creates a year-over-year sales comparison using PIVOT |
 | [Reverse pivoting a query's result into only one column](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Reverse%20pivoting%20a%20query's%20result%20(multiple%20columns)%20into%20only%20one%20column) | Uses UNPIVOT to collapse multiple columns into a single column |
