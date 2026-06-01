@@ -1,43 +1,78 @@
-This repository contains 4 folders that have multiple examples on how SQL Server can be used to work with data:
-1) Hierarchical parent-child relationship
-2) Pivoting
-3) String manipulation
-4) Data sets
+# SQL Server — Working with Data Sets
 
+This repository contains T-SQL exercises using Microsoft's **AdventureWorks2022** database, organised into 4 topic folders.
 
+Each exercise includes a question, one or more solutions, the T-SQL code, the query output, and a step-by-step explanation.
 
-Below is the list of examples for each folder.
+---
 
-Folder #1: Hierarchical parent-child relationship:
-1) Finding the manager for each employee (Parent-Child relationship)
+## 📋 Table of contents
 
+- [Folder 1 — Hierarchical parent-child relationship](#folder-1--hierarchical-parent-child-relationship)
+- [Folder 2 — Pivoting](#folder-2--pivoting)
+- [Folder 3 — String manipulation](#folder-3--string-manipulation)
+- [Folder 4 — Data sets](#folder-4--data-sets)
 
-Folder #2: Pivoting
-1) Pivoting employee count by department name
-2) Pivoting multiple department names under same group name
-3) Pivoting query results for year-to-year comparison of sales
-4) Reverse pivoting a query's result (multiple columns) into only one column
-5) Reverse pivoting employee count by department (columns into rows)
+---
 
+## 📁 Folder 1 — Hierarchical parent-child relationship
 
-Folder #3: String manipulation
-1) Alphabetize the individual characters within a string
-2) Convert delimited lists by commas into lists to use on IN clause
-3) Create delimited lists by commas from table rows
-4) Parsing through a string to retrieve each character on a different row
-5) Parsing through a string while changing the parameters of SUBSTRING function
-6) Sorting a column having mixed AlphaNumeric values
-7) Sorting a column having strings having only letters
+| Exercise | Description |
+|---|---|
+| [Finding the manager for each employee](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Hierarchical-Parent-Child-relationship/Finding%20the%20manager%20for%20each%20employee%20(Parent-Child%20relationship)) | Uses CTEs and self-joins to retrieve each employee's manager based on organisational hierarchy |
 
+---
 
-Folder #4: Data sets
-1) Calculating the historic subtotal purchasing amount for all vendors
-2) Concatenating multiple addresses for a BusinessEntityID into one row
-3) Creating evenly size groups of vendors
-4) Dividing vendors into 10 groups based on historical purchasing amounts
-5) Finding beginning and end of a range of consecutive numbers
-6) Finding duplicate records on multiple tables
-7) Finding employees with odd numbers on column BusinessEntityID
-8) Finding the manager for each employee (Parent-Child relationship)
-9) Generate lists of consecutives numeric values
-10) Removing repeating values from a column
+## 📁 Folder 2 — Pivoting
+
+| Exercise | Description |
+|---|---|
+| [Pivoting employee count by department name](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Pivoting%20employee%20count%20by%20department%20name) | Transforms department rows into columns using PIVOT |
+| [Pivoting multiple department names under same group name](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Pivoting%20multiple%20department%20names%20under%20same%20group%20name) | Groups and pivots departments sharing the same group name |
+| [Pivoting query results for year-to-year comparison of sales](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Pivoting%20query%20results%20for%20year-to-year%20comparison%20of%20sales) | Creates a year-over-year sales comparison using PIVOT |
+| [Reverse pivoting a query's result into only one column](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Reverse%20pivoting%20a%20query's%20result%20(multiple%20columns)%20into%20only%20one%20column) | Uses UNPIVOT to collapse multiple columns into a single column |
+| [Reverse pivoting employee count by department](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Pivoting/Reverse%20pivoting%20employee%20count%20by%20department%20(columns%20into%20rows)) | Converts pivoted columns back into rows using UNPIVOT |
+
+---
+
+## 📁 Folder 3 — String manipulation
+
+| Exercise | Description |
+|---|---|
+| [Alphabetize the individual characters within a string](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Alphabetize%20the%20individual%20characters%20within%20a%20string) | Sorts each character in a string alphabetically using T-SQL |
+| [Convert delimited lists by commas into lists to use on IN clause](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Convert%20delimited%20lists%20by%20commas%20into%20lists%20to%20use%20on%20IN%20clause) | Parses comma-separated strings for use in IN clauses |
+| [Create delimited lists by commas from table rows](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Create%20delimited%20lists%20by%20commas%20from%20table%20rows) | Concatenates multiple rows into a single comma-separated string |
+| [Parsing through a string to retrieve each character on a different row](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Parsing%20through%20a%20string%20to%20retrieve%20each%20character%20on%20a%20different%20row) | Splits a string character by character into individual rows |
+| [Parsing through a string while changing the parameters of SUBSTRING](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Parsing%20through%20a%20string%20while%20changing%20the%20parameters%20of%20SUBSTRING%20function) | Demonstrates SUBSTRING with varying start and length parameters |
+| [Sorting a column having mixed AlphaNumeric values](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Sorting%20a%20column%20having%20mixed%20AlphaNumeric%20values) | Correctly sorts columns containing both letters and numbers |
+| [Sorting a column having strings having only letters](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Sorting%20a%20column%20having%20strings%20having%20only%20letters) | Sorts purely alphabetical string columns |
+
+---
+
+## 📁 Folder 4 — Data sets
+
+| Exercise | Description |
+|---|---|
+| [Calculating the historic subtotal purchasing amount for all vendors](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Calculating%20the%20historic%20subtotal%20purchasing%20amount%20for%20all%20vendors) | Aggregates historical purchasing totals across all vendors |
+| [Concatenating multiple addresses for a BusinessEntityID into one row](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Concatenating%20multiple%20addresses%20for%20a%20BusinessEntityID%20into%20one%20row) | Merges multiple address rows into a single row per entity |
+| [Creating evenly sized groups of vendors](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Creating%20evenly%20size%20groups%20of%20vendors) | Divides vendors into equal groups using NTILE |
+| [Dividing vendors into 10 groups based on historical purchasing amounts](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Dividing%20vendors%20into%2010%20groups%20based%20on%20historical%20purchasing%20amounts) | Ranks and segments vendors into 10 tiers by purchase volume |
+| [Finding beginning and end of a range of consecutive numbers](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Finding%20beginning%20and%20end%20of%20a%20range%20of%20consecutive%20numbers) | Identifies start and end points of consecutive number sequences |
+| [Finding duplicate records on multiple tables](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Finding%20duplicate%20records%20on%20multiple%20tables) | Detects duplicate records across joined tables |
+| [Finding employees with odd numbers on column BusinessEntityID](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Finding%20employees%20with%20odd%20numbers%20on%20column%20BusinessEntityID) | Filters rows where the ID column contains odd numbers |
+| [Finding the manager for each employee (Parent-Child relationship)](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Finding%20the%20manager%20for%20each%20employee%20(Parent-Child%20relationship)) | Retrieves manager information using recursive CTEs |
+| [Generate lists of consecutive numeric values](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Generate%20lists%20of%20consecutives%20numeric%20values) | Generates sequential number lists without a numbers table |
+| [Removing repeating values from a column](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Removing%20repeating%20values%20from%20a%20column) | Displays a value only on its first occurrence in a sorted result |
+
+---
+
+## 🛠️ Data source
+
+All exercises use Microsoft's **AdventureWorks2022** sample database.
+For installation instructions see: [SQL_SERVER-Database-AdventureWorks2022-for-SSMS](https://github.com/arieferencz/SQL_SERVER-Database-AdventureWorks2022-for-SSMS)
+
+---
+
+## 🔗 Back to my profile
+
+[🏠 github.com/arieferencz](https://github.com/arieferencz)
