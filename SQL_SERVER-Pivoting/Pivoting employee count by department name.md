@@ -26,6 +26,9 @@ We use nested subqueries combined with `ROW_NUMBER()`, `CASE` statements, and `S
 ### T-SQL code
 
 ```sql
+USE AdventureWorks2022;
+GO
+
 SELECT
   SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Document Control'        THEN 1 ELSE 0 END) AS dept_DocControl
 , SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Engineering'             THEN 1 ELSE 0 END) AS dept_Engin
