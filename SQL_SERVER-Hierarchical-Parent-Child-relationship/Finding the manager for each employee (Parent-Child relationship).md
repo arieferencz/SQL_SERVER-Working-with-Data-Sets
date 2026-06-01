@@ -123,6 +123,16 @@ BusinessEntityID  JobTitle                           OrgLevel  EmployeeCode  Man
 
 ---
 
+## 📝 Note
+
+> This solution does not rely on the `.GetAncestor()` method.
+>
+> `.GetAncestor()` is a built-in method used with the `hierarchyid` data type to navigate up a tree structure and return the `hierarchyid` of a node's ancestor at a specified level.
+>
+> For further information visit: [GetAncestor (Database Engine) — Microsoft documentation](https://learn.microsoft.com/en-us/sql/t-sql/data-types/getancestor-database-engine?view=sql-server-ver17)
+
+---
+
 ## 🔍 Step-by-step explanation
 
 ### Query 1 — `OriginalTablesLevel1`
