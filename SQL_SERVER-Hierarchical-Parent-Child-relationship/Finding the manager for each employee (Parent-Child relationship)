@@ -1,374 +1,145 @@
-Exercise #1: Finding the manager for each employee based on Parent-Child relationship
+# Finding the manager for each employee (Parent-Child relationship)
 
+## 🎯 Exercise
+Find the manager for each employee based on the organisational hierarchy (Parent-Child relationship).
 
-Solution #1: We include the manager's information (BusinessEntityID and JobTitle) for each employee using Common Table Expression (CTEs).
+---
 
-Tables used:
-1) [AdventureWorks2022].[HumanResources].[Employee]
-2) [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory]
-3) [AdventureWorks2022].[HumanResources].[Department]
+## 💡 Solution
 
+### Approach
+We assign each employee a numeric `EmployeeCode` and `ManagerCode` based on their department group and organisation level. We then use a **self-join** via CTEs to match each employee's `ManagerCode` to another employee's `EmployeeCode`, returning the manager's ID and job title alongside each employee.
 
+### Tables used
+
+| Schema | Table |
+|---|---|
+| `HumanResources` | `Employee` |
+| `HumanResources` | `EmployeeDepartmentHistory` |
+| `HumanResources` | `Department` |
+
+---
+
+### T-SQL code
+
+```sql
 WITH 
 OriginalTablesLevel1 AS 
 (
-	SELECT																-- OriginalTablesLevel1
-	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
-	, Employee.BusinessEntityID	
-	, Department.GroupName
-	, GroupNameCode = CASE Department.GroupName
-		WHEN 'Executive General and Administration' THEN 1
-		WHEN 'Inventory Management' THEN 2
-		WHEN 'Manufacturing' THEN 3
-		WHEN 'Quality Assurance' THEN 4
-		WHEN 'Research and Development' THEN 5
-		WHEN 'Sales and Marketing' THEN 6
-		ELSE 'Error'
-		END 
-	, EmployeeDepartmentHistory.DepartmentID
-	, Department.[Name] AS DeparmentName
-	, Employee.JobTitle
-	, Employee.OrganizationLevel
-	, EmployeeDepartmentHistory.StartDate
-	, EmployeeDepartmentHistory.EndDate
-	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
-	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
-		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
-	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
-		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-	WHERE Employee.BusinessEntityID	<> 234								-- OriginalTablesLevel1
+    SELECT
+    ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID
+                       ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+    , Employee.BusinessEntityID	
+    , Department.GroupName
+    , GroupNameCode = CASE Department.GroupName
+        WHEN 'Executive General and Administration' THEN 1
+        WHEN 'Inventory Management'                 THEN 2
+        WHEN 'Manufacturing'                        THEN 3
+        WHEN 'Quality Assurance'                    THEN 4
+        WHEN 'Research and Development'             THEN 5
+        WHEN 'Sales and Marketing'                  THEN 6
+        ELSE 'Error'
+        END 
+    , EmployeeDepartmentHistory.DepartmentID
+    , Department.[Name] AS DeparmentName
+    , Employee.JobTitle
+    , Employee.OrganizationLevel
+    , EmployeeDepartmentHistory.StartDate
+    , EmployeeDepartmentHistory.EndDate
+    FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+    LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+        ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+    LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+        ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+    WHERE Employee.BusinessEntityID <> 234
 ),
 RemovingDuplicatesLevel2 AS
 (
-	SELECT 
-		OriginalTablesLevel1.BusinessEntityID							-- RemovingDuplicatesLevel2
-		, OriginalTablesLevel1.GroupNameCode
-		, OriginalTablesLevel1.GroupName
-		, OriginalTablesLevel1.DepartmentID
-		, OriginalTablesLevel1.DeparmentName
-		, OriginalTablesLevel1.JobTitle
-		, OriginalTablesLevel1.OrganizationLevel
-		, EmployeeCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel
-		, ManagerCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel - 1
-	FROM OriginalTablesLevel1
-	WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1			-- RemovingDuplicatesLevel2
-		--AND OriginalTablesLevel1.GroupNameCode <> 3
+    SELECT 
+        OriginalTablesLevel1.BusinessEntityID
+        , OriginalTablesLevel1.GroupNameCode
+        , OriginalTablesLevel1.GroupName
+        , OriginalTablesLevel1.DepartmentID
+        , OriginalTablesLevel1.DeparmentName
+        , OriginalTablesLevel1.JobTitle
+        , OriginalTablesLevel1.OrganizationLevel
+        , EmployeeCode = OriginalTablesLevel1.GroupNameCode * 10000 + OriginalTablesLevel1.OrganizationLevel
+        , ManagerCode  = OriginalTablesLevel1.GroupNameCode * 10000 + OriginalTablesLevel1.OrganizationLevel - 1
+    FROM OriginalTablesLevel1
+    WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1
 ),
 SelfJoinBwithDuplicates AS
 (
-	SELECT																-- ScalarSubqueryReturnManagerLevel3
-		RemovingDuplicatesLevel2.BusinessEntityID
-		, RemovingDuplicatesLevel2.JobTitle
-		, RemovingDuplicatesLevel2.EmployeeCode
-		, ROW_NUMBER() OVER (PARTITION BY RemovingDuplicatesLevel2.EmployeeCode ORDER BY RemovingDuplicatesLevel2.EmployeeCode ASC, RemovingDuplicatesLevel2.BusinessEntityID ASC) AS RowNumberEmployeeCode
-	FROM RemovingDuplicatesLevel2										-- ScalarSubqueryReturnManagerLevel3
+    SELECT
+        RemovingDuplicatesLevel2.BusinessEntityID
+        , RemovingDuplicatesLevel2.JobTitle
+        , RemovingDuplicatesLevel2.EmployeeCode
+        , ROW_NUMBER() OVER (PARTITION BY RemovingDuplicatesLevel2.EmployeeCode
+                             ORDER BY RemovingDuplicatesLevel2.EmployeeCode ASC,
+                                      RemovingDuplicatesLevel2.BusinessEntityID ASC) AS RowNumberEmployeeCode
+    FROM RemovingDuplicatesLevel2
 )
-SELECT A.BusinessEntityID 
-	, A.JobTitle
-	, A.OrganizationLevel
-	, A.EmployeeCode
-	, A.ManagerCode
-	, B.BusinessEntityID
-	, B.JobTitle
+SELECT
+    A.BusinessEntityID
+    , A.JobTitle
+    , A.OrganizationLevel
+    , A.EmployeeCode
+    , A.ManagerCode
+    , B.BusinessEntityID  AS ManagerBusinessEntityID
+    , B.JobTitle          AS ManagerJobTitle
 FROM RemovingDuplicatesLevel2 AS A
-LEFT JOIN (SELECT SelfJoinBwithDuplicates.BusinessEntityID
-		, SelfJoinBwithDuplicates.JobTitle
-		, SelfJoinBwithDuplicates.EmployeeCode
-		FROM SelfJoinBwithDuplicates
-		WHERE RowNumberEmployeeCode = 1) AS B
+LEFT JOIN (
+    SELECT
+        SelfJoinBwithDuplicates.BusinessEntityID
+        , SelfJoinBwithDuplicates.JobTitle
+        , SelfJoinBwithDuplicates.EmployeeCode
+    FROM SelfJoinBwithDuplicates
+    WHERE RowNumberEmployeeCode = 1
+) AS B
 ON A.ManagerCode = B.EmployeeCode
 ORDER BY A.BusinessEntityID
+```
 
+---
 
-  -- OUTPUT
-BusinessEntityID	JobTitle										OrganizationLevel	EmployeeCode	ManagerCode		BusinessEntityID	JobTitle
-1					Chief Executive Officer							NULL				NULL			NULL			NULL				NULL
-2					Vice President of Engineering					1					50001			50000			NULL				NULL
-3					Engineering Manager								2					50002			50001			2					Vice President of Engineering
-4					Senior Tool Designer							3					50003			50002			3					Engineering Manager
-5					Design Engineer									3					50003			50002			3					Engineering Manager
-6					Design Engineer									3					50003			50002			3					Engineering Manager
-7					Research and Development Manager				3					50003			50002			3					Engineering Manager
-8					Research and Development Engineer				4					50004			50003			4					Senior Tool Designer
-9					Research and Development Engineer				4					50004			50003			4					Senior Tool Designer
-10					Research and Development Manager				4					50004			50003			4					Senior Tool Designer
-11					Senior Tool Designer							3					50003			50002			3					Engineering Manager
-12					Tool Designer									4					50004			50003			4					Senior Tool Designer
-13					Tool Designer									4					50004			50003			4					Senior Tool Designer
-14					Senior Design Engineer							3					50003			50002			3					Engineering Manager
-15					Design Engineer									3					50003			50002			3					Engineering Manager
-16					Marketing Manager								1					60001			60000			NULL				NULL
-17					Marketing Assistant								2					60002			60001			16					Marketing Manager
-18					Marketing Specialist							2					60002			60001			16					Marketing Manager
-19					Marketing Assistant								2					60002			60001			16					Marketing Manager
-20					Marketing Assistant								2					60002			60001			16					Marketing Manager
-21					Marketing Specialist							2					60002			60001			16					Marketing Manager
-22					Marketing Specialist							2					60002			60001			16					Marketing Manager
-23					Marketing Specialist							2					60002			60001			16					Marketing Manager
-24					Marketing Specialist							2					60002			60001			16					Marketing Manager
-25					Vice President of Production					1					30001			30000			NULL				NULL
-26					Production Control Manager						2					30002			30001			25					Vice President of Production
-27					Production Supervisor - WC60					3					30003			30002			26					Production Control Manager
-28					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-29					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-30					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-31					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-32					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-33					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-34					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-35					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-36					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-37					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-38					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-39					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-40					Production Supervisor - WC60					3					30003			30002			26					Production Control Manager
-41					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-42					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-43					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-44					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-45					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-46					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-47					Production Supervisor - WC10					3					30003			30002			26					Production Control Manager
-48					Production Technician - WC10					4					30004			30003			27							Production Supervisor - WC60
-49					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-50					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-51					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-52					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-53					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-54					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-55					Production Supervisor - WC50					3					30003			30002			26					Production Control Manager
-56					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-57					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-58					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-59					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-60					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-61					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-62					Production Supervisor - WC60					3					30003			30002			26					Production Control Manager
-63					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-64					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-65					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-66					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-67					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-68					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-69					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-70					Production Technician - WC60					4					30004			30003			27					Production Supervisor - WC60
-71					Production Supervisor - WC30					3					30003			30002			26					Production Control Manager
-72					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-73					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-74					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-75					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-76					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-77					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-78					Production Supervisor - WC40					3					30003			30002			26					Production Control Manager
-79					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-80					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-81					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-82					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-83					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-84					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-85					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-86					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-87					Production Supervisor - WC10					3					30003			30002			26					Production Control Manager
-88					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-89					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-90					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-91					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-92					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-93					Production Supervisor - WC50					3					30003			30002			26					Production Control Manager
-94					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-95					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-96					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-97					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-98					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-99					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-100					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-101					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-102					Production Supervisor - WC10					3					30003			30002			26					Production Control Manager
-103					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-104					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-105					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-106					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-107					Production Technician - WC10					4					30004			30003			27					Production Supervisor - WC60
-108					Production Supervisor - WC50					3					30003			30002			26					Production Control Manager
-109					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-110					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-111					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-112					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-113					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-114					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-115					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-116					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-117					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-118					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-119					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-120					Production Technician - WC50					4					30004			30003			27					Production Supervisor - WC60
-121					Shipping and Receiving Supervisor				3					20003			20002			NULL				NULL
-122					Stocker											4					20004			20003			121					Shipping and Receiving Supervisor
-123					Shipping and Receiving Clerk					4					20004			20003			121					Shipping and Receiving Supervisor
-124					Stocker											4					20004			20003			121					Shipping and Receiving Supervisor
-125					Shipping and Receiving Clerk					4					20004			20003			121					Shipping and Receiving Supervisor
-126					Stocker											4					20004			20003			121					Shipping and Receiving Supervisor
-127					Production Supervisor - WC40					3					30003			30002			26					Production Control Manager
-128					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-129					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-130					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-131					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-132					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-133					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-134					Production Supervisor - WC20					3					30003			30002			26					Production Control Manager
-135					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-136					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-137					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-138					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-139					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-140					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-141					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-142					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-143					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-144					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-145					Production Supervisor - WC30					3					30003			30002			26					Production Control Manager
-146					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-147					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-148					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-149					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-150					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-151					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-152					Production Supervisor - WC20					3					30003			30002			26					Production Control Manager
-153					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-154					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-155					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-156					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-157					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-158					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-159					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-160					Production Supervisor - WC45					3					30003			30002			26					Production Control Manager
-161					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-162					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-163					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-164					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-165					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-166					Production Supervisor - WC30					3					30003			30002			26					Production Control Manager
-167					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-168					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-169					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-170					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-171					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-172					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-173					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-174					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-175					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-176					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-177					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-178					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-179					Production Technician - WC30					4					30004			30003			27					Production Supervisor - WC60
-180					Production Supervisor - WC20					3					30003			30002			26					Production Control Manager
-181					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-182					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-183					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-184					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-185					Production Technician - WC20					4					30004			30003			27					Production Supervisor - WC60
-186					Production Supervisor - WC45					3					30003			30002			26					Production Control Manager
-187					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-188					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-189					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-190					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-191					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-192					Production Supervisor - WC40					3					30003			30002			26					Production Control Manager
-193					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-194					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-195					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-196					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-197					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-198					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-199					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-200					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-201					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-202					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-203					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-204					Production Technician - WC40					4					30004			30003			27					Production Supervisor - WC60
-205					Production Supervisor - WC45					3					30003			30002			26					Production Control Manager
-206					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-207					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-208					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-209					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-210					Production Technician - WC45					4					30004			30003			27					Production Supervisor - WC60
-211					Quality Assurance Manager						2					40002			40001			NULL				NULL
-212					Quality Assurance Supervisor					3					40003			40002			211					Quality Assurance Manager
-213					Quality Assurance Technician					4					40004			40003			212					Quality Assurance Supervisor
-214					Quality Assurance Technician					4					40004			40003			212					Quality Assurance Supervisor
-215					Quality Assurance Technician					4					40004			40003			212					Quality Assurance Supervisor
-216					Quality Assurance Technician					4					40004			40003			212					Quality Assurance Supervisor
-217					Document Control Manager						3					40003			40002			211					Quality Assurance Manager
-218					Control Specialist								4					40004			40003			212					Quality Assurance Supervisor
-219					Document Control Assistant						4					40004			40003			212					Quality Assurance Supervisor
-220					Document Control Assistant						4					40004			40003			212					Quality Assurance Supervisor
-221					Control Specialist								4					40004			40003			212					Quality Assurance Supervisor
-222					Master Scheduler								2					30002			30001			25					Vice President of Production
-223					Scheduling Assistant							3					30003			30002			26					Production Control Manager
-224					Scheduling Assistant							3					30003			30002			26					Production Control Manager
-225					Scheduling Assistant							3					30003			30002			26					Production Control Manager
-226					Scheduling Assistant							3					30003			30002			26					Production Control Manager
-227					Facilities Manager								2					10002			10001			263					Information Services Manager
-228					Maintenance Supervisor							3					10003			10002			227					Facilities Manager
-229					Janitor											4					10004			10003			228					Maintenance Supervisor
-230					Janitor											4					10004			10003			228					Maintenance Supervisor
-231					Janitor											4					10004			10003			228					Maintenance Supervisor
-232					Janitor											4					10004			10003			228					Maintenance Supervisor
-233					Facilities Administrative Assistant				3					10003			10002			227					Facilities Manager
-235					Human Resources Manager							2					10002			10001			263					Information Services Manager
-236					Human Resources Administrative Assistant		3					10003			10002			227					Facilities Manager
-237					Human Resources Administrative Assistant		3					10003			10002			227					Facilities Manager
-238					Recruiter										3					10003			10002			227					Facilities Manager
-239					Benefits Specialist								3					10003			10002			227					Facilities Manager
-240					Recruiter										3					10003			10002			227					Facilities Manager
-241					Accounts Manager								2					10002			10001			263					Information Services Manager
-242					Accounts Receivable Specialist					3					10003			10002			227					Facilities Manager
-243					Accounts Receivable Specialist					3					10003			10002			227					Facilities Manager
-244					Accounts Receivable Specialist					3					10003			10002			227					Facilities Manager
-245					Accountant										3					10003			10002			227					Facilities Manager
-246					Accounts Payable Specialist						3					10003			10002			227					Facilities Manager
-247					Accounts Payable Specialist						3					10003			10002			227					Facilities Manager
-248					Accountant										3					10003			10002			227					Facilities Manager
-249					Finance Manager									2					10002			10001			263					Information Services Manager
-250					Purchasing Manager								3					20003			20002			NULL				NULL
-251					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-252					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-253					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-254					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-255					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-256					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-257					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-258					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-259					Buyer											4					20004			20003			121					Shipping and Receiving Supervisor
-260					Purchasing Assistant							4					20004			20003			121					Shipping and Receiving Supervisor
-261					Purchasing Assistant							4					20004			20003			121					Shipping and Receiving Supervisor
-263					Information Services Manager					1					10001			10000			NULL				NULL
-264					Network Manager									2					10002			10001			263					Information Services Manager
-265					Network Administrator							3					10003			10002			227					Facilities Manager
-266					Network Administrator							3					10003			10002			227					Facilities Manager
-267					Application Specialist							2					10002			10001			263					Information Services Manager
-268					Application Specialist							2					10002			10001			263					Information Services Manager
-269					Application Specialist							2					10002			10001			263					Information Services Manager
-270					Database Administrator							2					10002			10001			263					Information Services Manager
-271					Database Administrator							2					10002			10001			263					Information Services Manager
-272					Application Specialist							2					10002			10001			263					Information Services Manager
-273					Vice President of Sales							1					60001			60000			NULL				NULL
-274					North American Sales Manager					2					60002			60001			16					Marketing Manager
-275					Sales Representative							3					60003			60002			17					Marketing Assistant
-276					Sales Representative							3					60003			60002			17					Marketing Assistant
-277					Sales Representative							3					60003			60002			17					Marketing Assistant
-278					Sales Representative							3					60003			60002			17					Marketing Assistant
-279					Sales Representative							3					60003			60002			17					Marketing Assistant
-280					Sales Representative							3					60003			60002			17					Marketing Assistant
-281					Sales Representative							3					60003			60002			17					Marketing Assistant
-282					Sales Representative							3					60003			60002			17					Marketing Assistant
-283					Sales Representative							3					60003			60002			17					Marketing Assistant
-284					Sales Representative							3					60003			60002			17					Marketing Assistant
-285					Pacific Sales Manager							2					60002			60001			16					Marketing Manager
-286					Sales Representative							3					60003			60002			17					Marketing Assistant
-287					European Sales Manager							2					60002			60001			16					Marketing Manager
-288					Sales Representative							3					60003			60002			17					Marketing Assistant
-289					Sales Representative							3					60003			60002			17					Marketing Assistant
-290					Sales Representative							3					60003			60002			17					Marketing Assistant
-(end of results)
+### Output (truncated)
+
+```
+BusinessEntityID  JobTitle                           OrgLevel  EmployeeCode  ManagerCode  ManagerID  ManagerJobTitle
+1                 Chief Executive Officer            NULL      NULL          NULL         NULL       NULL
+2                 Vice President of Engineering      1         50001         50000        NULL       NULL
+3                 Engineering Manager                2         50002         50001        2          Vice President of Engineering
+4                 Senior Tool Designer               3         50003         50002        3          Engineering Manager
+5                 Design Engineer                    3         50003         50002        3          Engineering Manager
+6                 Design Engineer                    3         50003         50002        3          Engineering Manager
+...
+289               Sales Representative               3         60003         60002        17         Marketing Assistant
+290               Sales Representative               3         60003         60002        17         Marketing Assistant
 (289 rows affected)
+```
+
+---
+
+## 🔍 Step-by-step explanation
+
+### Query 1 — `OriginalTablesLevel1`
+Joins the three tables to retrieve each employee's department and organisation level. A `ROW_NUMBER()` window function is added to handle employees who have changed departments (which creates duplicate rows). Each group name is also converted into a numeric `GroupNameCode` using a `CASE` statement — this code is used later to calculate manager relationships mathematically.
+
+### Query 2 — `RemovingDuplicatesLevel2`
+Filters `RowNumberRemovingDuplicates = 1` to keep only the most recent department record per employee. Two new calculated columns are created:
+- `EmployeeCode` = `GroupNameCode × 10000 + OrganizationLevel`
+- `ManagerCode` = `GroupNameCode × 10000 + OrganizationLevel - 1`
+
+This means every employee's `ManagerCode` matches their direct manager's `EmployeeCode` within the same group.
+
+### Query 3 — `SelfJoinBwithDuplicates`
+Since multiple employees can share the same `EmployeeCode`, a second `ROW_NUMBER()` is used to pick only one representative per code — this becomes the manager record used in the final join.
+
+### Final SELECT
+A `LEFT JOIN` matches each employee's `ManagerCode` to a manager's `EmployeeCode`, returning the manager's `BusinessEntityID` and `JobTitle` alongside the employee. `LEFT JOIN` ensures employees at the top of the hierarchy (with no manager) still appear in the results with `NULL` manager values.
+
+---
+
+## 🔗 Back to repository
+
+[← Back to SQL_SERVER-Working-with-Data-Sets](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets)
