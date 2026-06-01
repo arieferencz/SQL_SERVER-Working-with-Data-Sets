@@ -53,7 +53,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 
 | Exercise | Description |
 |---|---|
-| [Calculating the historic subtotal purchasing amount for all vendors](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Calculating%20the%20historic%20subtotal%20purchasing%20amount%20for%20all%20vendors) | Aggregates historical purchasing totals across all vendors |
+| [Calculating the historic subtotal purchasing amount for all vendors](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Calculating%20the%20historic%20subtotal%20purchasing%20amount%20for%20all%20vendors.md) | Aggregates historical purchasing totals across all vendors |
 | [Concatenating multiple addresses for a BusinessEntityID into one row](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Concatenating%20multiple%20addresses%20for%20a%20BusinessEntityID%20into%20one%20row) | Merges multiple address rows into a single row per entity |
 | [Creating evenly sized groups of vendors](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Creating%20evenly%20size%20groups%20of%20vendors) | Divides vendors into equal groups using NTILE |
 | [Dividing vendors into 10 groups based on historical purchasing amounts](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Dividing%20vendors%20into%2010%20groups%20based%20on%20historical%20purchasing%20amounts) | Ranks and segments vendors into 10 tiers by purchase volume |
