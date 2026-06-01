@@ -39,7 +39,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 
 | Exercise | Description |
 |---|---|
-| [Alphabetize the individual characters within a string](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Alphabetize%20the%20individual%20characters%20within%20a%20string) | Sorts each character in a string alphabetically using T-SQL |
+| [Alphabetize the individual characters within a string](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Alphabetize%20the%20individual%20characters%20within%20a%20string.md) | Sorts each character in a string alphabetically using T-SQL |
 | [Convert delimited lists by commas into lists to use on IN clause](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Convert%20delimited%20lists%20by%20commas%20into%20lists%20to%20use%20on%20IN%20clause) | Parses comma-separated strings for use in IN clauses |
 | [Create delimited lists by commas from table rows](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Create%20delimited%20lists%20by%20commas%20from%20table%20rows) | Concatenates multiple rows into a single comma-separated string |
 | [Parsing through a string to retrieve each character on a different row](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-String-Manipulation/Parsing%20through%20a%20string%20to%20retrieve%20each%20character%20on%20a%20different%20row) | Splits a string character by character into individual rows |
