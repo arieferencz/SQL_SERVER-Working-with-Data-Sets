@@ -23,6 +23,9 @@ We use `ROW_NUMBER()` to assign a sequential number to each department within it
 ### T-SQL code
 
 ```sql
+USE AdventureWorks2022;
+GO
+
 SELECT
     PivotingDeptNameGroup.RowNmber
   , COALESCE(MAX(CASE WHEN PivotingDeptNameGroup.GroupName = 'Executive General and Administration' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END), '') AS ExecutiveGeneralandAdmin
