@@ -1,0 +1,42 @@
+Exercise: Find customers who have not made any purchase. 
+
+Solution: We used LEFT JOIN to connect the Customer and SalesOrderHeader tables, to retrieve the list of customers (CustomerID) having no sales orders (SalesOrderID) associated to it.
+
+If the SalesOrderID IS NULL, the condition in the WHERE clause evaluates to TRUE, and the query will retrieve the list customers without purchases.
+
+The output displays 701 rows, indicating there are 701 customers without purchases.
+
+
+Tables used
+[AdventureWorks2022].[Sales].[Customer]
+[AdventureWorks2022].[Sales].[SalesOrderHeader]
+
+T-SQL code
+
+USE AdventureWorks2022;
+GO
+
+SELECT Customers.[CustomerID]
+FROM [AdventureWorks2022].[Sales].[Customer] AS Customers 
+LEFT JOIN [AdventureWorks2022].[Sales].[SalesOrderHeader] AS Orders
+ON Customers.CustomerID = Orders.CustomerID
+WHERE Orders.[SalesOrderID] IS NULL;
+
+
+Output
+CustomerID
+1
+2
+3
+4
+5
+6
+...
+695
+696
+697
+698
+699
+700
+701
+(701 rows affected)
