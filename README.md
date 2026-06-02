@@ -64,6 +64,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 | [Generate lists of consecutive numeric values](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Generate%20lists%20of%20consecutives%20numeric%20values.md) | Generates sequential number lists without a numbers table |
 | [Removing repeating values from a column](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Removing%20repeating%20values%20from%20a%20column.md) | Displays a value only on its first occurrence in a sorted result |
 | [Finding the departments with zero employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Finding%20the%20departments%20with%20zero%20employees.md) | Displays list of departments having zero employees |
+| [Find customers who have not made any purchase](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Find%20customers%20who%20have%20not%20made%20any%20purchase.md) | Displays customers who have not made a purchase |
 
 ---
 
