@@ -1,0 +1,107 @@
+Exercise: Find the number of employees in each job title. 
+
+
+Solution: We used an OUTER query and an INNER query.
+The INNER query uses a LEFT JOIN to connect the Department and EmployeeDepartmentHistory tables, and an INNER JOIN to connect those to the Employee table.
+
+A CASE WHEN statement was used to reclassify the job titles "Production Supervisor" and "Production Technician". This reduces the number of job titles from 67 to 55.
+
+The data for this query was GROUPed BY JobTitle and BusinessEntityID.
+
+Finally, the OUTER query uses the COUNT function to count the number of employees for each job title.
+
+
+Tables used
+[AdventureWorks2022].[HumanResources].[Department]
+[AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory]
+[AdventureWorks2022].[HumanResources].[Employee]
+
+Functions used
+COUNT
+CASE WHEN statement
+
+
+T-SQL code
+USE AdventureWorks2022;
+GO
+
+SELECT	X.JobTitle
+	,COUNT(X.[BusinessEntityID]) AS NumberEmployees
+FROM
+(
+SELECT	CASE 
+	  WHEN Employees.[JobTitle] LIKE 'Production Supervisor%' THEN 'Production Supervisor' 
+	  WHEN Employees.[JobTitle] LIKE 'Production Technician%' THEN 'Production Technician'
+	  ELSE Employees.[JobTitle] 
+	END AS JobTitle
+	  ,COUNT(EmployeesHistorical.[BusinessEntityID]) AS NumberEmployees
+	  ,EmployeesHistorical.[BusinessEntityID]
+FROM [AdventureWorks2022].[HumanResources].[Department] AS Departments
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeesHistorical
+ON Departments.[DepartmentID] = EmployeesHistorical.[DepartmentID]
+INNER JOIN [AdventureWorks2022].[HumanResources].[Employee] AS Employees
+ON Employees.[BusinessEntityID] = EmployeesHistorical.[BusinessEntityID]
+GROUP BY Employees.[JobTitle],EmployeesHistorical.[BusinessEntityID]
+) AS X
+GROUP BY X.JobTitle;
+
+
+Output
+JobTitle					NumberEmployees
+Accountant					2
+Accounts Manager				1
+Accounts Payable Specialist			2
+Accounts Receivable Specialist			3
+Application Specialist				4
+Assistant to the Chief Financial Officer	1
+Benefits Specialist				1
+Buyer						9
+Chief Executive Officer				1
+Chief Financial Officer				1
+Control Specialist				2
+Database Administrator				2
+Design Engineer					3
+Document Control Assistant			2
+Document Control Manager			1
+Engineering Manager				1
+European Sales Manager				1
+Facilities Administrative Assistant		1
+Facilities Manager				1
+Finance Manager					1
+Human Resources Administrative Assistant	2
+Human Resources Manager				1
+Information Services Manager			1
+Janitor						4
+Maintenance Supervisor				1
+Marketing Assistant				3
+Marketing Manager				1
+Marketing Specialist				5
+Master Scheduler				1
+Network Administrator				2
+Network Manager					1
+North American Sales Manager			1
+Pacific Sales Manager				1
+Production Control Manager			1
+Production Supervisor				21
+Production Technician				157
+Purchasing Assistant				2
+Purchasing Manager				1
+Quality Assurance Manager			1
+Quality Assurance Supervisor			1
+Quality Assurance Technician			4
+Recruiter					2
+Research and Development Engineer		2
+Research and Development Manager		2
+Sales Representative				14
+Scheduling Assistant				4
+Senior Design Engineer				1
+Senior Tool Designer				2
+Shipping and Receiving Clerk			2
+Shipping and Receiving Supervisor		1
+Stocker						3
+Tool Designer					2
+Vice President of Engineering			1
+Vice President of Production			1
+Vice President of Sales				1
+
+(55 rows affected)
