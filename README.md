@@ -68,6 +68,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 | [List all departments and their employee counts](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/List%20all%20departments%20and%20their%20employee%20counts.md) | Displays all departments and their employee counts, including departments with zero employees |
 | [Count employees in each department having more than 5 employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Count%20employees%20in%20each%20department%20having%20more%20than%205%20employees.md) | Displays the count of employees for departments having 5 employees or more |
 | [Count number of males and females in each department using conditional aggregation](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Count%20number%20of%20males%20and%20females%20in%20each%20department%20using%20conditional%20aggregation.md) | Counts the number of males and females for each department using the COUNT function and CASE WHEN statement |
+| [Find the number of employees in each job title](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Find%20the%20number%20of%20employees%20in%20each%20job%20title.md) | Count the number of employees per job title |
 
 ---
 
