@@ -1,0 +1,50 @@
+Exercise: Calculate total sales by product name. 
+
+Solution: We used an INNER JOIN to connect the SalesOrderHeader and SalesOrderDetail tables, and an INNER JOIN to connect those to the Product table.
+
+The SUM function calculates the total sales amount by product name.
+
+The ROUND and FORMAT functions formats the amounts to facilitate reading.
+
+Tables used
+[AdventureWorks2022].[Sales].[SalesOrderHeader]
+[AdventureWorks2022].[Sales].[SalesOrderDetail]
+[AdventureWorks2022].[Production].[Product]
+
+Functions used
+SUM
+ROUND
+FORMAT
+
+
+T-SQL code
+USE AdventureWorks2022;
+GO
+
+SELECT	Product.[Name]
+	,FORMAT(ROUND(SUM(SalesOrderDetail.[LineTotal]), 2, 2),  '#,#.##') AS Total_Sales_By_Product_Name
+FROM [AdventureWorks2022].[Sales].[SalesOrderHeader] AS SalesOrderHeader
+INNER JOIN [AdventureWorks2022].[Sales].[SalesOrderDetail] AS SalesOrderDetail
+ON SalesOrderHeader.[SalesOrderID] = SalesOrderDetail.[SalesOrderID]
+INNER JOIN [AdventureWorks2022].[Production].[Product] AS Product
+ON SalesOrderDetail.[ProductID] = Product.[ProductID]
+GROUP BY Product.[Name];
+
+
+Output
+Name				Total_Sales_By_Product_Name
+All-Purpose Bike Stand		39,591
+AWC Logo Cap			51,229.44
+Bike Wash - Dissolver		18,406.97
+Cable Lock			16,240.22
+Chain				9,377.71
+Classic Vest, L			12,839.7
+...
+Women's Mountain Shorts, L	136,774.01
+Women's Mountain Shorts, M	57,685.75
+Women's Mountain Shorts, S	137,164.12
+Women's Tights, L		94,090.64
+Women's Tights, M		17,727.63
+Women's Tights, S		91,330.8
+
+(266 rows affected)
