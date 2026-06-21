@@ -152,7 +152,7 @@ HAVING COUNT(EmployeesHistorical.[BusinessEntityID]) BETWEEN 5 AND 10  -- betwee
 ### Related exercises
 
 This exercise builds directly on:
-- [List all departments and their employee counts, including departments with zero employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/List%20all%20departments%20and%20their%20employee%20counts%2C%20including%20departments%20with%20zero%20employees.md) — the same query without the `HAVING` filter
+- [List all departments and their employee counts, including departments with zero employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Finding%20the%20departments%20with%20zero%20employees.md) — the same query without the `HAVING` filter
 - [Finding the departments with zero employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Finding%20the%20departments%20with%20zero%20employees.md) — uses `LEFT JOIN` + `WHERE IS NULL` for the opposite scenario
 
 ---
