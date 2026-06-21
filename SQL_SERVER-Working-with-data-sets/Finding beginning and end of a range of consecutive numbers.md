@@ -20,7 +20,7 @@ We build the solution in 4 steps:
 3. Use a `CASE` statement to flag rows where the date changes (`1` = new group, `0` = same group)
 4. Use a running `SUM()` window function to convert those flags into a cumulative group number
 
-### T-SQL functions used
+### T-SQL functions and case expressions used
 
 | Function | Purpose |
 |---|---|
@@ -65,12 +65,12 @@ FROM (
       , DatediffHireDates.JobTitle
     FROM (
         SELECT
-            ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate)                                       AS RowNumber
-          , LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate)                      AS PreviousStartDate
+            ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber
+          , LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate) AS PreviousStartDate
           , OriginalTables.StartDate
           , DATEDIFF(DAY,
               LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate),
-              OriginalTables.StartDate)                                                                  AS DatediffStartDate
+              OriginalTables.StartDate) AS DatediffStartDate
           , OriginalTables.BusinessEntityID
           , OriginalTables.JobTitle
           , OriginalTables.DepartmentID
