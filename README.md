@@ -19,8 +19,8 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 
 | Exercise | Description |
 |---|---|
-| [Finding the manager for each employee](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Hierarchical-Parent-Child-relationship/Finding%20the%20manager%20for%20each%20employee%20(Parent-Child%20relationship).md) | Uses CTEs and self-joins to retrieve each employee's manager based on organisational hierarchy |
 | [Finding the manager for each employee](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Hierarchical-Parent-Child-relationship/Finding%20the%20manager%20for%20each%20employee%20(Parent-Child%20relationship)%20(.GetAncestor()%20method).md) | Uses .GetAncestor() method to retrieve each employee's manager based on organisational hierarchy |
+| [Finding the manager for each employee](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Hierarchical-Parent-Child-relationship/Finding%20the%20manager%20for%20each%20employee%20(Parent-Child%20relationship).md) | Uses CTEs and self-joins to retrieve each employee's manager based on organisational hierarchy |
 
 ---
 
