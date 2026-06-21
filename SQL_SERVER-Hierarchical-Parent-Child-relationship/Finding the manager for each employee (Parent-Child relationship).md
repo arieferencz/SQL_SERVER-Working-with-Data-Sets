@@ -232,7 +232,7 @@ LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS E
 	ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-WHERE Employee.BusinessEntityID	<> 234							-- OriginalTablesLevel1
+WHERE Employee.BusinessEntityID	<> 234			-- OriginalTablesLevel1
 )
 SELECT 
 	OriginalTablesLevel1.BusinessEntityID							-- RemovingDuplicatesLevel2
