@@ -30,22 +30,22 @@ USE AdventureWorks2022;
 GO
 
 SELECT
-  SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Document Control'        THEN 1 ELSE 0 END) AS dept_DocControl
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Engineering'             THEN 1 ELSE 0 END) AS dept_Engin
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Executive'               THEN 1 ELSE 0 END) AS dept_Exec
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Facilities and Maintenance' THEN 1 ELSE 0 END) AS dept_FacILMaint
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Finance'                 THEN 1 ELSE 0 END) AS dept_Finance
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Human Resources'         THEN 1 ELSE 0 END) AS dept_HR
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Information Services'    THEN 1 ELSE 0 END) AS dept_IT
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Marketing'               THEN 1 ELSE 0 END) AS dept_Marketing
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Production'              THEN 1 ELSE 0 END) AS dept_Prod
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Production Control'      THEN 1 ELSE 0 END) AS dept_ProdControl
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Purchasing'              THEN 1 ELSE 0 END) AS dept_Purch
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Quality Assurance'       THEN 1 ELSE 0 END) AS dept_QA
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Research and Development' THEN 1 ELSE 0 END) AS dept_R_and_D
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Sales'                   THEN 1 ELSE 0 END) AS dept_Sales
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Shipping and Receiving'  THEN 1 ELSE 0 END) AS dept_ShipReceiv
-, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Tool Design'             THEN 1 ELSE 0 END) AS dept_ToolDesign
+  SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Document Control'              THEN 1 ELSE 0 END) AS dept_DocControl
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Engineering'                   THEN 1 ELSE 0 END) AS dept_Engin
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Executive'                     THEN 1 ELSE 0 END) AS dept_Exec
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Facilities and Maintenance'    THEN 1 ELSE 0 END) AS dept_FacILMaint
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Finance'                       THEN 1 ELSE 0 END) AS dept_Finance
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Human Resources'               THEN 1 ELSE 0 END) AS dept_HR
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Information Services'          THEN 1 ELSE 0 END) AS dept_IT
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Marketing'                     THEN 1 ELSE 0 END) AS dept_Marketing
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Production'                    THEN 1 ELSE 0 END) AS dept_Prod
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Production Control'            THEN 1 ELSE 0 END) AS dept_ProdControl
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Purchasing'                    THEN 1 ELSE 0 END) AS dept_Purch
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Quality Assurance'             THEN 1 ELSE 0 END) AS dept_QA
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Research and Development'      THEN 1 ELSE 0 END) AS dept_R_and_D
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Sales'                         THEN 1 ELSE 0 END) AS dept_Sales
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Shipping and Receiving'        THEN 1 ELSE 0 END) AS dept_ShipReceiv
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Tool Design'                   THEN 1 ELSE 0 END) AS dept_ToolDesign
 FROM (
     SELECT
         OriginalTables.DepartmentName
