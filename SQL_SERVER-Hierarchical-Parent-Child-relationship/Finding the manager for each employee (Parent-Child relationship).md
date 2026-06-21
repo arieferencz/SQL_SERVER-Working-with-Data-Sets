@@ -71,7 +71,7 @@ RemovingDuplicatesLevel2 AS                                              -- CTE 
     FROM OriginalTablesLevel1
     WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1
 ),
-SelfJoinBwithDuplicates AS
+SelfJoinBwithDuplicates AS                                              -- CTE 3: SelfJoinBwithDuplicates
 (
     SELECT
         RemovingDuplicatesLevel2.BusinessEntityID
