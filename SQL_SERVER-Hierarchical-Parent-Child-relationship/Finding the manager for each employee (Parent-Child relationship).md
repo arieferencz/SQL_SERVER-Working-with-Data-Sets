@@ -56,7 +56,7 @@ OriginalTablesLevel1 AS                                              -- CTE 1: O
         ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
     WHERE Employee.BusinessEntityID <> 234
 ),
-RemovingDuplicatesLevel2 AS                                              -- CTE 1: OriginalTablesLevel1 
+RemovingDuplicatesLevel2 AS                                              -- CTE 2: RemovingDuplicatesLevel2 
 (
     SELECT 
         OriginalTablesLevel1.BusinessEntityID
