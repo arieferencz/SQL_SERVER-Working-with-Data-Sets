@@ -68,7 +68,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 | [Finding number of employees in each job title](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Find%20the%20number%20of%20employees%20in%20each%20job%20title.md) | Count the number of employees per job title |
 | [Generate lists of consecutive numeric values](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Generate%20lists%20of%20consecutives%20numeric%20values.md) | Generates sequential number lists without a numbers table |
 | [List all departments and their employee counts](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/List%20all%20departments%20and%20their%20employee%20counts.md) | List all departments alongside their total employee count, including any departments that have zero employees assigned to them |
-| [Removing repeating values from a column](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Removing%20repeating%20values%20from%20a%20column.md) | Displays a value only on its first occurrence in a sorted result |
+| [Removing repeating values from a column](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Removing%20repeating%20values%20from%20a%20column.md) | Displays a value only on its first occurrence in a sorted result |
 
 ---
 
