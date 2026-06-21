@@ -65,10 +65,10 @@ WITH Management AS                                              -- CTE 1: CEO + 
                EmployeePerson.[MiddleName], ' ',
                EmployeePerson.[LastName])                       AS EmployeeName
       , EmployeeTitle.[JobTitle]                                AS EmployeeTitle
-      , EmployeeTitle.[OrganizationNode].GetAncestor(0)        AS OwnNode
-      , EmployeeTitle.[OrganizationNode].GetAncestor(1)        AS ManagerNode
-      , CAST(NULL AS NVARCHAR(150))                            AS ManagerName
-      , CAST(NULL AS NVARCHAR(50))                             AS ManagerTitle
+      , EmployeeTitle.[OrganizationNode].GetAncestor(0)         AS OwnNode
+      , EmployeeTitle.[OrganizationNode].GetAncestor(1)         AS ManagerNode
+      , CAST(NULL AS NVARCHAR(150))                             AS ManagerName
+      , CAST(NULL AS NVARCHAR(50))                              AS ManagerTitle
     FROM [AdventureWorks2022].[Person].[Person] AS EmployeePerson
     RIGHT JOIN [AdventureWorks2022].[HumanResources].[Employee] AS EmployeeTitle
         ON EmployeePerson.[BusinessEntityID] = EmployeeTitle.[BusinessEntityID]
@@ -107,8 +107,8 @@ Employees AS                                                    -- CTE 3: All re
                EmployeePerson.[MiddleName], ' ',
                EmployeePerson.[LastName])                       AS EmployeeName
       , EmployeeTitle.[JobTitle]                                AS EmployeeTitle
-      , EmployeeTitle.[OrganizationNode].GetAncestor(0)        AS OwnNode
-      , ManagerTitle.[OrganizationNode].GetAncestor(1)         AS ManagerNode
+      , EmployeeTitle.[OrganizationNode].GetAncestor(0)         AS OwnNode
+      , ManagerTitle.[OrganizationNode].GetAncestor(1)          AS ManagerNode
       , CONCAT(ManagerPerson.[FirstName], ' ',
                ManagerPerson.[MiddleName], ' ',
                ManagerPerson.[LastName])                        AS ManagerName
