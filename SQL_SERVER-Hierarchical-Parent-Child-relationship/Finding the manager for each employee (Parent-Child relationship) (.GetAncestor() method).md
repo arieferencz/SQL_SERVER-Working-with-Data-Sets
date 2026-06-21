@@ -1,4 +1,4 @@
-<img width="1765" height="929" alt="image" src="https://github.com/user-attachments/assets/c586a9e9-0060-42b4-9f74-ba51d54006eb" /># Finding the manager for each employee (Parent-Child relationship) — using the .GetAncestor() method
+# Finding the manager for each employee (Parent-Child relationship) — using the .GetAncestor() method
 
 ## 🎯 Exercise
 Find the manager for each employee based on the organisational hierarchy (Parent-Child relationship) — using the built-in `.GetAncestor()` method on the `hierarchyid` data type.
