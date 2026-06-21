@@ -173,24 +173,24 @@ WHERE Employee.BusinessEntityID	<> 234					-- OriginalTablesLevel1
 **Output of CTE 1 (truncated)**
 
 ```
-RowNumberRemovingDuplicates	BusinessEntityID	GroupName	GroupNameCode	DepartmentID	DeparmentName	JobTitle	OrganizationLevel	StartDate	EndDate
-1	1	Executive General and Administration	1	16	Executive	Chief Executive Officer	NULL	2009-01-14	NULL
-1	2	Research and Development	5	1	Engineering	Vice President of Engineering	1	2008-01-31	NULL
-1	3	Research and Development	5	1	Engineering	Engineering Manager	2	2007-11-11	NULL
-1	4	Research and Development	5	2	Tool Design	Senior Tool Designer	3	2010-05-31	NULL
-2	4	Research and Development	5	1	Engineering	Senior Tool Designer	3	2007-12-05	2010-05-30
-1	5	Research and Development	5	1	Engineering	Design Engineer	3	2008-01-06	NULL
-1	6	Research and Development	5	1	Engineering	Design Engineer	3	2008-01-24	NULL
-1	7	Research and Development	5	6	Research and Development	Research and Development Manager	3	2009-02-08	NULL
-1	8	Research and Development	5	6	Research and Development	Research and Development Engineer	4	2008-12-29	NULL
-1	9	Research and Development	5	6	Research and Development	Research and Development Engineer	4	2009-01-16	NULL
-1	10	Research and Development	5	6	Research and Development	Research and Development Manager	4	2009-05-03	NULL
-1	11	Research and Development	5	2	Tool Design	Senior Tool Designer	3	2010-12-05	NULL
-1	12	Research and Development	5	2	Tool Design	Tool Designer	4	2007-12-11	NULL
+RowNumberRemovingDuplicates		BusinessEntityID	GroupName								GroupNameCode	DepartmentID	DeparmentName		JobTitle						OrganizationLevel	StartDate	EndDate
+1								1					Executive General and Administration	1				16				Executive			Chief Executive Officer			NULL				2009-01-14	NULL
+1								2					Research and Development				5				1				Engineering			Vice President of Engineering	1					2008-01-31	NULL
+1								3					Research and Development	5	1	Engineering	Engineering Manager	2	2007-11-11	NULL
+1								4					Research and Development	5	2	Tool Design	Senior Tool Designer	3	2010-05-31	NULL
+2								4					Research and Development	5	1	Engineering	Senior Tool Designer	3	2007-12-05	2010-05-30
+1								5	Research and Development	5	1	Engineering	Design Engineer	3	2008-01-06	NULL
+1								6	Research and Development	5	1	Engineering	Design Engineer	3	2008-01-24	NULL
+1								7	Research and Development	5	6	Research and Development	Research and Development Manager	3	2009-02-08	NULL
+1								8	Research and Development	5	6	Research and Development	Research and Development Engineer	4	2008-12-29	NULL
+1								9	Research and Development	5	6	Research and Development	Research and Development Engineer	4	2009-01-16	NULL
+1								10	Research and Development	5	6	Research and Development	Research and Development Manager	4	2009-05-03	NULL
+1								11	Research and Development	5	2	Tool Design	Senior Tool Designer	3	2010-12-05	NULL
+1								12	Research and Development	5	2	Tool Design	Tool Designer	4	2007-12-11	NULL
 ...
-1	288	Sales and Marketing	6	3	Sales	Sales Representative	3	2013-05-30	NULL
-1	289	Sales and Marketing	6	3	Sales	Sales Representative	3	2012-05-30	NULL
-1	290	Sales and Marketing	6	3	Sales	Sales Representative	3	2012-05-30	NULL
+1								288	Sales and Marketing	6	3	Sales	Sales Representative	3	2013-05-30	NULL
+1								289	Sales and Marketing	6	3	Sales	Sales Representative	3	2012-05-30	NULL
+1								290	Sales and Marketing	6	3	Sales	Sales Representative	3	2012-05-30	NULL
 (294 rows affected)
 ```
 
