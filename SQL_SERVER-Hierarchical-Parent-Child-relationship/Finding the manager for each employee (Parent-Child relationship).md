@@ -283,12 +283,81 @@ BusinessEntityID	GroupNameCode	GroupName	DepartmentID	DeparmentName	JobTitle	Org
 288	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
 289	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
 290	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
+(289 rows affected)
 ```
 
 ---
 
 ### Query 3 — `SelfJoinBwithDuplicates`
 Since multiple employees can share the same `EmployeeCode`, a second `ROW_NUMBER()` is used to pick only one representative per code — this becomes the manager record used in the final join.
+
+**T-SQL code of CTE 3**
+
+```
+WITH OriginalTablesLevel1 AS
+(
+	SELECT										-- OriginalTablesLevel1
+	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+	, Employee.BusinessEntityID	
+	, Department.GroupName
+	, GroupNameCode = CASE Department.GroupName
+		WHEN 'Executive General and Administration' THEN 1
+		WHEN 'Inventory Management' THEN 2
+		WHEN 'Manufacturing' THEN 3
+		WHEN 'Quality Assurance' THEN 4
+		WHEN 'Research and Development' THEN 5
+		WHEN 'Sales and Marketing' THEN 6
+		ELSE 'Error'
+		END 
+	, EmployeeDepartmentHistory.DepartmentID
+	, Department.[Name] AS DeparmentName
+	, Employee.JobTitle
+	, Employee.OrganizationLevel
+	, EmployeeDepartmentHistory.StartDate
+	, EmployeeDepartmentHistory.EndDate
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	WHERE Employee.BusinessEntityID	<> 234		-- OriginalTablesLevel1
+),
+RemovingDuplicatesLevel2 AS
+(
+	SELECT 
+		OriginalTablesLevel1.BusinessEntityID						-- RemovingDuplicatesLevel2
+		, OriginalTablesLevel1.GroupNameCode
+		, OriginalTablesLevel1.GroupName
+		, OriginalTablesLevel1.DepartmentID
+		, OriginalTablesLevel1.DeparmentName
+		, OriginalTablesLevel1.JobTitle
+		, OriginalTablesLevel1.OrganizationLevel
+		, EmployeeCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel
+		, ManagerCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel - 1
+	FROM OriginalTablesLevel1
+	WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1		-- RemovingDuplicatesLevel2
+		--AND OriginalTablesLevel1.GroupNameCode <> 3
+)
+	SELECT											-- ScalarSubqueryReturnManagerLevel3
+		RemovingDuplicatesLevel2.BusinessEntityID
+		, RemovingDuplicatesLevel2.JobTitle
+		, RemovingDuplicatesLevel2.EmployeeCode
+		, ROW_NUMBER() OVER (PARTITION BY RemovingDuplicatesLevel2.EmployeeCode ORDER BY RemovingDuplicatesLevel2.EmployeeCode ASC, RemovingDuplicatesLevel2.BusinessEntityID ASC) AS RowNumberEmployeeCode
+	FROM RemovingDuplicatesLevel2					-- ScalarSubqueryReturnManagerLevel3
+```
+---
+
+**Output of CTE 3 (truncated)**
+
+```
+
+(289 rows affected)
+```
+
+---
+
+
+
 
 ### Final SELECT
 A `LEFT JOIN` matches each employee's `ManagerCode` to a manager's `EmployeeCode`, returning the manager's `BusinessEntityID` and `JobTitle` alongside the employee. `LEFT JOIN` ensures employees at the top of the hierarchy (with no manager) still appear in the results with `NULL` manager values.
