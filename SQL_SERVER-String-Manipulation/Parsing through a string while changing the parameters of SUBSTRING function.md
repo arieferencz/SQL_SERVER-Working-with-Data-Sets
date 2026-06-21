@@ -175,10 +175,10 @@ FROM (
 **Output (truncated):**
 
 ```
-FirstName  MiddleName  LastName    FullName           PhoneNumber   AlphaNumericText               NumStartPos  SortFirst3  SortSecond3  SortLast4  SortCharPortion
-Ken        J           Sánchez     Ken J Sánchez       697-555-0142  Ken J Sánchez 697-555-0142     15           697         555          142        Ken J Sánchez
-Terri      Lee         Duffy       Terri Lee Duffy     819-555-0175  Terri Lee Duffy 819-555-0175   17           819         555          175        Terri Lee Duffy
-Roberto    NULL        Tamburello  Roberto Tamburello  212-555-0187  Roberto Tamburello 212-555-0187 20           212         555          187        Roberto Tamburello
+FirstName    MiddleName    LastName        FullName            PhoneNumber   AlphaNumericText                    NumStartPos  SortFirst3  SortSecond3  SortLast4  SortCharPortion
+Ken          J             Sánchez         Ken J Sánchez       697-555-0142  Ken J Sánchez 697-555-0142          15           697         555          142        Ken J Sánchez
+Terri        Lee           Duffy           Terri Lee Duffy     819-555-0175  Terri Lee Duffy 819-555-0175        17           819         555          175        Terri Lee Duffy
+Roberto      NULL          Tamburello      Roberto Tamburello  212-555-0187  Roberto Tamburello 212-555-0187     20           212         555          187        Roberto Tamburello
 ...
 (19972 rows affected)
 ```
