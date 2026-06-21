@@ -171,7 +171,7 @@ The same pattern can be extended to any number of conditions — for example, co
 ### Related exercises
 
 This exercise extends the counting logic from:
-- [List all departments and their employee counts, including departments with zero employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/List%20all%20departments%20and%20their%20employee%20counts%2C%20including%20departments%20with%20zero%20employees.md)
+- [List all departments and their employee counts, including departments with zero employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/List%20all%20departments%20and%20their%20employee%20counts.md)
 - [Count employees in each department having more than 5 employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Count%20employees%20in%20each%20department%20having%20more%20than%205%20employees.md)
 
 ---
