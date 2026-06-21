@@ -27,7 +27,7 @@ USE AdventureWorks2022;
 GO
 
 WITH 
-OriginalTablesLevel1 AS 
+OriginalTablesLevel1 AS                                              -- CTE 1: OriginalTablesLevel1
 (
     SELECT
     ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID
@@ -56,7 +56,7 @@ OriginalTablesLevel1 AS
         ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
     WHERE Employee.BusinessEntityID <> 234
 ),
-RemovingDuplicatesLevel2 AS
+RemovingDuplicatesLevel2 AS                                              -- CTE 1: OriginalTablesLevel1 
 (
     SELECT 
         OriginalTablesLevel1.BusinessEntityID
@@ -168,6 +168,7 @@ LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
 WHERE Employee.BusinessEntityID	<> 234					-- OriginalTablesLevel1
 ```
+
 ---
 
 **Output of CTE 1 (truncated)**
