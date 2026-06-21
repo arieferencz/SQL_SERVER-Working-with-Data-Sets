@@ -20,7 +20,7 @@ We assign each employee a numeric `EmployeeCode` and `ManagerCode` based on thei
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 USE AdventureWorks2022;
@@ -137,6 +137,38 @@ BusinessEntityID  JobTitle                           OrgLevel  EmployeeCode  Man
 
 ### Query 1 — `OriginalTablesLevel1`
 Joins the three tables to retrieve each employee's department and organisation level. A `ROW_NUMBER()` window function is added to handle employees who have changed departments (which creates duplicate rows). Each group name is also converted into a numeric `GroupNameCode` using a `CASE` statement — this code is used later to calculate manager relationships mathematically.
+
+**T-SQL code of CTE 1**
+
+```
+SELECT											        -- OriginalTablesLevel1
+ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+, Employee.BusinessEntityID	
+, Department.GroupName
+, GroupNameCode = CASE Department.GroupName
+	WHEN 'Executive General and Administration' THEN 1
+	WHEN 'Inventory Management'                 THEN 2
+	WHEN 'Manufacturing'                        THEN 3
+	WHEN 'Quality Assurance'                    THEN 4
+	WHEN 'Research and Development'             THEN 5
+	WHEN 'Sales and Marketing'                  THEN 6
+	ELSE 'Error'
+	END 
+, EmployeeDepartmentHistory.DepartmentID
+, Department.[Name] AS DeparmentName
+, Employee.JobTitle
+, Employee.OrganizationLevel
+, EmployeeDepartmentHistory.StartDate
+, EmployeeDepartmentHistory.EndDate
+FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+	ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+WHERE Employee.BusinessEntityID	<> 234					-- OriginalTablesLevel1
+```
+
+---
 
 **Output of CTE 1 (truncated)**
 
