@@ -142,7 +142,7 @@ BusinessEntityID  EmployeeName                    EmployeeTitle                 
 263               Jean E Trenary                  Information Services Manager        0x8C        0x            Ken J Sánchez
 273               Brian S Welcker                 Vice President of Sales            0x94        0x            Ken J Sánchez
 3                 Roberto  Tamburello             Engineering Manager                0x5AC0      0x            Terri Lee Duffy              Vice President of Engineering
-4                 Rob  Walters                   Senior Tool Designer               0x5AD6      0x58          Roberto Tamburello           Engineering Manager
+4                 Rob  Walters                    Senior Tool Designer               0x5AD6      0x58          Roberto Tamburello           Engineering Manager
 5                 Gail A Erickson               Design Engineer                     0x5ADA    0x58         Roberto Tamburello           Engineering Manager
 6                 Jossef H Goldberg             Design Engineer                     0x5ADE    0x58         Roberto Tamburello           Engineering Manager
 7                 Dylan A Miller                Research and Development Manager    0x5AE1    0x58         Roberto Tamburello           Engineering Manager
