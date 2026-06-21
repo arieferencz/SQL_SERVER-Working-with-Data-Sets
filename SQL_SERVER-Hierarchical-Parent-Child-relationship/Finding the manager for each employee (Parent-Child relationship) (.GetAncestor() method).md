@@ -133,35 +133,35 @@ FROM Employees;
 ### Output (truncated)
 
 ```
-BusinessEntityID  EmployeeName                    EmployeeTitle                      OwnNode    ManagerNode  ManagerName                  ManagerTitle
-1                 Ken J Sánchez                   Chief Executive Officer             NULL      NULL         NULL                         N/A
-2                 Terri Lee Duffy                 Vice President of Engineering       0x58      0x           Ken J Sánchez
-16                David M Bradley                 Marketing Manager                   0x68      0x           Ken J Sánchez
-25                James R Hamilton                Vice President of Production        0x78      0x           Ken J Sánchez
-234               Laura F Norman                  Chief Financial Officer             0x84      0x           Ken J Sánchez
-263               Jean E Trenary                  Information Services Manager        0x8C        0x            Ken J Sánchez
-273               Brian S Welcker                 Vice President of Sales            0x94        0x            Ken J Sánchez
-3                 Roberto  Tamburello             Engineering Manager                0x5AC0      0x            Terri Lee Duffy              Vice President of Engineering
-4                 Rob  Walters                    Senior Tool Designer               0x5AD6      0x58          Roberto Tamburello           Engineering Manager
-5                 Gail A Erickson                 Design Engineer                     0x5ADA    0x58         Roberto Tamburello           Engineering Manager
-6                 Jossef H Goldberg               Design Engineer                     0x5ADE    0x58         Roberto Tamburello           Engineering Manager
-7                 Dylan A Miller                  Research and Development Manager    0x5AE1    0x58         Roberto Tamburello           Engineering Manager
-8                 Diane L Margheim                Research and Development Engineer   0x5AE158  0x5AC0       Dylan A Miller               Research and Development Manager
-9                 Gigi N Matthew                  Research and Development Engineer   0x5AE168  0x5AC0       Dylan A Miller               Research and Development Manager
-10                Michael  Raheem                 Research and Development Manager    0x5AE178  0x5AC0       Dylan A Miller               Research and Development Manager
+BusinessEntityID  EmployeeName                    EmployeeTitle                        OwnNode    ManagerNode  ManagerName                  ManagerTitle
+1                 Ken J Sánchez                   Chief Executive Officer              NULL      NULL         NULL                         N/A
+2                 Terri Lee Duffy                 Vice President of Engineering        0x58      0x           Ken J Sánchez
+16                David M Bradley                 Marketing Manager                    0x68      0x           Ken J Sánchez
+25                James R Hamilton                Vice President of Production         0x78      0x           Ken J Sánchez
+234               Laura F Norman                  Chief Financial Officer              0x84      0x           Ken J Sánchez
+263               Jean E Trenary                  Information Services Manager         0x8C        0x            Ken J Sánchez
+273               Brian S Welcker                 Vice President of Sales              0x94        0x            Ken J Sánchez
+3                 Roberto  Tamburello             Engineering Manager                  0x5AC0      0x            Terri Lee Duffy              Vice President of Engineering
+4                 Rob  Walters                    Senior Tool Designer                 0x5AD6      0x58          Roberto Tamburello           Engineering Manager
+5                 Gail A Erickson                 Design Engineer                      0x5ADA    0x58         Roberto Tamburello           Engineering Manager
+6                 Jossef H Goldberg               Design Engineer                      0x5ADE    0x58         Roberto Tamburello           Engineering Manager
+7                 Dylan A Miller                  Research and Development Manager     0x5AE1    0x58         Roberto Tamburello           Engineering Manager
+8                 Diane L Margheim                Research and Development Engineer    0x5AE158  0x5AC0       Dylan A Miller               Research and Development Manager
+9                 Gigi N Matthew                  Research and Development Engineer    0x5AE168  0x5AC0       Dylan A Miller               Research and Development Manager
+10                Michael  Raheem                 Research and Development Manager     0x5AE178  0x5AC0       Dylan A Miller               Research and Development Manager
 ...
-235               Paula M Barreto de Mattos       Human Resources Manager             0x8560    0x           Laura F Norman               Chief Financial Officer
-236               Grant N Culbertson              HR Administrative Assistant         0x856B    0x84         Paula M Barreto de Mattos    Human Resources Manager
+235               Paula M Barreto de Mattos       Human Resources Manager              0x8560    0x           Laura F Norman               Chief Financial Officer
+236               Grant N Culbertson              HR Administrative Assistant          0x856B    0x84         Paula M Barreto de Mattos    Human Resources Manager
 ...
-274               Stephen Y Jiang                 North American Sales Manager        0x9560    0x           Brian S Welcker              Vice President of Sales
-275               Michael G Blythe                Sales Representative                0x956B    0x94         Stephen Y Jiang              North American Sales Manager
+274               Stephen Y Jiang                 North American Sales Manager         0x9560    0x           Brian S Welcker              Vice President of Sales
+275               Michael G Blythe                Sales Representative                 0x956B    0x94         Stephen Y Jiang              North American Sales Manager
 ...
-285               Syed E Abbas                    Pacific Sales Manager               0x95A0    0x           Brian S Welcker              Vice President of Sales
-286               Lynn N Tsoflias                 Sales Representative                0x95AB    0x94         Syed E Abbas                 Pacific Sales Manager
-287               Amy E Alberts                   European Sales Manager              0x95E0    0x           Brian S Welcker              Vice President of Sales
-288               Rachel B Valdez                 Sales Representative                0x95EB    0x94         Amy E Alberts                European Sales Manager
-289               Jae B Pak                       Sales Representative                0x95ED    0x94         Amy E Alberts                European Sales Manager
-290               Ranjit R Varkey Chudukatil      Sales Representative                0x95EF    0x94         Amy E Alberts                European Sales Manager
+285               Syed E Abbas                    Pacific Sales Manager                0x95A0    0x           Brian S Welcker              Vice President of Sales
+286               Lynn N Tsoflias                 Sales Representative                 0x95AB    0x94         Syed E Abbas                 Pacific Sales Manager
+287               Amy E Alberts                   European Sales Manager               0x95E0    0x           Brian S Welcker              Vice President of Sales
+288               Rachel B Valdez                 Sales Representative                 0x95EB    0x94         Amy E Alberts                European Sales Manager
+289               Jae B Pak                       Sales Representative                 0x95ED    0x94         Amy E Alberts                European Sales Manager
+290               Ranjit R Varkey Chudukatil      Sales Representative                 0x95EF    0x94         Amy E Alberts                European Sales Manager
 (290 rows affected)
 ```
 
