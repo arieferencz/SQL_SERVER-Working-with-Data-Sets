@@ -100,31 +100,31 @@ GROUP BY X.BusinessEntityID, X.FirstName, X.MiddleName, X.LastName, X.CountryReg
 ### Output
 
 ```
-BusinessEntityID    FirstName	    MiddleName        LastName	Addresses	CountryRegionCode
-2996	            Amanda	        S                 Cook	4098 Woodcrest Dr., Everett, WA ;9187 Vista Del Sol, Everett, WA 	US
-4073	            Miguel	        NULL              Miller	6696 Anchor Drive, Bothell, WA ;4293 Concord Ct., Everett, WA 	US
-4388	            Osarumwense	    Uwaifiokun        Agbonile	1873 Lion Circle, Bothell, WA ;3858 Vista Diablo, Issaquah, WA 	US
-5124	            Karl	        V	              Xie	4912 La Vuelta, Bothell, WA ;4039 Elkwood Dr., Ballard, WA 	US
-5479	            Luis	        NULL              Shan	500 35th Ave NE, Los Angeles, CA ;3993 Jabber Place, Los Angeles, CA 	US
-5561	            Caleb	        NULL              Alexander	4775 Kentucky Dr., Monroe, WA ;1261 Viking Drive, Everett, WA 	US
-5668	            Jose	        M                 Hayes	793 Crawford Street, Kenmore, WA ;3141 Jabber Place, Ballard, WA 	US
-5976	            Nathan	        D	              Chen	2095 Sierra Drive, Sammamish, WA ;2238 Pine Street, Issaquah, WA 	US
-8892	            Gilbert	        NULL	          Xu	1010 Maple, Baltimore, MD ;7779 Merry Drive, Cheektowaga, NY 	US
-9196	            Calvin	        A	              Raji	5415 San Gabriel Dr., Bothell, WA ;5509 Newcastle Road, Bothell, WA 	US
-10781	            Sydney	        C	              Martinez	3770 Viewpoint Ct, Renton, WA ;5165 Cambridge Drive, Renton, WA 	US
-11072	            Julia	        NULL	          Lee	3148 Rose Street, Bothell, WA ;3443 Centennial Way, Seattle, WA 	US
-11625	            Lauren	        NULL	          Miller	6202 Seeno St., Sammamish, WA ;6437 Brookview Dr., Redmond, WA 	US
-15073	            Evan	        L	              Murphy	249 Alexander Pl., Redmond, WA ;6900 Bellord Ct., Redmond, WA 	US
-16746	            Aaron	        R	              Green	9 Olive Way, Seattle, WA ;8486 Hazelwood Lane, Seattle, WA 	US
-17243	            Terry	        G	              Chander	771 Northridge Drive, Bellevue, WA ;521 Hermosa, Bellevue, WA 	US
-17298	            José	        S	              Miller	9008 Creekside Drive, Everett, WA ;1946 Bayside Way, Everett, WA 	US
-17400	            Karen	        NULL	          Wu	9265 La Paz, Bothell, WA ;7057 Striped Maple Court, Bothell, WA 	US
-17691	            Jonathan	    L	              Jackson	40 Ellis St., Bothell, WA ;769 Algiers Drive, Edmonds, WA 	US
-20099	            Destiny	        NULL	          Alexander	6097 Mt. McKinley Ct., Redmond, WA ;7432 Corte Valencia, Redmond, WA 	US
-20305	            Chloe	        NULL	          Patterson	1960 Via Catanzaro, Redmond, WA ;3175 Olivera Rd., Redmond, WA 	US
-20419	            Julia	        NULL	          Simmons	7723 Firestone Drive, Redmond, WA ;2701 Sierra Rd, Redmond, WA 	US
-20550	            Karen	        NULL	          Sanchez	7469 Paradise Ct., Newport Hills, WA ;6036 Park Glenn, Issaquah, WA 	US
-20759	            Isabella	    NULL	          Reed	5297 Algiers Drive, Renton, WA ;6351 22nd Ave., Renton, WA 	US
+BusinessEntityID    FirstName	    MiddleName        LastName	    Addresses	                                                            CountryRegionCode
+2996	            Amanda	        S                 Cook	        4098 Woodcrest Dr., Everett, WA ;9187 Vista Del Sol, Everett, WA 	    US
+4073	            Miguel	        NULL              Miller	    6696 Anchor Drive, Bothell, WA ;4293 Concord Ct., Everett, WA 	        US
+4388	            Osarumwense	    Uwaifiokun        Agbonile	    1873 Lion Circle, Bothell, WA ;3858 Vista Diablo, Issaquah, WA 	        US
+5124	            Karl	        V	              Xie	        4912 La Vuelta, Bothell, WA ;4039 Elkwood Dr., Ballard, WA             	US
+5479	            Luis	        NULL              Shan	        500 35th Ave NE, Los Angeles, CA ;3993 Jabber Place, Los Angeles, CA 	US
+5561	            Caleb	        NULL              Alexander	    4775 Kentucky Dr., Monroe, WA ;1261 Viking Drive, Everett, WA 	        US
+5668	            Jose	        M                 Hayes	        793 Crawford Street, Kenmore, WA ;3141 Jabber Place, Ballard, WA 	    US
+5976	            Nathan	        D	              Chen	        2095 Sierra Drive, Sammamish, WA ;2238 Pine Street, Issaquah, WA 	    US
+8892	            Gilbert	        NULL	          Xu	        1010 Maple, Baltimore, MD ;7779 Merry Drive, Cheektowaga, NY 	        US
+9196	            Calvin	        A	              Raji	        5415 San Gabriel Dr., Bothell, WA ;5509 Newcastle Road, Bothell, WA 	US
+10781	            Sydney	        C	              Martinez	    3770 Viewpoint Ct, Renton, WA ;5165 Cambridge Drive, Renton, WA 	    US
+11072	            Julia	        NULL	          Lee	        3148 Rose Street, Bothell, WA ;3443 Centennial Way, Seattle, WA 	    US
+11625	            Lauren	        NULL	          Miller	    6202 Seeno St., Sammamish, WA ;6437 Brookview Dr., Redmond, WA 	        US
+15073	            Evan	        L	              Murphy	    249 Alexander Pl., Redmond, WA ;6900 Bellord Ct., Redmond, WA 	        US
+16746	            Aaron	        R	              Green	        9 Olive Way, Seattle, WA ;8486 Hazelwood Lane, Seattle, WA 	            US
+17243	            Terry	        G	              Chander	    771 Northridge Drive, Bellevue, WA ;521 Hermosa, Bellevue, WA 	        US
+17298	            José	        S	              Miller	    9008 Creekside Drive, Everett, WA ;1946 Bayside Way, Everett, WA 	    US
+17400	            Karen	        NULL	          Wu	        9265 La Paz, Bothell, WA ;7057 Striped Maple Court, Bothell, WA 	    US
+17691	            Jonathan	    L	              Jackson	    40 Ellis St., Bothell, WA ;769 Algiers Drive, Edmonds, WA 	            US
+20099	            Destiny	        NULL	          Alexander	    6097 Mt. McKinley Ct., Redmond, WA ;7432 Corte Valencia, Redmond, WA 	US
+20305	            Chloe	        NULL	          Patterson	    1960 Via Catanzaro, Redmond, WA ;3175 Olivera Rd., Redmond, WA 	        US
+20419	            Julia	        NULL	          Simmons	    7723 Firestone Drive, Redmond, WA ;2701 Sierra Rd, Redmond, WA 	        US
+20550	            Karen	        NULL	          Sanchez	    7469 Paradise Ct., Newport Hills, WA ;6036 Park Glenn, Issaquah, WA 	US
+20759	            Isabella	    NULL	          Reed	        5297 Algiers Drive, Renton, WA ;6351 22nd Ave., Renton, WA 	            US
 (24 rows affected)
 ```
 
