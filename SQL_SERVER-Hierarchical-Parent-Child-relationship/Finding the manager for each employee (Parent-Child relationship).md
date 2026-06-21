@@ -194,7 +194,6 @@ RowNumberRemovingDuplicates	BusinessEntityID	GroupName	GroupNameCode	DepartmentI
 ```
 
 ---
-
 <br>
 
 ### Query 2 — `RemovingDuplicatesLevel2`
