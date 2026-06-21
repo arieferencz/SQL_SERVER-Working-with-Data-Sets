@@ -168,7 +168,7 @@ LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 WHERE Employee.BusinessEntityID	<> 234					-- OriginalTablesLevel1
 ```
 
----
+----
 
 **Output of CTE 1 (truncated)**
 
