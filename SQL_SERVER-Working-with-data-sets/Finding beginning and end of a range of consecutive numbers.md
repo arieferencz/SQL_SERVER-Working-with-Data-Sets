@@ -103,32 +103,32 @@ FROM (
 ### Output (truncated)
 
 ```
-RowNumber  StartDate   BusinessEntityID  JobTitle                      NewGroup
-1          2006-06-30  28                Production Technician - WC60  1
-2          2007-01-26  17                Marketing Assistant            2
-3          2007-11-11  3                 Engineering Manager            3
-4          2007-12-11  12                Tool Designer                 4
-5          2007-12-26  40                Production Supervisor - WC60  5
-6          2008-01-06  48                Production Technician - WC10  6
-7          2008-01-06  5                 Design Engineer               6   ← same date as row 6
-8          2008-01-07  49                Production Technician - WC10  7
-9          2008-01-24  6                 Design Engineer               8
-10         2008-01-31  2                 Vice President of Engineering 9
+RowNumber  StartDate   BusinessEntityID  JobTitle                        NewGroup
+1          2006-06-30  28                Production Technician - WC60    1
+2          2007-01-26  17                Marketing Assistant             2
+3          2007-11-11  3                 Engineering Manager             3
+4          2007-12-11  12                Tool Designer                   4
+5          2007-12-26  40                Production Supervisor - WC60    5
+6          2008-01-06  48                Production Technician - WC10    6
+7          2008-01-06  5                 Design Engineer                 6   ← same date as row 6
+8          2008-01-07  49                Production Technician - WC10    7
+9          2008-01-24  6                 Design Engineer                 8
+10         2008-01-31  2                 Vice President of Engineering   9
 ...
-271        2011-05-31  275               Sales Representative          158
-272        2011-05-31  276               Sales Representative          158
-273        2011-05-31  277               Sales Representative          158
-274        2011-05-31  278               Sales Representative          158
-275        2011-05-31  279               Sales Representative          158
-276        2011-05-31  280               Sales Representative          158
-277        2011-05-31  281               Sales Representative          158
-278        2011-05-31  282               Sales Representative          158
-279        2011-05-31  283               Sales Representative          158  ← 9 employees in group 158
-280        2011-09-01  224               Scheduling Assistant          159
+271        2011-05-31  275               Sales Representative            158
+272        2011-05-31  276               Sales Representative            158
+273        2011-05-31  277               Sales Representative            158
+274        2011-05-31  278               Sales Representative            158
+275        2011-05-31  279               Sales Representative            158
+276        2011-05-31  280               Sales Representative            158
+277        2011-05-31  281               Sales Representative            158
+278        2011-05-31  282               Sales Representative            158
+279        2011-05-31  283               Sales Representative            158  ← 9 employees in group 158
+280        2011-09-01  224               Scheduling Assistant            159
 ...
-287        2013-05-30  286               Sales Representative          165
-288        2013-05-30  288               Sales Representative          165
-289        2013-11-14  234               Chief Financial Officer       166
+287        2013-05-30  286               Sales Representative            165
+288        2013-05-30  288               Sales Representative            165
+289        2013-11-14  234               Chief Financial Officer         166
 (289 rows affected)
 ```
 
