@@ -195,7 +195,6 @@ RowNumberRemovingDuplicates	BusinessEntityID	GroupName	GroupNameCode	DepartmentI
 ```
 
 ---
-<br>
 
 ### Query 2 — `RemovingDuplicatesLevel2`
 Filters `RowNumberRemovingDuplicates = 1` to keep only the most recent department record per employee. Two new calculated columns are created:
