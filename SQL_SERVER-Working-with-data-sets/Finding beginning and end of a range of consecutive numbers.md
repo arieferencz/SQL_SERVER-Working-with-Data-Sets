@@ -142,12 +142,12 @@ Some employees have multiple rows in `EmployeeDepartmentHistory` due to departme
 **Output:** 289 rows — one per employee with their most recent start date.
 
 ```
-RowNumber  BusinessEntityID  JobTitle                      DepartmentID  DepartmentName  StartDate
-1          28                Production Technician - WC60  7             Production      2006-06-30
-2          17                Marketing Assistant            4             Marketing       2007-01-26
-3          3                 Engineering Manager            1             Engineering     2007-11-11
+RowNumber  BusinessEntityID  JobTitle                        DepartmentID    DepartmentName    StartDate
+1          28                Production Technician - WC60    7               Production        2006-06-30
+2          17                Marketing Assistant             4               Marketing         2007-01-26
+3          3                 Engineering Manager             1               Engineering       2007-11-11
 ...
-289        234               Chief Financial Officer        16            Executive       2013-11-14
+289        234               Chief Financial Officer         16              Executive         2013-11-14
 (289 rows affected)
 ```
 
