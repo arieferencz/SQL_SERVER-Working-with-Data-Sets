@@ -181,14 +181,14 @@ We join `Person` and `Employee` using a `RIGHT JOIN` to ensure all employees are
 **Output of CTE 1:** 7 rows — the CEO plus 6 direct reports.
 
 ```
-BusinessEntityID  EmployeeName      EmployeeTitle                    OwnNode  ManagerNode  ManagerName  ManagerTitle
-1                 Ken J Sánchez     Chief Executive Officer            NULL     NULL         NULL         NULL
-2                 Terri Lee Duffy   Vice President of Engineering      0x58     0x           NULL         NULL
-16                David M Bradley   Marketing Manager                  0x68     0x           NULL         NULL
-25                James R Hamilton  Vice President of Production        0x78     0x           NULL         NULL
-234               Laura F Norman    Chief Financial Officer             0x84     0x           NULL         NULL
-263               Jean E Trenary    Information Services Manager        0x8C     0x           NULL         NULL
-273               Brian S Welcker   Vice President of Sales             0x94     0x           NULL         NULL
+BusinessEntityID  EmployeeName        EmployeeTitle                    OwnNode    ManagerNode    ManagerName    ManagerTitle
+1                 Ken J Sánchez       Chief Executive Officer          NULL       NULL           NULL           NULL
+2                 Terri Lee Duffy     Vice President of Engineering    0x58       0x             NULL           NULL
+16                David M Bradley     Marketing Manager                0x68       0x             NULL           NULL
+25                James R Hamilton    Vice President of Production     0x78       0x             NULL           NULL
+234               Laura F Norman      Chief Financial Officer          0x84       0x             NULL           NULL
+263               Jean E Trenary      Information Services Manager     0x8C       0x             NULL           NULL
+273               Brian S Welcker     Vice President of Sales          0x94       0x             NULL           NULL
 (7 rows affected)
 ```
 
