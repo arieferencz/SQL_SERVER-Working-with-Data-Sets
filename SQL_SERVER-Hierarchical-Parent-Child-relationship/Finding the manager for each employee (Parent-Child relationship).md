@@ -56,7 +56,7 @@ OriginalTablesLevel1 AS                                              -- CTE 1: O
         ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
     WHERE Employee.BusinessEntityID <> 234
 ),
-RemovingDuplicatesLevel2 AS                                              -- CTE 2: RemovingDuplicatesLevel2 
+RemovingDuplicatesLevel2 AS                                          -- CTE 2: RemovingDuplicatesLevel2 
 (
     SELECT 
         OriginalTablesLevel1.BusinessEntityID
@@ -142,7 +142,7 @@ Joins the three tables to retrieve each employee's department and organisation l
 **T-SQL code of CTE 1**
 
 ```
-SELECT											        -- OriginalTablesLevel1
+SELECT                                              	-- CTE 1: OriginalTablesLevel1
 ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 , Employee.BusinessEntityID	
 , Department.GroupName
@@ -166,7 +166,7 @@ LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS E
 	ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-WHERE Employee.BusinessEntityID	<> 234					-- OriginalTablesLevel1
+WHERE Employee.BusinessEntityID	<> 234
 ```
 
 ---
@@ -207,9 +207,9 @@ This means every employee's `ManagerCode` matches their direct manager's `Employ
 **T-SQL code of CTE 2**
 
 ```
-WITH OriginalTablesLevel1 AS
+WITH OriginalTablesLevel1 AS										-- CTE 1: OriginalTablesLevel1
 (
-SELECT														-- OriginalTablesLevel1
+SELECT
 ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 , Employee.BusinessEntityID	
 , Department.GroupName
@@ -233,10 +233,10 @@ LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS E
 	ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-WHERE Employee.BusinessEntityID	<> 234						-- OriginalTablesLevel1
+WHERE Employee.BusinessEntityID	<> 234
 )
-SELECT 
-	OriginalTablesLevel1.BusinessEntityID							-- RemovingDuplicatesLevel2
+SELECT                                              				-- CTE 2: RemovingDuplicatesLevel2  
+	OriginalTablesLevel1.BusinessEntityID
 	, OriginalTablesLevel1.GroupNameCode
 	, OriginalTablesLevel1.GroupName
 	, OriginalTablesLevel1.DepartmentID
@@ -246,7 +246,7 @@ SELECT
 	, EmployeeCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel
 	, ManagerCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel - 1
 FROM OriginalTablesLevel1
-WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1			-- RemovingDuplicatesLevel2
+WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1
 ```
 ---
 
@@ -295,9 +295,9 @@ Since multiple employees can share the same `EmployeeCode`, a second `ROW_NUMBER
 **T-SQL code of CTE 3**
 
 ```
-WITH OriginalTablesLevel1 AS
+WITH OriginalTablesLevel1 AS										-- CTE 1: OriginalTablesLevel1
 (
-	SELECT													-- OriginalTablesLevel1
+	SELECT
 	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 	, Employee.BusinessEntityID	
 	, Department.GroupName
@@ -323,10 +323,10 @@ WITH OriginalTablesLevel1 AS
 		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
 	WHERE Employee.BusinessEntityID	<> 234					-- OriginalTablesLevel1
 ),
-RemovingDuplicatesLevel2 AS
+RemovingDuplicatesLevel2 AS                                         -- CTE 2: RemovingDuplicatesLevel2
 (
 	SELECT 
-		OriginalTablesLevel1.BusinessEntityID						-- RemovingDuplicatesLevel2
+		OriginalTablesLevel1.BusinessEntityID
 		, OriginalTablesLevel1.GroupNameCode
 		, OriginalTablesLevel1.GroupName
 		, OriginalTablesLevel1.DepartmentID
@@ -336,10 +336,9 @@ RemovingDuplicatesLevel2 AS
 		, EmployeeCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel
 		, ManagerCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel - 1
 	FROM OriginalTablesLevel1
-	WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1		-- RemovingDuplicatesLevel2
-		--AND OriginalTablesLevel1.GroupNameCode <> 3
+	WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1
 )
-	SELECT											-- ScalarSubqueryReturnManagerLevel3
+	SELECT                                             				-- CTE 3: SelfJoinBwithDuplicates
 		RemovingDuplicatesLevel2.BusinessEntityID
 		, RemovingDuplicatesLevel2.JobTitle
 		, RemovingDuplicatesLevel2.EmployeeCode
