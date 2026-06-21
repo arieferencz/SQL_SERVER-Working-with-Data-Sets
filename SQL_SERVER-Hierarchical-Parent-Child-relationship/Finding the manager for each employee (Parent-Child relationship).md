@@ -195,12 +195,67 @@ RowNumberRemovingDuplicates	BusinessEntityID	GroupName	GroupNameCode	DepartmentI
 
 ---
 
+
 ### Query 2 — `RemovingDuplicatesLevel2`
 Filters `RowNumberRemovingDuplicates = 1` to keep only the most recent department record per employee. Two new calculated columns are created:
 - `EmployeeCode` = `GroupNameCode × 10000 + OrganizationLevel`
 - `ManagerCode` = `GroupNameCode × 10000 + OrganizationLevel - 1`
 
 This means every employee's `ManagerCode` matches their direct manager's `EmployeeCode` within the same group.
+
+**T-SQL code of CTE 2**
+
+```
+WITH OriginalTablesLevel1 AS
+(
+SELECT											-- OriginalTablesLevel1
+ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+, Employee.BusinessEntityID	
+, Department.GroupName
+, GroupNameCode = CASE Department.GroupName
+	WHEN 'Executive General and Administration' 	THEN 1
+	WHEN 'Inventory Management' 					THEN 2
+	WHEN 'Manufacturing' 							THEN 3
+	WHEN 'Quality Assurance' 						THEN 4
+	WHEN 'Research and Development' 				THEN 5
+	WHEN 'Sales and Marketing' 						THEN 6
+	ELSE 'Error'
+	END 
+, EmployeeDepartmentHistory.DepartmentID
+, Department.[Name] AS DeparmentName
+, Employee.JobTitle
+, Employee.OrganizationLevel
+, EmployeeDepartmentHistory.StartDate
+, EmployeeDepartmentHistory.EndDate
+FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+	ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+WHERE Employee.BusinessEntityID	<> 234							-- OriginalTablesLevel1
+)
+SELECT 
+	OriginalTablesLevel1.BusinessEntityID							-- RemovingDuplicatesLevel2
+	, OriginalTablesLevel1.GroupNameCode
+	, OriginalTablesLevel1.GroupName
+	, OriginalTablesLevel1.DepartmentID
+	, OriginalTablesLevel1.DeparmentName
+	, OriginalTablesLevel1.JobTitle
+	, OriginalTablesLevel1.OrganizationLevel
+	, EmployeeCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel
+	, ManagerCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel - 1
+FROM OriginalTablesLevel1
+WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1			-- RemovingDuplicatesLevel2
+	--AND OriginalTablesLevel1.GroupNameCode <> 3
+```
+---
+
+**Output of CTE 2 (truncated)**
+
+```
+
+---
+
 
 ### Query 3 — `SelfJoinBwithDuplicates`
 Since multiple employees can share the same `EmployeeCode`, a second `ROW_NUMBER()` is used to pick only one representative per code — this becomes the manager record used in the final join.
