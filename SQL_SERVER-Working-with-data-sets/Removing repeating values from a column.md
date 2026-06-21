@@ -62,7 +62,7 @@ FROM (
     SELECT
         RemovingDepartmentNames.DepartmentID
       , LAG(RemovingDepartmentNames.DepartmentName)
-            OVER (ORDER BY RemovingDepartmentNames.DepartmentName)  AS LAGDepartmentNumber
+            OVER (ORDER BY RemovingDepartmentNames.DepartmentName) AS LAGDepartmentNumber
       , RemovingDepartmentNames.DepartmentName
       , CASE
             WHEN LAG(RemovingDepartmentNames.DepartmentName)
@@ -70,7 +70,7 @@ FROM (
                 = RemovingDepartmentNames.DepartmentName
             THEN ''
             ELSE RemovingDepartmentNames.DepartmentName
-        END                                                          AS NewDepartmentName
+        END AS NewDepartmentName
       , RemovingDepartmentNames.FirstName
       , RemovingDepartmentNames.MiddleName
       , RemovingDepartmentNames.LastName
