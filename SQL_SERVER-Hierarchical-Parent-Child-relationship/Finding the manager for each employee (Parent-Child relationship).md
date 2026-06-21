@@ -133,6 +133,7 @@ BusinessEntityID  JobTitle                           OrgLevel  EmployeeCode  Man
 
 ---
 <br>
+
 ## 🔍 Step-by-step explanation
 
 ### Query 1 — `OriginalTablesLevel1`
