@@ -74,14 +74,14 @@ FROM (
 **Output (truncated):**
 
 ```
-FirstName  MiddleName  LastName    FullName            PhoneNumber   AlphaNumericText               NumStartPos  SortFirst3  SortSecond3  SortLast4  SortCharPortion
-Ken        J           Sánchez     Ken J Sánchez        697-555-0142  Ken J Sánchez 697-555-0142     15           697         555          142        Ken J Sánchez
-Terri      Lee         Duffy       Terri Lee Duffy      819-555-0175  Terri Lee Duffy 819-555-0175   17           819         555          175        Terri Lee Duffy
-Roberto    NULL        Tamburello  Roberto Tamburello   212-555-0187  Roberto Tamburello 212-555-0187 20           212         555          187        Roberto Tamburello
-Rob        NULL        Walters     Rob Walters          612-555-0100  Rob Walters 612-555-0100        13           612         555          100        Rob Walters
-Gail       A           Erickson    Gail A Erickson      849-555-0139  Gail A Erickson 849-555-0139   17           849         555          139        Gail A Erickson
-Jossef     H           Goldberg    Jossef H Goldberg    122-555-0189  Jossef H Goldberg 122-555-0189  19           122         555          189        Jossef H Goldberg
-Dylan      A           Miller      Dylan A Miller       181-555-0156  Dylan A Miller 181-555-0156    16           181         555          156        Dylan A Miller
+FirstName    MiddleName    LastName        FullName                PhoneNumber     AlphaNumericText                    NumStartPos  SortFirst3  SortSecond3  SortLast4  SortCharPortion
+Ken          J             Sánchez         Ken J Sánchez           697-555-0142    Ken J Sánchez 697-555-0142          15           697         555          142        Ken J Sánchez
+Terri        Lee           Duffy           Terri Lee Duffy         819-555-0175    Terri Lee Duffy 819-555-0175        17           819         555          175        Terri Lee Duffy
+Roberto      NULL          Tamburello      Roberto Tamburello      212-555-0187    Roberto Tamburello 212-555-0187     20           212         555          187        Roberto Tamburello
+Rob          NULL          Walters         Rob Walters             612-555-0100    Rob Walters 612-555-0100            13           612         555          100        Rob Walters
+Gail         A             Erickson        Gail A Erickson         849-555-0139    Gail A Erickson 849-555-0139        17           849         555          139        Gail A Erickson
+Jossef       H             Goldberg        Jossef H Goldberg       122-555-0189    Jossef H Goldberg 122-555-0189      19           122         555          189        Jossef H Goldberg
+Dylan        A             Miller          Dylan A Miller          181-555-0156    Dylan A Miller 181-555-0156         16           181         555          156        Dylan A Miller
 ...
 (19972 rows affected)
 ```
