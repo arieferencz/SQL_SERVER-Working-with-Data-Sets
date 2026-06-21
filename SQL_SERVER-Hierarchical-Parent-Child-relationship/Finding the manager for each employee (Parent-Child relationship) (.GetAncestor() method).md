@@ -238,38 +238,37 @@ A second `LEFT JOIN` to `Person` then retrieves the manager's full name.
 
 ```
 BusinessEntityID	EmployeeName	EmployeeTitle	OwnNode	ManagerNode	ManagerName	ManagerTitle
-3	Roberto  Tamburello	Engineering Manager	0x5AC0	0x	Terri Lee Duffy	Vice President of Engineering
-4	Rob  Walters	Senior Tool Designer	0x5AD6	0x58	Roberto  Tamburello	Engineering Manager
-5	Gail A Erickson	Design Engineer	0x5ADA	0x58	Roberto  Tamburello	Engineering Manager
-6	Jossef H Goldberg	Design Engineer	0x5ADE	0x58	Roberto  Tamburello	Engineering Manager
-7	Dylan A Miller	Research and Development Manager	0x5AE1	0x58	Roberto  Tamburello	Engineering Manager
-8	Diane L Margheim	Research and Development Engineer	0x5AE158	0x5AC0	Dylan A Miller	Research and Development Manager
-9	Gigi N Matthew	Research and Development Engineer	0x5AE168	0x5AC0	Dylan A Miller	Research and Development Manager
-10	Michael  Raheem	Research and Development Manager	0x5AE178	0x5AC0	Dylan A Miller	Research and Development Manager
-11	Ovidiu V Cracium	Senior Tool Designer	0x5AE3	0x58	Roberto  Tamburello	Engineering Manager
-12	Thierry B D'Hers	Tool Designer	0x5AE358	0x5AC0	Ovidiu V Cracium	Senior Tool Designer
-13	Janice M Galvin	Tool Designer	0x5AE368	0x5AC0	Ovidiu V Cracium	Senior Tool Designer
-14	Michael I Sullivan	Senior Design Engineer	0x5AE5	0x58	Roberto  Tamburello	Engineering Manager
-15	Sharon B Salavaria	Design Engineer	0x5AE7	0x58	Roberto  Tamburello	Engineering Manager
-						
-274	Stephen Y Jiang	North American Sales Manager	0x9560	0x	Brian S Welcker	Vice President of Sales
-275	Michael G Blythe	Sales Representative	0x956B	0x94	Stephen Y Jiang	North American Sales Manager
-276	Linda C Mitchell	Sales Representative	0x956D	0x94	Stephen Y Jiang	North American Sales Manager
-277	Jillian  Carson	Sales Representative	0x956F	0x94	Stephen Y Jiang	North American Sales Manager
-278	Garrett R Vargas	Sales Representative	0x957080	0x94	Stephen Y Jiang	North American Sales Manager
-279	Tsvi Michael Reiter	Sales Representative	0x957180	0x94	Stephen Y Jiang	North American Sales Manager
-280	Pamela O Ansman-Wolfe	Sales Representative	0x957280	0x94	Stephen Y Jiang	North American Sales Manager
-281	Shu K Ito	Sales Representative	0x957380	0x94	Stephen Y Jiang	North American Sales Manager
-282	José Edvaldo Saraiva	Sales Representative	0x957440	0x94	Stephen Y Jiang	North American Sales Manager
-283	David R Campbell	Sales Representative	0x9574C0	0x94	Stephen Y Jiang	North American Sales Manager
-284	Tete A Mensa-Annan	Sales Representative	0x957540	0x94	Stephen Y Jiang	North American Sales Manager
-285	Syed E Abbas	Pacific Sales Manager	0x95A0	0x	Brian S Welcker	Vice President of Sales
-286	Lynn N Tsoflias	Sales Representative	0x95AB	0x94	Syed E Abbas	Pacific Sales Manager
-287	Amy E Alberts	European Sales Manager	0x95E0	0x	Brian S Welcker	Vice President of Sales
-288	Rachel B Valdez	Sales Representative	0x95EB	0x94	Amy E Alberts	European Sales Manager
-289	Jae B Pak	Sales Representative	0x95ED	0x94	Amy E Alberts	European Sales Manager
-290	Ranjit R Varkey Chudukatil	Sales Representative	0x95EF	0x94	Amy E Alberts	European Sales Manager
-
+3					Roberto  Tamburello	Engineering Manager	0x5AC0	0x	Terri Lee Duffy	Vice President of Engineering
+4					Rob  Walters	Senior Tool Designer	0x5AD6	0x58	Roberto  Tamburello	Engineering Manager
+5					Gail A Erickson	Design Engineer	0x5ADA	0x58	Roberto  Tamburello	Engineering Manager
+6					Jossef H Goldberg	Design Engineer	0x5ADE	0x58	Roberto  Tamburello	Engineering Manager
+7					Dylan A Miller	Research and Development Manager	0x5AE1	0x58	Roberto  Tamburello	Engineering Manager
+8					Diane L Margheim	Research and Development Engineer	0x5AE158	0x5AC0	Dylan A Miller	Research and Development Manager
+9					Gigi N Matthew	Research and Development Engineer	0x5AE168	0x5AC0	Dylan A Miller	Research and Development Manager
+10					Michael  Raheem	Research and Development Manager	0x5AE178	0x5AC0	Dylan A Miller	Research and Development Manager
+11					Ovidiu V Cracium	Senior Tool Designer	0x5AE3	0x58	Roberto  Tamburello	Engineering Manager
+12					Thierry B D'Hers	Tool Designer	0x5AE358	0x5AC0	Ovidiu V Cracium	Senior Tool Designer
+13					Janice M Galvin	Tool Designer	0x5AE368	0x5AC0	Ovidiu V Cracium	Senior Tool Designer
+14					Michael I Sullivan	Senior Design Engineer	0x5AE5	0x58	Roberto  Tamburello	Engineering Manager
+15					Sharon B Salavaria	Design Engineer	0x5AE7	0x58	Roberto  Tamburello	Engineering Manager
+...
+274					Stephen Y Jiang	North American Sales Manager	0x9560	0x	Brian S Welcker	Vice President of Sales
+275					Michael G Blythe	Sales Representative	0x956B	0x94	Stephen Y Jiang	North American Sales Manager
+276					Linda C Mitchell	Sales Representative	0x956D	0x94	Stephen Y Jiang	North American Sales Manager
+277					Jillian  Carson	Sales Representative	0x956F	0x94	Stephen Y Jiang	North American Sales Manager
+278					Garrett R Vargas	Sales Representative	0x957080	0x94	Stephen Y Jiang	North American Sales Manager
+279					Tsvi Michael Reiter	Sales Representative	0x957180	0x94	Stephen Y Jiang	North American Sales Manager
+280					Pamela O Ansman-Wolfe	Sales Representative	0x957280	0x94	Stephen Y Jiang	North American Sales Manager
+281					Shu K Ito	Sales Representative	0x957380	0x94	Stephen Y Jiang	North American Sales Manager
+282					José Edvaldo Saraiva	Sales Representative	0x957440	0x94	Stephen Y Jiang	North American Sales Manager
+283					David R Campbell	Sales Representative	0x9574C0	0x94	Stephen Y Jiang	North American Sales Manager
+284					Tete A Mensa-Annan	Sales Representative	0x957540	0x94	Stephen Y Jiang	North American Sales Manager
+285					Syed E Abbas	Pacific Sales Manager	0x95A0	0x	Brian S Welcker	Vice President of Sales
+286					Lynn N Tsoflias	Sales Representative	0x95AB	0x94	Syed E Abbas	Pacific Sales Manager
+287					Amy E Alberts	European Sales Manager	0x95E0	0x	Brian S Welcker	Vice President of Sales
+288					Rachel B Valdez	Sales Representative	0x95EB	0x94	Amy E Alberts	European Sales Manager
+289					Jae B Pak	Sales Representative	0x95ED	0x94	Amy E Alberts	European Sales Manager
+290					Ranjit R Varkey Chudukatil	Sales Representative	0x95EF	0x94	Amy E Alberts	European Sales Manager
 (283 rows affected)
 ```
 
