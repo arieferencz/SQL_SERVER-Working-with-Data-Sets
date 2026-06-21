@@ -246,7 +246,6 @@ SELECT
 	, ManagerCode = OriginalTablesLevel1.GroupNameCode*10000 + OriginalTablesLevel1.OrganizationLevel - 1
 FROM OriginalTablesLevel1
 WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1			-- RemovingDuplicatesLevel2
-	--AND OriginalTablesLevel1.GroupNameCode <> 3
 ```
 ---
 
