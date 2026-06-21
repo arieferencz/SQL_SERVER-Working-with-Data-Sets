@@ -252,12 +252,40 @@ WHERE OriginalTablesLevel1.RowNumberRemovingDuplicates = 1			-- RemovingDuplicat
 **Output of CTE 2 (truncated)**
 
 ```
-
+BusinessEntityID	GroupNameCode	GroupName	DepartmentID	DeparmentName	JobTitle	OrganizationLevel	EmployeeCode	ManagerCode
+1	1	Executive General and Administration	16	Executive	Chief Executive Officer	NULL	NULL	NULL
+2	5	Research and Development	1	Engineering	Vice President of Engineering	1	50001	50000
+3	5	Research and Development	1	Engineering	Engineering Manager	2	50002	50001
+4	5	Research and Development	2	Tool Design	Senior Tool Designer	3	50003	50002
+5	5	Research and Development	1	Engineering	Design Engineer	3	50003	50002
+6	5	Research and Development	1	Engineering	Design Engineer	3	50003	50002
+7	5	Research and Development	6	Research and Development	Research and Development Manager	3	50003	50002
+8	5	Research and Development	6	Research and Development	Research and Development Engineer	4	50004	50003
+9	5	Research and Development	6	Research and Development	Research and Development Engineer	4	50004	50003
+10	5	Research and Development	6	Research and Development	Research and Development Manager	4	50004	50003
+11	5	Research and Development	2	Tool Design	Senior Tool Designer	3	50003	50002
+12	5	Research and Development	2	Tool Design	Tool Designer	4	50004	50003
+13	5	Research and Development	2	Tool Design	Tool Designer	4	50004	50003
+14	5	Research and Development	1	Engineering	Senior Design Engineer	3	50003	50002
+15	5	Research and Development	1	Engineering	Design Engineer	3	50003	50002
+16	6	Sales and Marketing	4	Marketing	Marketing Manager	1	60001	60000
+17	6	Sales and Marketing	4	Marketing	Marketing Assistant	2	60002	60001
+18	6	Sales and Marketing	4	Marketing	Marketing Specialist	2	60002	60001
+...
+273	6	Sales and Marketing	3	Sales	Vice President of Sales	1	60001	60000
+274	6	Sales and Marketing	3	Sales	North American Sales Manager	2	60002	60001
+275	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
+276	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
+...
+285	6	Sales and Marketing	3	Sales	Pacific Sales Manager	2	60002	60001
+286	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
+287	6	Sales and Marketing	3	Sales	European Sales Manager	2	60002	60001
+288	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
+289	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
+290	6	Sales and Marketing	3	Sales	Sales Representative	3	60003	60002
 ```
 
-
 ---
-
 
 ### Query 3 — `SelfJoinBwithDuplicates`
 Since multiple employees can share the same `EmployeeCode`, a second `ROW_NUMBER()` is used to pick only one representative per code — this becomes the manager record used in the final join.
