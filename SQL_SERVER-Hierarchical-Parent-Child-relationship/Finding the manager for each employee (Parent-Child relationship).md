@@ -138,7 +138,7 @@ BusinessEntityID  JobTitle                           OrgLevel  EmployeeCode  Man
 ### Query 1 — `OriginalTablesLevel1`
 Joins the three tables to retrieve each employee's department and organisation level. A `ROW_NUMBER()` window function is added to handle employees who have changed departments (which creates duplicate rows). Each group name is also converted into a numeric `GroupNameCode` using a `CASE` statement — this code is used later to calculate manager relationships mathematically.
 
-### Output of CTE 1 (truncated)
+**Output of CTE 1 (truncated)**
 
 ```
 RowNumberRemovingDuplicates	BusinessEntityID	GroupName	GroupNameCode	DepartmentID	DeparmentName	JobTitle	OrganizationLevel	StartDate	EndDate
@@ -156,19 +156,13 @@ RowNumberRemovingDuplicates	BusinessEntityID	GroupName	GroupNameCode	DepartmentI
 1	11	Research and Development	5	2	Tool Design	Senior Tool Designer	3	2010-12-05	NULL
 1	12	Research and Development	5	2	Tool Design	Tool Designer	4	2007-12-11	NULL
 ...
-1	284	Sales and Marketing	6	3	Sales	Sales Representative	3	2012-09-30	NULL
-1	285	Sales and Marketing	6	3	Sales	Pacific Sales Manager	2	2013-03-14	NULL
-1	286	Sales and Marketing	6	3	Sales	Sales Representative	3	2013-05-30	NULL
-1	287	Sales and Marketing	6	3	Sales	European Sales Manager	2	2012-04-16	NULL
 1	288	Sales and Marketing	6	3	Sales	Sales Representative	3	2013-05-30	NULL
 1	289	Sales and Marketing	6	3	Sales	Sales Representative	3	2012-05-30	NULL
 1	290	Sales and Marketing	6	3	Sales	Sales Representative	3	2012-05-30	NULL
 (294 rows affected)
 ```
 
-
-
-
+---
 
 ### Query 2 — `RemovingDuplicatesLevel2`
 Filters `RowNumberRemovingDuplicates = 1` to keep only the most recent department record per employee. Two new calculated columns are created:
