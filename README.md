@@ -54,6 +54,7 @@ Each exercise includes a question, one or more solutions, the T-SQL code, the qu
 
 | Exercise | Description |
 |---|---|
+| [Calculating the total sales by product name](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Calculate%20total%20sales%20by%20product%20name.md) | Calculate the total sales amount for each product |
 | [Calculating the historic subtotal purchasing amount for all vendors](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Calculating%20the%20historic%20subtotal%20purchasing%20amount%20for%20all%20vendors.md) | Aggregates historical purchasing totals across all vendors |
 | [Concatenating multiple addresses for a BusinessEntityID into one row](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Data-Sets/Concatenating%20multiple%20addresses%20for%20a%20BusinessEntityID%20into%20one%20row.md) | Merges multiple address rows into a single row per entity |
 | [Count employees in each department having more than 5 employees](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/Count%20employees%20in%20each%20department%20having%20more%20than%205%20employees.md) | Displays the count of employees for departments having 5 employees or more |
