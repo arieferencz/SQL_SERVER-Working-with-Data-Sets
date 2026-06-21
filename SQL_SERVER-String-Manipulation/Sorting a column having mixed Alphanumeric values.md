@@ -241,10 +241,10 @@ FROM ( ... ) AS X
 **Output (truncated):**
 
 ```
-AlphaNumericText               SortNumericOnly  SortFirst3  SortCharacterOnly
-Ken J Sánchez 697-555-0142     6975550142       697         Ken J Sánchez
-Terri Lee Duffy 819-555-0175   8195550175       819         Terri Lee Duffy
-Roberto Tamburello 212-555-0187 2125550187      212         Roberto Tamburello
+AlphaNumericText                   SortNumericOnly    SortFirst3    SortCharacterOnly
+Ken J Sánchez 697-555-0142         6975550142         697           Ken J Sánchez
+Terri Lee Duffy 819-555-0175       8195550175         819           Terri Lee Duffy
+Roberto Tamburello 212-555-0187    2125550187         212           Roberto Tamburello
 ...
 ```
 
