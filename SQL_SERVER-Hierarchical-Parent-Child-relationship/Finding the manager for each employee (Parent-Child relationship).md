@@ -350,37 +350,37 @@ RemovingDuplicatesLevel2 AS
 **Output of CTE 3 (truncated)**
 
 ```
-BusinessEntityID	JobTitle	EmployeeCode	RowNumberEmployeeCode
-1	Chief Executive Officer	NULL	1
-2	Vice President of Engineering	50001	1
-3	Engineering Manager	50002	1
-4	Senior Tool Designer	50003	1
-5	Design Engineer	50003	2
-6	Design Engineer	50003	3
-7	Research and Development Manager	50003	4
-8	Research and Development Engineer	50004	1
-9	Research and Development Engineer	50004	2
-10	Research and Development Manager	50004	3
-11	Senior Tool Designer	50003	5
-12	Tool Designer	50004	4
-13	Tool Designer	50004	5
-14	Senior Design Engineer	50003	6
-15	Design Engineer	50003	7
-16	Marketing Manager	60001	1
-17	Marketing Assistant	60002	1
-18	Marketing Specialist	60002	2
+BusinessEntityID	JobTitle							EmployeeCode	RowNumberEmployeeCode
+1					Chief Executive Officer				NULL			1
+2					Vice President of Engineering		50001			1
+3					Engineering Manager					50002			1
+4					Senior Tool Designer				50003			1
+5					Design Engineer						50003			2
+6					Design Engineer						50003			3
+7					Research and Development Manager	50003			4
+8					Research and Development Engineer	50004			1
+9					Research and Development Engineer	50004			2
+10					Research and Development Manager	50004			3
+11					Senior Tool Designer				50003			5
+12					Tool Designer						50004			4
+13					Tool Designer						50004			5
+14					Senior Design Engineer				50003			6
+15					Design Engineer						50003			7
+16					Marketing Manager					60001			1
+17					Marketing Assistant					60002			1
+18					Marketing Specialist				60002			2
 ...			
-273	Vice President of Sales	60001	2
-274	North American Sales Manager	60002	9
-275	Sales Representative	60003	1
-276	Sales Representative	60003	2
+273					Vice President of Sales				60001			2
+274					North American Sales Manager		60002			9
+275					Sales Representative				60003			1
+276					Sales Representative				60003			2
 ...			
-285	Pacific Sales Manager	60002	10
-286	Sales Representative	60003	11
-287	European Sales Manager	60002	11
-288	Sales Representative	60003	12
-289	Sales Representative	60003	13
-290	Sales Representative	60003	14
+285					Pacific Sales Manager				60002			10
+286					Sales Representative				60003			11
+287					European Sales Manager				60002			11
+288					Sales Representative				60003			12
+289					Sales Representative				60003			13
+290					Sales Representative				60003			14
 (289 rows affected)
 ```
 
