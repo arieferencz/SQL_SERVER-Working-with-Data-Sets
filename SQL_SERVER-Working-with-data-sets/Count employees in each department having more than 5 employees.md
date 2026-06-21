@@ -71,7 +71,7 @@ Shipping and Receiving      6
 
 ### Query 1.1 — Count all employees per department (without `HAVING`)
 
-First, we apply `LEFT JOIN`, `COUNT()`, and `GROUP BY` to get the employee count for all 16 departments — the same result as the [List all departments and their employee counts](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/List%20all%20departments%20and%20their%20employee%20counts%2C%20including%20departments%20with%20zero%20employees.md) exercise.
+First, we apply `LEFT JOIN`, `COUNT()`, and `GROUP BY` to get the employee count for all 16 departments — the same result as the [List all departments and their employee counts](https://github.com/arieferencz/SQL_SERVER-Working-with-Data-Sets/blob/main/SQL_SERVER-Working-with-data-sets/List%20all%20departments%20and%20their%20employee%20counts.md) exercise.
 
 **Output (all 16 departments):**
 
