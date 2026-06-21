@@ -93,15 +93,15 @@ Engineering      3                 M
 Engineering      5                 F
 Engineering      6                 M
 Engineering      7                 M
-Engineering      14               M
-Engineering      15               F
-Engineering      11               M
+Engineering      14                M
+Engineering      15                F
+Engineering      11                M
 ...
-Production       28               M
-Production       29               M
+Production       28                M
+Production       29                M
 ...
-Finance          84               F
-Finance          83               M
+Finance          84                F
+Finance          83                M
 ...
 (295 rows affected)
 ```
