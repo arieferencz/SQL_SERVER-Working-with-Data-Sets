@@ -114,22 +114,22 @@ GO
 SELECT
     Department.[Name]
   , CASE Department.[Name]
-        WHEN 'Document Control'        THEN VIEW_CountNumberEmployeesByDepartment.dept_DocControl
-        WHEN 'Engineering'             THEN VIEW_CountNumberEmployeesByDepartment.dept_Engin
-        WHEN 'Executive'               THEN VIEW_CountNumberEmployeesByDepartment.dept_Exec
-        WHEN 'Facilities and Maintenance' THEN VIEW_CountNumberEmployeesByDepartment.dept_FacILMaint
-        WHEN 'Finance'                 THEN VIEW_CountNumberEmployeesByDepartment.dept_Finance
-        WHEN 'Human Resources'         THEN VIEW_CountNumberEmployeesByDepartment.dept_HR
-        WHEN 'Information Services'    THEN VIEW_CountNumberEmployeesByDepartment.dept_IT
-        WHEN 'Marketing'               THEN VIEW_CountNumberEmployeesByDepartment.dept_Marketing
-        WHEN 'Production'              THEN VIEW_CountNumberEmployeesByDepartment.dept_Prod
-        WHEN 'Production Control'      THEN VIEW_CountNumberEmployeesByDepartment.dept_ProdControl
-        WHEN 'Purchasing'              THEN VIEW_CountNumberEmployeesByDepartment.dept_Purch
-        WHEN 'Quality Assurance'       THEN VIEW_CountNumberEmployeesByDepartment.dept_QA
-        WHEN 'Research and Development' THEN VIEW_CountNumberEmployeesByDepartment.dept_R_and_D
-        WHEN 'Sales'                   THEN VIEW_CountNumberEmployeesByDepartment.dept_Sales
-        WHEN 'Shipping and Receiving'  THEN VIEW_CountNumberEmployeesByDepartment.dept_ShipReceiv
-        WHEN 'Tool Design'             THEN VIEW_CountNumberEmployeesByDepartment.dept_ToolDesign
+        WHEN 'Document Control'                THEN VIEW_CountNumberEmployeesByDepartment.dept_DocControl
+        WHEN 'Engineering'                     THEN VIEW_CountNumberEmployeesByDepartment.dept_Engin
+        WHEN 'Executive'                       THEN VIEW_CountNumberEmployeesByDepartment.dept_Exec
+        WHEN 'Facilities and Maintenance'      THEN VIEW_CountNumberEmployeesByDepartment.dept_FacILMaint
+        WHEN 'Finance'                         THEN VIEW_CountNumberEmployeesByDepartment.dept_Finance
+        WHEN 'Human Resources'                 THEN VIEW_CountNumberEmployeesByDepartment.dept_HR
+        WHEN 'Information Services'            THEN VIEW_CountNumberEmployeesByDepartment.dept_IT
+        WHEN 'Marketing'                       THEN VIEW_CountNumberEmployeesByDepartment.dept_Marketing
+        WHEN 'Production'                      THEN VIEW_CountNumberEmployeesByDepartment.dept_Prod
+        WHEN 'Production Control'              THEN VIEW_CountNumberEmployeesByDepartment.dept_ProdControl
+        WHEN 'Purchasing'                      THEN VIEW_CountNumberEmployeesByDepartment.dept_Purch
+        WHEN 'Quality Assurance'               THEN VIEW_CountNumberEmployeesByDepartment.dept_QA
+        WHEN 'Research and Development'        THEN VIEW_CountNumberEmployeesByDepartment.dept_R_and_D
+        WHEN 'Sales'                           THEN VIEW_CountNumberEmployeesByDepartment.dept_Sales
+        WHEN 'Shipping and Receiving'          THEN VIEW_CountNumberEmployeesByDepartment.dept_ShipReceiv
+        WHEN 'Tool Design'                     THEN VIEW_CountNumberEmployeesByDepartment.dept_ToolDesign
     END AS CountEmployeeByDept
 FROM VIEW_CountNumberEmployeesByDepartment
    , [AdventureWorks2022].[HumanResources].[Department]
