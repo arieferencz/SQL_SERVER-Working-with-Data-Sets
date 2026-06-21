@@ -132,7 +132,7 @@ BusinessEntityID  JobTitle                           OrgLevel  EmployeeCode  Man
 > For further information visit: [GetAncestor (Database Engine) — Microsoft documentation](https://learn.microsoft.com/en-us/sql/t-sql/data-types/getancestor-database-engine?view=sql-server-ver17)
 
 ---
-
+<br>
 ## 🔍 Step-by-step explanation
 
 ### Query 1 — `OriginalTablesLevel1`
