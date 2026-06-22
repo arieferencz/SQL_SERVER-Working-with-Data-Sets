@@ -236,8 +236,8 @@ WITH Management AS                                                -- CTE 1: CEO 
       , EmployeeTitle.[JobTitle]          AS EmployeeTitle
       , EmployeeTitle.[OrganizationNode].GetAncestor(0) AS OwnNode
       , EmployeeTitle.[OrganizationNode].GetAncestor(1) AS ManagerNode
-      , CAST(NULL AS NVARCHAR(150))                             AS ManagerName
-      , CAST(NULL AS NVARCHAR(50))                              AS ManagerTitle
+      , CAST(NULL AS NVARCHAR(150))       AS ManagerName
+      , CAST(NULL AS NVARCHAR(50))        AS ManagerTitle
     FROM [AdventureWorks2022].[Person].[Person] AS EmployeePerson
     RIGHT JOIN [AdventureWorks2022].[HumanResources].[Employee] AS EmployeeTitle
         ON EmployeePerson.[BusinessEntityID] = EmployeeTitle.[BusinessEntityID]
@@ -295,6 +295,71 @@ INNER JOIN [HumanResources].[Employee] AS ManagerTitle
 This `INNER JOIN` automatically **excludes** the CEO (whose `OrganizationNode` is `NULL`) and the direct reports (whose parent is `0x` — the root, which has no matching row). It returns only employees who have a manager with a valid, matchable node.
 
 A second `LEFT JOIN` to `Person` then retrieves the manager's full name.
+
+**T-SQL code:**
+```sql
+WITH Management AS                                              -- CTE 1: CEO + direct reports
+(
+    SELECT
+        EmployeePerson.[BusinessEntityID] AS BusinessEntityID
+      , CONCAT(EmployeePerson.[FirstName], ' ',
+               EmployeePerson.[MiddleName], ' ',
+               EmployeePerson.[LastName]) AS EmployeeName
+      , EmployeeTitle.[JobTitle]          AS EmployeeTitle
+      , EmployeeTitle.[OrganizationNode].GetAncestor(0) AS OwnNode
+      , EmployeeTitle.[OrganizationNode].GetAncestor(1) AS ManagerNode
+      , CAST(NULL AS NVARCHAR(150))       AS ManagerName
+      , CAST(NULL AS NVARCHAR(50))        AS ManagerTitle
+    FROM [AdventureWorks2022].[Person].[Person] AS EmployeePerson
+    RIGHT JOIN [AdventureWorks2022].[HumanResources].[Employee] AS EmployeeTitle
+        ON EmployeePerson.[BusinessEntityID] = EmployeeTitle.[BusinessEntityID]
+    WHERE EmployeeTitle.[OrganizationNode].GetAncestor(1) = 0x
+       OR EmployeeTitle.[OrganizationNode] IS NULL
+),
+Management2 AS                                                  -- CTE 2: Populate ManagerName and ManagerTitle
+(
+    SELECT
+        Management.BusinessEntityID
+      , Management.EmployeeName
+      , Management.EmployeeTitle
+      , CASE WHEN OwnNode IS NOT NULL
+             THEN OwnNode
+             ELSE CAST(NULL AS NVARCHAR(150))
+        END                                   AS OwnNode
+      , CASE WHEN ManagerNode IS NOT NULL
+             THEN ManagerNode
+             ELSE CAST(NULL AS NVARCHAR(150))
+        END                                   AS ManagerNode
+      , CASE WHEN ManagerNode = 0x
+             THEN 'Ken J Sánchez'
+             ELSE CAST(NULL AS NVARCHAR(150))
+        END                                   AS ManagerName
+      , CASE WHEN ManagerNode IS NULL
+             THEN 'N/A'
+             ELSE ''
+        END                                   AS ManagerTitle
+    FROM Management
+)
+SELECT								                            -- CTE 3: All remaining employees
+    EmployeePerson.[BusinessEntityID] AS BusinessEntityID
+    , CONCAT(EmployeePerson.[FirstName], ' ',
+           EmployeePerson.[MiddleName], ' ',
+           EmployeePerson.[LastName]) AS EmployeeName
+    , EmployeeTitle.[JobTitle]        AS EmployeeTitle
+    , EmployeeTitle.[OrganizationNode].GetAncestor(0) AS OwnNode
+    , ManagerTitle.[OrganizationNode].GetAncestor(1)  AS ManagerNode
+    , CONCAT(ManagerPerson.[FirstName], ' ',
+           ManagerPerson.[MiddleName], ' ',
+           ManagerPerson.[LastName]) AS ManagerName
+    , ManagerTitle.[JobTitle]        AS ManagerTitle
+FROM [AdventureWorks2022].[Person].[Person] AS EmployeePerson
+RIGHT JOIN [AdventureWorks2022].[HumanResources].[Employee] AS EmployeeTitle
+    ON EmployeePerson.[BusinessEntityID] = EmployeeTitle.[BusinessEntityID]
+INNER JOIN [AdventureWorks2022].[HumanResources].[Employee] AS ManagerTitle
+    ON EmployeeTitle.[OrganizationNode].GetAncestor(1) = ManagerTitle.[OrganizationNode]
+ LEFT JOIN [AdventureWorks2022].[Person].[Person] AS ManagerPerson
+    ON ManagerTitle.[BusinessEntityID] = ManagerPerson.[BusinessEntityID]
+```
 
 **Output of CTE 3:** 283 rows — all employees excluding the CEO and his 6 direct reports.
 
