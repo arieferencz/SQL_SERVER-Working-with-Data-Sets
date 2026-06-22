@@ -178,7 +178,7 @@ We join `Person` and `Employee` using a `RIGHT JOIN` to ensure all employees are
 
 `.GetAncestor(0)` returns the employee's own node (`OwnNode`). `.GetAncestor(1)` returns their parent node (`ManagerNode`). `ManagerName` and `ManagerTitle` are set as typed `NULL` placeholders — they will be populated in CTE 2.
 
-**T-SQL code of CTE 1**
+**T-SQL code of CTE 1:**
 ```sql
 SELECT                                                            -- CTE 1: CEO + direct reports
     EmployeePerson.[BusinessEntityID] AS BusinessEntityID
@@ -224,7 +224,7 @@ We use `CASE` statements to fill in the `ManagerName` and `ManagerTitle` columns
 **Why is the CEO's `OwnNode` unavailable?**
 The `OrganizationNode` column for `BusinessEntityID = 1` (Ken J Sánchez) is `NULL` in the AdventureWorks2022 database — his node was not populated in the sample data. This is why `.GetAncestor()` cannot be used to retrieve his name dynamically, and it must be hardcoded instead.
 
-**T-SQL code of CTE 2**
+**T-SQL code of CTE 2:**
 ```sql
 WITH Management AS                                                -- CTE 1: CEO + direct reports
 (
@@ -296,7 +296,7 @@ This `INNER JOIN` automatically **excludes** the CEO (whose `OrganizationNode` i
 
 A second `LEFT JOIN` to `Person` then retrieves the manager's full name.
 
-**T-SQL code of CTE 3**
+**T-SQL code of CTE 3:**
 ```sql
 WITH Management AS                                              -- CTE 1: CEO + direct reports
 (
