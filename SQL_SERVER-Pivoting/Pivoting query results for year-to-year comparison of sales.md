@@ -18,7 +18,7 @@ We use nested subqueries combined with `CASE` statements and `SUM()` to pivot sa
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 USE AdventureWorks2022;
