@@ -102,19 +102,49 @@ SalesOrderID	SalesYear	SubTotal
 ### Query 1.2 — Pivot the subtotal into one column per year using `CASE`
 For each row we use a `CASE` statement per year: if the order belongs to that year, the column returns the `SubTotal`; otherwise `NULL`. This spreads each order's amount into its year column, with `NULL` in all other year columns.
 
-**Output:** 31,465 rows, each with an amount in one year column and `NULL` in the others (truncated).
-
+**T-SQL code of Query 1.2**
+```sql
+SELECT Sales.SalesYear                                                -- SalesAmountPerYearPerSalesOrderIDLevel2
+, CASE WHEN Sales.SalesYear = 2011 THEN Sales.SubTotal END AS Sales2011
+, CASE WHEN Sales.SalesYear = 2012 THEN Sales.SubTotal END AS Sales2012
+, CASE WHEN Sales.SalesYear = 2013 THEN Sales.SubTotal END AS Sales2013
+, CASE WHEN Sales.SalesYear = 2014 THEN Sales.SubTotal END AS Sales2014
+FROM (
+	SELECT SalesOrderID								                                -- OriginalTablesLevel1
+	, DATEPART(YEAR, OrderDate) AS SalesYear
+	, SubTotal
+	FROM [AdventureWorks2022].[Sales].[SalesOrderHeader] AS SalesOrderHeader    	-- OriginalTablesLevel1
+) AS Sales                                                            -- SalesAmountPerYearPerSalesOrderIDLevel2
 ```
-SalesYear  Sales2011   Sales2012    Sales2013   Sales2014
-2011       20565.6206  NULL         NULL        NULL
-2011       1294.2529   NULL         NULL        NULL
+
+**Output of Query 1.2 (Truncated):** 31,465 rows, each with an amount in one year column and `NULL` in the others (truncated).
+```
+SalesYear	Sales2011		Sales2012	Sales2013	Sales2014
+2011		20565.6206		NULL		NULL		NULL
+2011		1294.2529		NULL		NULL		NULL
+2011		32726.4786		NULL		NULL		NULL
+2011		28832.5289		NULL		NULL		NULL
+2011		419.4589		NULL		NULL		NULL
 ...
-2012       NULL        24509.8281   NULL        NULL
-2012       NULL        3463.2998    NULL        NULL
+2011		3374.99			NULL		NULL		NULL
+2011		3374.99			NULL		NULL		NULL
+2012		NULL			24509.8281	NULL		NULL
+2012		NULL			3463.2998	NULL		NULL
 ...
-2013       NULL        NULL         2181.5625   NULL
+2012		NULL			1000.4375	NULL		NULL
+2012		NULL			782.99		NULL		NULL
+2013		NULL			NULL		2181.5625	NULL
+2013		NULL			NULL		2443.35		NULL
 ...
-2014       NULL        NULL         NULL        27.28
+2013		NULL			NULL		2384.07		NULL
+2013		NULL			NULL		2419.06		NULL
+2014		NULL			NULL		NULL		27.28
+2014		NULL			NULL		NULL		29.93
+...
+2014		NULL			NULL		NULL		84.96
+2014		NULL			NULL		NULL		74.98
+2014		NULL			NULL		NULL		30.97
+2014		NULL			NULL		NULL		189.97
 (31465 rows affected)
 ```
 
@@ -123,8 +153,22 @@ SalesYear  Sales2011   Sales2012    Sales2013   Sales2014
 ### Query 1.3 — Sum all amounts per year into a single row
 We wrap Query 1.2 with `SUM()` per year column. Since each row contains only one non-`NULL` value, `SUM()` totals all amounts per year and collapses the 31,465 rows into a single row with one total per year.
 
-**Output:** 1 row with the total sales amount for each year.
+**T-SQL code of Query 1.3**
+```sql
+SELECT                                                            -- SumSalesAmountPerYearPerSalesOrderIDLevel3 / SalesAmountPerYearPerSalesOrderIDLevel2
+SUM(CASE WHEN Sales.SalesYear = 2011 THEN Sales.SubTotal END)   AS Sales2011
+, SUM(CASE WHEN Sales.SalesYear = 2012 THEN Sales.SubTotal END) AS Sales2012
+, SUM(CASE WHEN Sales.SalesYear = 2013 THEN Sales.SubTotal END) AS Sales2013
+, SUM(CASE WHEN Sales.SalesYear = 2014 THEN Sales.SubTotal END) AS Sales2014
+FROM (
+	SELECT SalesOrderID                                                             -- OriginalTablesLevel1
+	, DATEPART(YEAR, OrderDate) AS SalesYear
+	, SubTotal
+	FROM [AdventureWorks2022].[Sales].[SalesOrderHeader] AS SalesOrderHeader        -- OriginalTablesLevel1
+) AS Sales                                                        -- SumSalesAmountPerYearPerSalesOrderIDLevel3 / SalesAmountPerYearPerSalesOrderIDLevel2
+```
 
+**Output of Query 1.3:** 1 row with the total sales amount for each year.
 ```
 Sales2011         Sales2012        Sales2013         Sales2014
 12,641,672.2129   33,524,301.326   43,622,479.0537   20,057,928.8113
