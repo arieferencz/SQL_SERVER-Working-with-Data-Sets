@@ -126,6 +126,28 @@ Sales                     290
 ### Query 1.2 — Add `EmployeeCountByDepartment` column
 We add `COUNT(*) ... GROUP BY DepartmentName, BusinessEntityID` to prepare the data for aggregation. At this stage every employee still has their own row — each with a count of `1`.
 
+**T-SQL code of Query 1.2**
+```sql
+SELECT OriginalTables.DepartmentName						-- PrepareForCountingEmployeesLevel3 / RemovingDuplicatesLevel2
+, OriginalTables.BusinessEntityID
+, COUNT(*) AS EmployeeCountByDepartment
+FROM (
+	SELECT											-- OriginalTablesLevel1
+	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+	, Employee.BusinessEntityID	
+	, EmployeeDepartmentHistory.DepartmentID
+	, Department.[Name] AS DepartmentName
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	WHERE Employee.BusinessEntityID <> 1							-- OriginalTablesLevel1
+) AS OriginalTables
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2
+GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID		-- PrepareForCountingEmployeesLevel3
+```
+
 **Output:** 289 rows, each employee with `EmployeeCountByDepartment = 1`.
 
 ```
