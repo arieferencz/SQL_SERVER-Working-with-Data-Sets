@@ -88,6 +88,26 @@ dept_DocControl  dept_Engin  dept_Exec  dept_FacILMaint  dept_Finance  dept_HR  
 ### Query 1.1 — Remove duplicate employee records (`RowNumberRemovingDuplicates`)
 Some employees have changed departments over time, which creates multiple rows per employee in `EmployeeDepartmentHistory`. We use `ROW_NUMBER()` partitioned by `BusinessEntityID` and ordered by `StartDate DESC` to number each employee's department records, then filter to `RowNumberRemovingDuplicates = 1` to keep only the most recent department per employee.
 
+**T-SQL code of Query 1.1**
+```sql
+SELECT OriginalTables.DepartmentName                        			-- RemovingDuplicatesLevel2
+, OriginalTables.BusinessEntityID
+FROM (
+	SELECT										                      -- OriginalTablesLevel1
+	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+	, Employee.BusinessEntityID	
+	, EmployeeDepartmentHistory.DepartmentID
+	, Department.[Name] AS DepartmentName
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+) AS OriginalTables
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1              -- RemovingDuplicatesLevel2
+```
+
 **Output:** 289 unique employee rows, each with their current department name.
 
 ```
