@@ -178,6 +178,25 @@ We join `Person` and `Employee` using a `RIGHT JOIN` to ensure all employees are
 
 `.GetAncestor(0)` returns the employee's own node (`OwnNode`). `.GetAncestor(1)` returns their parent node (`ManagerNode`). `ManagerName` and `ManagerTitle` are set as typed `NULL` placeholders — they will be populated in CTE 2.
 
+**T-SQL code:**
+```sql
+SELECT
+    EmployeePerson.[BusinessEntityID] AS BusinessEntityID
+    , CONCAT(EmployeePerson.[FirstName], ' ',
+           EmployeePerson.[MiddleName], ' ',
+           EmployeePerson.[LastName]) AS EmployeeName
+    , EmployeeTitle.[JobTitle]          AS EmployeeTitle
+    , EmployeeTitle.[OrganizationNode].GetAncestor(0) AS OwnNode
+    , EmployeeTitle.[OrganizationNode].GetAncestor(1) AS ManagerNode
+    , CAST(NULL AS NVARCHAR(150))                             AS ManagerName
+    , CAST(NULL AS NVARCHAR(50))                              AS ManagerTitle
+FROM [AdventureWorks2022].[Person].[Person] AS EmployeePerson
+RIGHT JOIN [AdventureWorks2022].[HumanResources].[Employee] AS EmployeeTitle
+    ON EmployeePerson.[BusinessEntityID] = EmployeeTitle.[BusinessEntityID]
+WHERE EmployeeTitle.[OrganizationNode].GetAncestor(1) = 0x
+   OR EmployeeTitle.[OrganizationNode] IS NULL
+```
+
 **Output of CTE 1:** 7 rows — the CEO plus 6 direct reports.
 
 ```
