@@ -90,10 +90,10 @@ Some employees have changed departments over time, which creates multiple rows p
 
 **T-SQL code of Query 1.1**
 ```sql
-SELECT OriginalTables.DepartmentName                        			-- RemovingDuplicatesLevel2
+SELECT OriginalTables.DepartmentName								-- RemovingDuplicatesLevel2
 , OriginalTables.BusinessEntityID
 FROM (
-	SELECT										                      -- OriginalTablesLevel1
+	SELECT												-- OriginalTablesLevel1
 	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 	, Employee.BusinessEntityID	
 	, EmployeeDepartmentHistory.DepartmentID
@@ -103,9 +103,9 @@ FROM (
 		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-	WHERE Employee.BusinessEntityID <> 1						-- OriginalTablesLevel1
+	WHERE Employee.BusinessEntityID <> 1				-- OriginalTablesLevel1
 ) AS OriginalTables
-WHERE OriginalTables.RowNumberRemovingDuplicates = 1              -- RemovingDuplicatesLevel2
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1				-- RemovingDuplicatesLevel2
 ```
 
 **Output:** 289 unique employee rows, each with their current department name.
@@ -128,11 +128,11 @@ We add `COUNT(*) ... GROUP BY DepartmentName, BusinessEntityID` to prepare the d
 
 **T-SQL code of Query 1.2**
 ```sql
-SELECT OriginalTables.DepartmentName						-- PrepareForCountingEmployeesLevel3 / RemovingDuplicatesLevel2
+SELECT OriginalTables.DepartmentName								-- PrepareForCountingEmployeesLevel3 / RemovingDuplicatesLevel2
 , OriginalTables.BusinessEntityID
 , COUNT(*) AS EmployeeCountByDepartment
 FROM (
-	SELECT											-- OriginalTablesLevel1
+	SELECT												-- OriginalTablesLevel1
 	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 	, Employee.BusinessEntityID	
 	, EmployeeDepartmentHistory.DepartmentID
@@ -142,10 +142,10 @@ FROM (
 		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
 	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
-	WHERE Employee.BusinessEntityID <> 1							-- OriginalTablesLevel1
+	WHERE Employee.BusinessEntityID <> 1				-- OriginalTablesLevel1
 ) AS OriginalTables
-WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2
-GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID		-- PrepareForCountingEmployeesLevel3
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1				-- RemovingDuplicatesLevel2
+GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID					-- PrepareForCountingEmployeesLevel3
 ```
 
 **Output:** 289 rows, each employee with `EmployeeCountByDepartment = 1`.
