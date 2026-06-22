@@ -68,17 +68,32 @@ Warning: Null value is eliminated by an aggregate or other SET operation.
 ### Query 1.1 — Retrieve the sales amount for each order (`OriginalTablesLevel1`)
 We extract `SalesOrderID`, the order year using `DATEPART(YEAR, OrderDate)`, and `SubTotal` (the amount before taxes and shipping) from `SalesOrderHeader`.
 
-**Output:** 31,465 rows — one per sales order, with its year and subtotal amount (truncated).
+**T-SQL code of Query 1.1**
+```sql
+SELECT SalesOrderID									                            -- OriginalTablesLevel1
+, DATEPART(YEAR, OrderDate) AS SalesYear
+, SubTotal
+FROM [AdventureWorks2022].[Sales].[SalesOrderHeader] AS SalesOrderHeader		-- OriginalTablesLevel1
+```
+
+**Output of Query 1.1 (Truncated):** 31,465 rows — one per sales order, with its year and subtotal amount (truncated).
 
 ```
-SalesOrderID  SalesYear  SubTotal
-43659         2011       20565.6206
-43660         2011       1294.2529
-43661         2011       32726.4786
+SalesOrderID	SalesYear	SubTotal
+43659		    2011        20565.6206
+43660		    2011        1294.2529
+43661		    2011        32726.4786
+43662		    2011        28832.5289
+43663		    2011	    419.4589
+43664		    2011	    24432.6088
 ...
-75121         2014       74.98
-75122         2014       30.97
-75123         2014       189.97
+75117		    2014	    29.48
+75118		    2014	    135.23
+75119		    2014	    42.28
+75120		    2014	    84.96
+75121		    2014	    74.98
+75122		    2014	    30.97
+75123		    2014	    189.97
 (31465 rows affected)
 ```
 
