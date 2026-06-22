@@ -160,8 +160,6 @@ RowNumber	ExecutiveGeneralandAdmin		InventoryManagement			Manufacturing			Qualit
 ### Query 1.3 — Group by `RowNumber` and collapse using `MAX()`
 We add `GROUP BY RowNumber` and wrap each `CASE` statement with `MAX()`. Since each row number within a group contains only one non-`NULL` value, `MAX()` returns that value while ignoring all `NULL`s. This collapses the 16 rows into 5 rows (one per row number), aligning all departments into their correct columns.
 
-**Output:** 5 rows — departments aligned under their group columns, but `NULL` still visible where a group has fewer departments than others.
-
 **T-SQL code of Query 1.3**
 ```sql
 SELECT PivotingDeptNameGroup.RowNumber												-- PivotingDeptNamesGroupedLevel3 / PivotingDeptNamesNonGroupedLevel2
@@ -185,7 +183,7 @@ FROM (
 GROUP BY PivotingDeptNameGroup.RowNumber											-- PivotingDeptNamesGroupedLevel3
 ```
 
-
+**Output of Query 1.3:** 5 rows — departments aligned under their group columns, but `NULL` still visible where a group has fewer departments than others.
 ```
 RowNumber	ExecutiveGeneralandAdmin		InventoryManagement			Manufacturing			QualityAssurance		ResearchandDevelopment		    SalesandMarketing
 1			Executive						Purchasing					Production				Document Control		Engineering						Marketing
