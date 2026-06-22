@@ -23,7 +23,7 @@ We use nested subqueries combined with `ROW_NUMBER()`, `CASE` statements, and `S
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 USE AdventureWorks2022;
