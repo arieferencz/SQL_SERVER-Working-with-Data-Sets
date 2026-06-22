@@ -108,7 +108,7 @@ FROM (
 WHERE OriginalTables.RowNumberRemovingDuplicates = 1				-- RemovingDuplicatesLevel2
 ```
 
-**Output:** 289 unique employee rows, each with their current department name.
+**Output of Query 1.1:** 289 unique employee rows, each with their current department name.
 
 ```
 DepartmentName            BusinessEntityID
@@ -148,7 +148,7 @@ WHERE OriginalTables.RowNumberRemovingDuplicates = 1				-- RemovingDuplicatesLev
 GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID					-- PrepareForCountingEmployeesLevel3
 ```
 
-**Output:** 289 rows, each employee with `EmployeeCountByDepartment = 1`.
+**Output of Query 1.2:** 289 rows, each employee with `EmployeeCountByDepartment = 1`.
 
 ```
 DepartmentName            BusinessEntityID  EmployeeCountByDepartment
@@ -165,7 +165,49 @@ Sales                     290               1
 ### Query 1.3 — Pivot department names using `CASE` statements
 For each row we use a `CASE` statement per department: if the employee belongs to that department, the column returns `1`; otherwise `0`. This converts each row into a wide format with one column per department.
 
-**Output:** 289 rows, each with a `1` in one department column and `0` in all others (truncated).
+**T-SQL code of Query 1.3**
+```sql
+SELECT PivotDeptNames.DepartmentName									-- PivotingDeptNamePrepareForCountingEmployeesLevel4
+, CASE WHEN PivotDeptNames.DepartmentName = 'Document Control' THEN 1 ELSE 0 END 			AS dept_DocControl
+, CASE WHEN PivotDeptNames.DepartmentName = 'Engineering' THEN 1 ELSE 0 END 				AS dept_Engin
+, CASE WHEN PivotDeptNames.DepartmentName = 'Executive' THEN 1 ELSE 0 END 					AS dept_Exec
+, CASE WHEN PivotDeptNames.DepartmentName = 'Facilities and Maintenance' THEN 1 ELSE 0 END 	AS dept_FacILMaint
+, CASE WHEN PivotDeptNames.DepartmentName = 'Finance' THEN 1 ELSE 0 END 					AS dept_Finance
+, CASE WHEN PivotDeptNames.DepartmentName = 'Human Resources' THEN 1 ELSE 0 END 			AS dept_HR
+, CASE WHEN PivotDeptNames.DepartmentName = 'Information Services' THEN 1 ELSE 0 END 		AS dept_IT
+, CASE WHEN PivotDeptNames.DepartmentName = 'Marketing' THEN 1 ELSE 0 END 					AS dept_Marketing
+, CASE WHEN PivotDeptNames.DepartmentName = 'Production' THEN 1 ELSE 0 END 					AS dept_Prod
+, CASE WHEN PivotDeptNames.DepartmentName = 'Production Control' THEN 1 ELSE 0 END 			AS dept_ProdControl
+, CASE WHEN PivotDeptNames.DepartmentName = 'Purchasing' THEN 1 ELSE 0 END 					AS dept_Purch
+, CASE WHEN PivotDeptNames.DepartmentName = 'Quality Assurance' THEN 1 ELSE 0 END 			AS dept_QA
+, CASE WHEN PivotDeptNames.DepartmentName = 'Research and Development' THEN 1 ELSE 0 END 	AS dept_R_and_D
+, CASE WHEN PivotDeptNames.DepartmentName = 'Sales' THEN 1 ELSE 0 END 						AS dept_Sales
+, CASE WHEN PivotDeptNames.DepartmentName = 'Shipping and Receiving' THEN 1 ELSE 0 END 		AS dept_ShipReceiv
+, CASE WHEN PivotDeptNames.DepartmentName = 'Tool Design' THEN 1 ELSE 0 END 				AS dept_ToolDesign
+FROM (
+	SELECT OriginalTables.DepartmentName								-- PrepareForCountingEmployeesLevel3 / RemovingDuplicatesLevel2
+	, OriginalTables.BusinessEntityID
+	, COUNT(*) AS EmployeeCountByDepartment
+	FROM (
+		SELECT											-- OriginalTablesLevel1
+		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+		, Employee.BusinessEntityID	
+		, EmployeeDepartmentHistory.DepartmentID
+		, Department.[Name] AS DepartmentName
+		FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+		WHERE Employee.BusinessEntityID <> 1			-- OriginalTablesLevel1
+	) AS OriginalTables
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1				-- RemovingDuplicatesLevel2
+	GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID				-- PrepareForCountingEmployeesLevel3
+) AS PivotDeptNames																		-- PivotingDeptNamePrepareForCountingEmployeesLevel4
+```
+
+
+**Output of Query 1.3:** 289 rows, each with a `1` in one department column and `0` in all others (truncated).
 
 ```
 DepartmentName    dept_DocControl  dept_Engin  dept_Exec  ...  dept_ToolDesign
@@ -181,6 +223,8 @@ Tool Design       0                0           0          ...  1
 
 ### Query 1.4 — Sum per department and remove zeros
 We wrap Query 1.3 with `SUM()` per department column and add `GROUP BY DepartmentName`. This collapses the 289 rows into 16 rows (one per department), but each row still contains zeros in the other columns.
+
+
 
 **Output:** 16 rows — one per department, zeros still visible in non-matching columns.
 
