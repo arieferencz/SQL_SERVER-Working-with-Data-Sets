@@ -125,16 +125,42 @@ BusinessEntityID  DepartmentID  NationalIDNumber      NewPivotedOneColumn
 ### Query 1.1 — Remove duplicate employee records
 We use `ROW_NUMBER()` partitioned by `BusinessEntityID` and ordered by `StartDate DESC` to keep only the most recent department record per employee, removing duplicates caused by department history changes.
 
-**Output:** 289 unique employee rows with `BusinessEntityID`, `DepartmentID`, and `NationalIDNumber`.
-
+**T-SQL code of Query 1.1**
+```sql
+SELECT OriginalTables.BusinessEntityID                                    -- RemovingDuplicatesLevel2
+, OriginalTables.DepartmentID	
+, OriginalTables.NationalIDNumber
+FROM (
+	SELECT                                                  -- OriginalTablesLevel1
+	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+	, Employee.BusinessEntityID	
+	, EmployeeDepartmentHistory.DepartmentID
+	, Employee.NationalIDNumber
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	WHERE Employee.BusinessEntityID <> 1                    -- OriginalTablesLevel1
+) AS OriginalTables
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1                    -- RemovingDuplicatesLevel2
 ```
-BusinessEntityID  DepartmentID  NationalIDNumber
-2                 1             245797967
-3                 1             509647174
-4                 2             112457891
+
+**Output of Query 1.1 (Truncated):** 289 unique employee rows with `BusinessEntityID`, `DepartmentID`, and `NationalIDNumber`.
+```
+BusinessEntityID	DepartmentID	NationalIDNumber
+2					1				245797967
+3	                1				509647174
+4					2				112457891
+5					1				695256908
+6					1				998320692
 ...
-289               3             668991357
-290               3             134219713
+286					3				758596752
+287					3				982310417
+288					3				954276278
+289					3				668991357
+290					3				134219713
+
 (289 rows affected)
 ```
 
@@ -143,17 +169,60 @@ BusinessEntityID  DepartmentID  NationalIDNumber
 ### Query 1.2 — Create 3 repeated rows per employee using Cartesian Product + `ROW_NUMBER()`
 We apply a **Cartesian Product** by joining `RemovingDuplicates` with a small `Iteration` subquery that returns exactly 3 rows (using `SalesOrderDetailID < 4`). This causes each employee's row to repeat 3 times — once per column to be transposed. `ROW_NUMBER()` then numbers each repeated row 1, 2, or 3 within each employee's group.
 
-**Output:** 867 rows (289 employees × 3 repetitions each), with `RowNumberTranspose` values of 1, 2, or 3.
-
+**T-SQL code of Query 1.2**
+```sql
+SELECT RemovingDuplicates.BusinessEntityID                                            -- RepeatedRowsLevel3
+, RemovingDuplicates.DepartmentID
+, RemovingDuplicates.NationalIDNumber
+, ROW_NUMBER() OVER (PARTITION BY RemovingDuplicates.BusinessEntityID ORDER BY RemovingDuplicates.BusinessEntityID) AS RowNumberTranspose
+FROM (
+	SELECT OriginalTables.BusinessEntityID                              -- RemovingDuplicatesLevel2
+	, OriginalTables.DepartmentID	
+	, OriginalTables.NationalIDNumber
+	FROM (
+		SELECT                                              -- OriginalTablesLevel1
+		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+		, Employee.BusinessEntityID	
+		, EmployeeDepartmentHistory.DepartmentID
+		, Employee.NationalIDNumber
+		FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+		WHERE Employee.BusinessEntityID <> 1                -- OriginalTablesLevel1
+	) AS OriginalTables
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1                -- RemovingDuplicatesLevel2
+	) AS RemovingDuplicates,
+	(
+	SELECT SalesOrderDetailID AS Position						-- IterationLevel2
+	FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]
+	WHERE SalesOrderDetailID < 4								-- IterationLevel2
+	) AS Iteration                                                                    -- RepeatedRowsLevel3
 ```
-BusinessEntityID  DepartmentID  NationalIDNumber  RowNumberTranspose
-2                 1             245797967         1
-2                 1             245797967         2
-2                 1             245797967         3
-3                 1             509647174         1
-3                 1             509647174         2
-3                 1             509647174         3
+
+**Output of Query 1.2 (Truncated):** 867 rows (289 employees × 3 repetitions each), with `RowNumberTranspose` values of 1, 2, or 3.
+```
+BusinessEntityID	DepartmentID		NationalIDNumber		RowNumberTranspose
+2					1					245797967				1
+2					1					245797967				2
+2					1					245797967				3
+3					1					509647174				1
+3					1					509647174				2
+3					1					509647174				3
+4					2					112457891				1
+4					2					112457891				2
+4					2					112457891				3
 ...
+288					3					954276278				1
+288					3					954276278				2
+288					3					954276278				3
+289					3					668991357				1
+289					3					668991357				2
+289					3					668991357				3
+290					3					134219713				1
+290					3					134219713				2
+290					3					134219713				3
 (867 rows affected)
 ```
 
