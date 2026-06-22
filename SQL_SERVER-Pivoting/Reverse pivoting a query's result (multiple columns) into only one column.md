@@ -33,7 +33,7 @@ The 3 columns being reverse pivoted are:
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 USE AdventureWorks2022;
@@ -85,7 +85,7 @@ FROM (
 
 ---
 
-### Output
+### Output (Truncated)
 
 ```
 RowNumberTranspose  NewPivotedOneColumn
