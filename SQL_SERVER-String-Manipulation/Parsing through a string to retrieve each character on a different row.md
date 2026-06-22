@@ -172,7 +172,7 @@ FROM (
 **Output:** 19,972 rows — 22 valid characters followed by 19,950 empty rows.
 
 ```
-FirstNameNoSpaces           IterationPosition    FirstNameCharacter
+FirstNameNoSpaces           IterationPosition       FirstNameCharacter
 JanainaBarreiroGambaro      1		    	        J
 JanainaBarreiroGambaro		2        	    		a
 JanainaBarreiroGambaro		3		            	n
@@ -200,9 +200,9 @@ JanainaBarreiroGambaro		24		            	(empty)
 JanainaBarreiroGambaro		25	            		(empty)
 JanainaBarreiroGambaro		26		            	(empty)
 ...
-JanainaBarreiroGambaro		19970                    (empty)
-JanainaBarreiroGambaro		19971                    (empty)
-JanainaBarreiroGambaro		19972                    (empty)
+JanainaBarreiroGambaro		19970                   (empty)
+JanainaBarreiroGambaro		19971                   (empty)
+JanainaBarreiroGambaro		19972                   (empty)
 (19972 rows affected)
 ```
 
