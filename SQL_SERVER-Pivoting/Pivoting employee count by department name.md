@@ -286,11 +286,17 @@ GROUP BY PivotDeptNames.DepartmentName													-- SumEmployeesByDeptNeedRemo
 **Output:** 16 rows — one per department, zeros still visible in non-matching columns.
 
 ```
-dept_DocControl  dept_Engin  dept_Exec  ...
-5                0           0          ...
-0                6           0          ...
-0                0           1          ...
-...
+dept_DocControl		dept_Engin	dept_Exec	dept_FacILMaint		dept_Finance	...		dept_R_and_D	dept_Sales	dept_ShipReceiv		dept_ToolDesign
+5					0			0			0					0				...		0				0			0					0
+0					6			0			0					0				...		0				0			0					0
+0					0			1			0					0				...		0				0			0					0
+0					0			0			7					0				...		0				0			0					0
+0					0			0			0					10				...		0				0			0					0
+...																				...
+0					0			0			0					0				...		4				0			0					0
+0					0			0			0					0				...		0				18			0					0
+0					0			0			0					0				...		0				0			6					0
+0					0			0			0					0				...		0				0			0					4
 (16 rows affected)
 ```
 
