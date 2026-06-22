@@ -162,13 +162,37 @@ We add `GROUP BY RowNumber` and wrap each `CASE` statement with `MAX()`. Since e
 
 **Output:** 5 rows — departments aligned under their group columns, but `NULL` still visible where a group has fewer departments than others.
 
+**T-SQL code of Query 1.3**
+```sql
+SELECT PivotingDeptNameGroup.RowNumber												-- PivotingDeptNamesGroupedLevel3 / PivotingDeptNamesNonGroupedLevel2
+, MAX(CASE WHEN PivotingDeptNameGroup.GroupName = 'Executive General and Administration' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END) AS 'ExecutiveGeneralandAdmin'
+, MAX(CASE WHEN PivotingDeptNameGroup.GroupName = 'Inventory Management' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END) AS 'InventoryManagement'
+, MAX(CASE WHEN PivotingDeptNameGroup.GroupName = 'Manufacturing' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END) AS 'Manufacturing'
+, MAX(CASE WHEN PivotingDeptNameGroup.GroupName = 'Quality Assurance' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END) AS 'QualityAssurance'
+, MAX(CASE WHEN PivotingDeptNameGroup.GroupName = 'Research and Development' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END) AS 'ResearchandDevelopment'
+, MAX(CASE WHEN PivotingDeptNameGroup.GroupName = 'Sales and Marketing' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END) AS 'SalesandMarketing'
+FROM (
+	SELECT Department.GroupName										-- RowNumberDeptGroupNameLevel1
+	, Department.[Name] AS DepartmentName
+	, ROW_NUMBER() OVER(PARTITION BY Department.GroupName ORDER BY Department.[Name]) AS RowNumber
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	GROUP BY Department.GroupName, Department.[Name]				-- RowNumberDeptGroupNameLevel1
+) AS PivotingDeptNameGroup															-- PivotingDeptNamesLevel2
+GROUP BY PivotingDeptNameGroup.RowNumber											-- PivotingDeptNamesGroupedLevel3
 ```
-RowNumber  ExecutiveGeneralandAdmin    InventoryManagement     Manufacturing       QualityAssurance   ResearchandDevelopment    SalesandMarketing
-1          Executive                   Purchasing              Production          Document Control   Engineering               Marketing
-2          Facilities and Maintenance  Shipping and Receiving  Production Control  Quality Assurance  Research and Development  Sales
-3          Finance                     NULL                    NULL                NULL               Tool Design               NULL
-4          Human Resources             NULL                    NULL                NULL               NULL                      NULL
-5          Information Services        NULL                    NULL                NULL               NULL                      NULL
+
+
+```
+RowNumber	ExecutiveGeneralandAdmin		InventoryManagement			Manufacturing			QualityAssurance		ResearchandDevelopment		    SalesandMarketing
+1			Executive						Purchasing					Production				Document Control		Engineering						Marketing
+2			Facilities and Maintenance		Shipping and Receiving		Production Control		Quality Assurance		Research and Development		Sales
+3			Finance							NULL						NULL					NULL					Tool Design						NULL
+4			Human Resources					NULL						NULL					NULL					NULL							NULL
+5			Information Services			NULL						NULL					NULL					NULL							NULL
 (5 rows affected)
 ```
 
