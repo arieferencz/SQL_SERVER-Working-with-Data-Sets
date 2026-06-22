@@ -20,7 +20,7 @@ We use `ROW_NUMBER()` to assign a sequential number to each department within it
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 USE AdventureWorks2022;
@@ -113,12 +113,50 @@ For each row we use a `CASE` statement per group: if the row belongs to that gro
 
 **T-SQL code of Query 1.2**
 ```sql
-
+SELECT PivotingDeptNameGroup.RowNumber												-- PivotingDeptNamesNonGroupedLevel2
+, CASE WHEN PivotingDeptNameGroup.GroupName = 'Executive General and Administration' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END AS 'ExecutiveGeneralandAdmin'
+, CASE WHEN PivotingDeptNameGroup.GroupName = 'Inventory Management' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END 				 AS 'InventoryManagement'
+, CASE WHEN PivotingDeptNameGroup.GroupName = 'Manufacturing' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END 						 AS 'Manufacturing'
+, CASE WHEN PivotingDeptNameGroup.GroupName = 'Quality Assurance' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END 					 AS 'QualityAssurance'
+, CASE WHEN PivotingDeptNameGroup.GroupName = 'Research and Development' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END 			 AS 'ResearchandDevelopment'
+, CASE WHEN PivotingDeptNameGroup.GroupName = 'Sales and Marketing' THEN PivotingDeptNameGroup.DepartmentName ELSE NULL END 				 AS 'SalesandMarketing'
+FROM (
+	SELECT Department.GroupName										-- RowNumberDeptGroupNameLevel1
+	, Department.[Name] AS DepartmentName
+	, ROW_NUMBER() OVER(PARTITION BY Department.GroupName ORDER BY Department.[Name]) AS RowNumber
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	GROUP BY Department.GroupName, Department.[Name]				-- RowNumberDeptGroupNameLevel1
+) AS PivotingDeptNameGroup															-- PivotingDeptNamesNonGroupedLevel2
 ```
 
-**Output:** 16 rows, each with a department name in one column and `NULL` in all others.
+**Output of Query 1.2:** 16 rows, each with a department name in one column and `NULL` in all others.
 
+RowNumber	ExecutiveGeneralandAdmin		InventoryManagement			Manufacturing			QualityAssurance		ResearchandDevelopment		SalesandMarketing
+1			Executive						NULL						NULL					NULL					NULL						NULL
+2			Facilities and Maintenance		NULL						NULL					NULL					NULL						NULL
+3			Finance							NULL						NULL					NULL					NULL						NULL
+4			Human Resources					NULL						NULL					NULL					NULL						NULL
+5			Information Services			NULL						NULL					NULL					NULL						NULL
+1			NULL							Purchasing					NULL					NULL					NULL						NULL
+2			NULL							Shipping and Receiving		NULL					NULL					NULL						NULL
+1			NULL							NULL						Production				NULL					NULL						NULL
+2			NULL							NULL						Production Control		NULL					NULL						NULL
+1			NULL							NULL						NULL					Document Control		NULL						NULL
+2			NULL							NULL						NULL					Quality Assurance		NULL						NULL
+1			NULL							NULL						NULL					NULL					Engineering					NULL
+2			NULL							NULL						NULL					NULL					Research and Development	NULL
+3			NULL							NULL						NULL					NULL					Tool Design					NULL
+1			NULL							NULL						NULL					NULL					NULL						Marketing
+2			NULL							NULL						NULL					NULL					NULL						Sales
+(16 rows affected)
 ```
+
+
+
 RowNumber  ExecutiveGeneralandAdmin    InventoryManagement  Manufacturing  QualityAssurance  ResearchandDevelopment  SalesandMarketing
 1          Executive                   NULL                 NULL           NULL              NULL                    NULL
 2          Facilities and Maintenance  NULL                 NULL           NULL              NULL                    NULL
