@@ -224,7 +224,47 @@ Tool Design       0                0           0          ...  1
 ### Query 1.4 — Sum per department and remove zeros
 We wrap Query 1.3 with `SUM()` per department column and add `GROUP BY DepartmentName`. This collapses the 289 rows into 16 rows (one per department), but each row still contains zeros in the other columns.
 
-
+**T-SQL code of Query 1.4**
+```sql
+SELECT									-- SumEmployeesByDeptNeedRemoveZerosLevel5 / PivotingDeptNamePrepareForCountingEmployeesLevel4
+SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Document Control' THEN 1 ELSE 0 END) 			AS dept_DocControl
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Engineering' THEN 1 ELSE 0 END) 				AS dept_Engin
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Executive' THEN 1 ELSE 0 END) 					AS dept_Exec
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Facilities and Maintenance' THEN 1 ELSE 0 END) AS dept_FacILMaint
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Finance' THEN 1 ELSE 0 END) 					AS dept_Finance
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Human Resources' THEN 1 ELSE 0 END) 			AS dept_HR
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Information Services' THEN 1 ELSE 0 END) 		AS dept_IT
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Marketing' THEN 1 ELSE 0 END) 					AS dept_Marketing
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Production' THEN 1 ELSE 0 END) 				AS dept_Prod
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Production Control' THEN 1 ELSE 0 END) 		AS dept_ProdControl
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Purchasing' THEN 1 ELSE 0 END) 				AS dept_Purch
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Quality Assurance' THEN 1 ELSE 0 END) 			AS dept_QA
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Research and Development' THEN 1 ELSE 0 END) 	AS dept_R_and_D
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Sales' THEN 1 ELSE 0 END) 						AS dept_Sales
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Shipping and Receiving' THEN 1 ELSE 0 END) 	AS dept_ShipReceiv
+, SUM(CASE WHEN PivotDeptNames.DepartmentName = 'Tool Design' THEN 1 ELSE 0 END) 				AS dept_ToolDesign
+FROM (
+	SELECT OriginalTables.DepartmentName								-- PrepareForCountingEmployeesLevel3 / RemovingDuplicatesLevel2
+	, OriginalTables.BusinessEntityID
+	, COUNT(*) AS EmployeeCountByDepartment
+	FROM (
+		SELECT											-- OriginalTablesLevel1
+		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+		, Employee.BusinessEntityID	
+		, EmployeeDepartmentHistory.DepartmentID
+		, Department.[Name] AS DepartmentName
+		FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+		WHERE Employee.BusinessEntityID <> 1			-- OriginalTablesLevel1
+	) AS OriginalTables
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1				-- RemovingDuplicatesLevel2
+	GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID				-- PrepareForCountingEmployeesLevel3
+) AS PivotDeptNames																		-- PivotingDeptNamePrepareForCountingEmployeesLevel4
+GROUP BY PivotDeptNames.DepartmentName													-- SumEmployeesByDeptNeedRemoveZerosLevel5
+```
 
 **Output:** 16 rows — one per department, zeros still visible in non-matching columns.
 
