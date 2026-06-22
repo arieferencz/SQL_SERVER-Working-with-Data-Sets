@@ -134,7 +134,7 @@ FROM (
 ```
 
 **Output of Query 1.2:** 16 rows, each with a department name in one column and `NULL` in all others.
-
+```
 RowNumber	ExecutiveGeneralandAdmin		InventoryManagement			Manufacturing			QualityAssurance		ResearchandDevelopment		SalesandMarketing
 1			Executive						NULL						NULL					NULL					NULL						NULL
 2			Facilities and Maintenance		NULL						NULL					NULL					NULL						NULL
@@ -152,20 +152,6 @@ RowNumber	ExecutiveGeneralandAdmin		InventoryManagement			Manufacturing			Qualit
 3			NULL							NULL						NULL					NULL					Tool Design					NULL
 1			NULL							NULL						NULL					NULL					NULL						Marketing
 2			NULL							NULL						NULL					NULL					NULL						Sales
-(16 rows affected)
-```
-
-
-
-RowNumber  ExecutiveGeneralandAdmin    InventoryManagement  Manufacturing  QualityAssurance  ResearchandDevelopment  SalesandMarketing
-1          Executive                   NULL                 NULL           NULL              NULL                    NULL
-2          Facilities and Maintenance  NULL                 NULL           NULL              NULL                    NULL
-3          Finance                     NULL                 NULL           NULL              NULL                    NULL
-4          Human Resources             NULL                 NULL           NULL              NULL                    NULL
-5          Information Services        NULL                 NULL           NULL              NULL                    NULL
-1          NULL                        Purchasing           NULL           NULL              NULL                    NULL
-2          NULL                        Shipping and Rec...  NULL           NULL              NULL                    NULL
-...
 (16 rows affected)
 ```
 
