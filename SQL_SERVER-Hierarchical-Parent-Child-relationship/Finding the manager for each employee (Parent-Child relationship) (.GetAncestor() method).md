@@ -180,16 +180,16 @@ We join `Person` and `Employee` using a `RIGHT JOIN` to ensure all employees are
 
 **T-SQL code:**
 ```sql
-SELECT
+SELECT                                                            -- CTE 1: CEO + direct reports
     EmployeePerson.[BusinessEntityID] AS BusinessEntityID
     , CONCAT(EmployeePerson.[FirstName], ' ',
            EmployeePerson.[MiddleName], ' ',
            EmployeePerson.[LastName]) AS EmployeeName
-    , EmployeeTitle.[JobTitle]          AS EmployeeTitle
+    , EmployeeTitle.[JobTitle]        AS EmployeeTitle
     , EmployeeTitle.[OrganizationNode].GetAncestor(0) AS OwnNode
     , EmployeeTitle.[OrganizationNode].GetAncestor(1) AS ManagerNode
-    , CAST(NULL AS NVARCHAR(150))                             AS ManagerName
-    , CAST(NULL AS NVARCHAR(50))                              AS ManagerTitle
+    , CAST(NULL AS NVARCHAR(150))     AS ManagerName
+    , CAST(NULL AS NVARCHAR(50))      AS ManagerTitle
 FROM [AdventureWorks2022].[Person].[Person] AS EmployeePerson
 RIGHT JOIN [AdventureWorks2022].[HumanResources].[Employee] AS EmployeeTitle
     ON EmployeePerson.[BusinessEntityID] = EmployeeTitle.[BusinessEntityID]
@@ -223,6 +223,49 @@ We use `CASE` statements to fill in the `ManagerName` and `ManagerTitle` columns
 
 **Why is the CEO's `OwnNode` unavailable?**
 The `OrganizationNode` column for `BusinessEntityID = 1` (Ken J Sánchez) is `NULL` in the AdventureWorks2022 database — his node was not populated in the sample data. This is why `.GetAncestor()` cannot be used to retrieve his name dynamically, and it must be hardcoded instead.
+
+**T-SQL code:**
+```sql
+WITH Management AS                                                -- CTE 1: CEO + direct reports
+(
+    SELECT
+        EmployeePerson.[BusinessEntityID] AS BusinessEntityID
+      , CONCAT(EmployeePerson.[FirstName], ' ',
+               EmployeePerson.[MiddleName], ' ',
+               EmployeePerson.[LastName]) AS EmployeeName
+      , EmployeeTitle.[JobTitle]          AS EmployeeTitle
+      , EmployeeTitle.[OrganizationNode].GetAncestor(0) AS OwnNode
+      , EmployeeTitle.[OrganizationNode].GetAncestor(1) AS ManagerNode
+      , CAST(NULL AS NVARCHAR(150))                             AS ManagerName
+      , CAST(NULL AS NVARCHAR(50))                              AS ManagerTitle
+    FROM [AdventureWorks2022].[Person].[Person] AS EmployeePerson
+    RIGHT JOIN [AdventureWorks2022].[HumanResources].[Employee] AS EmployeeTitle
+        ON EmployeePerson.[BusinessEntityID] = EmployeeTitle.[BusinessEntityID]
+    WHERE EmployeeTitle.[OrganizationNode].GetAncestor(1) = 0x
+       OR EmployeeTitle.[OrganizationNode] IS NULL
+)
+SELECT                                                            -- CTE 2: Populate ManagerName and ManagerTitle
+    Management.BusinessEntityID
+    , Management.EmployeeName
+    , Management.EmployeeTitle
+    , CASE WHEN OwnNode IS NOT NULL
+         THEN OwnNode
+         ELSE CAST(NULL AS NVARCHAR(150))
+      END                                   AS OwnNode
+    , CASE WHEN ManagerNode IS NOT NULL
+         THEN ManagerNode
+         ELSE CAST(NULL AS NVARCHAR(150))
+      END                                   AS ManagerNode
+    , CASE WHEN ManagerNode = 0x
+         THEN 'Ken J Sánchez'
+         ELSE CAST(NULL AS NVARCHAR(150))
+      END                                   AS ManagerName
+    , CASE WHEN ManagerNode IS NULL
+         THEN 'N/A'
+         ELSE ''
+      END                                   AS ManagerTitle
+FROM Management
+```
 
 **Output of CTE 2:** Same 7 rows with `ManagerName` and `ManagerTitle` now populated.
 
