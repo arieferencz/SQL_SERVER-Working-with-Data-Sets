@@ -70,7 +70,20 @@ RowNumber  ExecutiveGeneralandAdmin    InventoryManagement     Manufacturing    
 ### Query 1.1 — Assign a row number to each department within its group (`RowNumber`)
 We join the three tables and use `ROW_NUMBER()` partitioned by `GroupName` and ordered alphabetically by department name. This assigns each department a sequential number (1, 2, 3...) within its group. The `GROUP BY` removes duplicate rows caused by multiple employees belonging to the same department.
 
-**Output:** 16 rows — one per unique department, each with its group name and row number.
+**T-SQL code of Query 1.1**
+```sql
+SELECT Department.GroupName                                            -- RowNumberDeptGroupNameLevel1
+, Department.[Name] AS DepartmentName
+, ROW_NUMBER() OVER(PARTITION BY Department.GroupName ORDER BY Department.[Name]) AS RowNumber
+FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+	ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+GROUP BY Department.GroupName, Department.[Name]                        -- RowNumberDeptGroupNameLevel1
+```
+
+**Output of Query 1.1:** 16 rows — one per unique department, each with its group name and row number.
 
 ```
 GroupName                             DepartmentName              RowNumber
@@ -97,6 +110,11 @@ Sales and Marketing                   Sales                       2
 
 ### Query 1.2 — Pivot department names using `CASE` statements
 For each row we use a `CASE` statement per group: if the row belongs to that group, the column returns the department name; otherwise `NULL`. This spreads each department into its group's column, but the result still has `NULL` values in all non-matching columns and duplicate row numbers across groups.
+
+**T-SQL code of Query 1.2**
+```sql
+
+```
 
 **Output:** 16 rows, each with a department name in one column and `NULL` in all others.
 
