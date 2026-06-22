@@ -160,7 +160,6 @@ BusinessEntityID	DepartmentID	NationalIDNumber
 288					3				954276278
 289					3				668991357
 290					3				134219713
-
 (289 rows affected)
 ```
 
