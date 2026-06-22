@@ -151,12 +151,20 @@ GROUP BY OriginalTables.DepartmentName, OriginalTables.BusinessEntityID					-- P
 **Output of Query 1.2:** 289 rows, each employee with `EmployeeCountByDepartment = 1`.
 
 ```
-DepartmentName            BusinessEntityID  EmployeeCountByDepartment
-Engineering               2                 1
-Engineering               3                 1
-Tool Design               4                 1
+DepartmentName				BusinessEntityID	EmployeeCountByDepartment
+Engineering					2					1
+Engineering					3					1
+Tool Design             	4					1
+Engineering					5					1
+Engineering					6					1
+Research and Development	7					1
+Research and Development	8					1
 ...
-Sales                     290               1
+Sales						286					1
+Sales						287					1
+Sales						288					1
+Sales						289					1
+Sales						290					1
 (289 rows affected)
 ```
 
@@ -210,12 +218,21 @@ FROM (
 **Output of Query 1.3:** 289 rows, each with a `1` in one department column and `0` in all others (truncated).
 
 ```
-DepartmentName    dept_DocControl  dept_Engin  dept_Exec  ...  dept_ToolDesign
-Document Control  1                0           0          ...  0
-Document Control  1                0           0          ...  0
-Engineering       0                1           0          ...  0
+DepartmentName			dept_DocControl		dept_Engin	dept_Exec	...		dept_Sales		dept_ShipReceiv		dept_ToolDesign
+Document Control		1					0			0			...		0				0					0
+Document Control		1					0			0			...		0				0					0
+Document Control		1					0			0			...		0				0					0
+Document Control		1					0			0			...		0				0					0
+Document Control		1					0			0			...		0				0					0
+Engineering				0					1			0			...		0				0					0
 ...
-Tool Design       0                0           0          ...  1
+Shipping and Receiving	0					0			0			...		0				1					0
+Shipping and Receiving	0					0			0			...		0				1					0
+Shipping and Receiving	0					0			0			...		0				1					0
+Tool Design				0					0			0			...		0				0					1
+Tool Design				0					0			0			...		0				0					1
+Tool Design				0					0			0			...		0				0					1
+Tool Design				0					0			0			...		0				0					1
 (289 rows affected)
 ```
 
