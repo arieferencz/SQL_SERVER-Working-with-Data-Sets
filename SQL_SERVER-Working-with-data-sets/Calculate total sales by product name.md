@@ -34,9 +34,6 @@ We join three tables to connect each sales order line to its product name. We th
 ### T-SQL code
 
 ```sql
-USE AdventureWorks2022;
-GO
-
 SELECT
     Product.[Name]
   , FORMAT(ROUND(SUM(SalesOrderDetail.[LineTotal]), 2, 2), '#,#.##') AS Total_Sales_By_Product_Name
@@ -57,26 +54,7 @@ Name                         Total_Sales_By_Product_Name
 All-Purpose Bike Stand       39,591
 AWC Logo Cap                 51,229.44
 Bike Wash - Dissolver        18,406.97
-Cable Lock                   16,240.22
-Chain                        9,377.71
-Classic Vest, L              12,839.7
-Classic Vest, M              15,522.34
-Classic Vest, S              11,622.55
-Fender Set - Mountain        33,748.91
-Full-Finger Gloves, L        155,321.46
-Full-Finger Gloves, M        92,413.18
-Full-Finger Gloves, S        47,126.22
-Half-Finger Gloves, L        67,867.26
-Half-Finger Gloves, M        67,530.22
-Half-Finger Gloves, S        19,044.17
-Headset Ball Bearings        12,827.58
 ...
-Women's Mountain Shorts, L   136,774.01
-Women's Mountain Shorts, M   57,685.75
-Women's Mountain Shorts, S   137,164.12
-Women's Tights, L            94,090.64
-Women's Tights, M            17,727.63
-Women's Tights, S            91,330.8
 (266 rows affected)
 ```
 
@@ -108,16 +86,46 @@ SalesOrderID ──────────► SalesOrderID                  Pro
 
 Before `GROUP BY` and `SUM()`, each row contains one order line with its product name and line total.
 
-**Output (truncated):** 121,317 rows — one per order line.
-
+**T-SQL code of Query 1.1**
+```sql
+SELECT
+    Product.[Name]
+  , SalesOrderDetail.[SalesOrderID]
+  , SalesOrderDetail.[LineTotal] AS LineTotal
+FROM [AdventureWorks2022].[Sales].[SalesOrderHeader] AS SalesOrderHeader
+INNER JOIN [AdventureWorks2022].[Sales].[SalesOrderDetail] AS SalesOrderDetail
+    ON SalesOrderHeader.[SalesOrderID] = SalesOrderDetail.[SalesOrderID]
+INNER JOIN [AdventureWorks2022].[Production].[Product] AS Product
+    ON SalesOrderDetail.[ProductID] = Product.[ProductID]
 ```
-ProductName           SalesOrderID  LineTotal
-Mountain Bike Socks, M 43659        29.694
-Sport-100 Helmet, Black 43659       419.4589
-Road-650 Red, 44        43659       874.794
+
+
+**Output of Query 1.1 (truncated):** 121,317 rows — one per order line.
+```
+Name								SalesOrderID	LineTotal
+Mountain-100 Black, 42				43659			2024.994
+Mountain-100 Black, 44				43659			6074.982
+Mountain-100 Black, 48				43659			2024.994
+Mountain-100 Silver, 38				43659			2039.994
+Mountain-100 Silver, 42				43659			2039.994
+Mountain-100 Silver, 44				43659			4079.988
+Mountain-100 Silver, 48				43659			2039.994
+Long-Sleeve Logo Jersey, M			43659			86.5212
+Long-Sleeve Logo Jersey, XL			43659			28.8404
+Mountain Bike Socks, M				43659			34.2
+AWC Logo Cap						43659			10.373
+Sport-100 Helmet, Blue				43659			80.746
+Road-650 Red, 44					43660			419.4589
+Road-450 Red, 52					43660			874.794
 ...
-AWC Logo Cap            75123       8.99
-Water Bottle - 30 oz.   75122       4.99
+Mountain Tire Tube					75121			4.99
+HL Mountain Tire					75121			35
+Sport-100 Helmet, Red				75121			34.99
+Fender Set - Mountain				75122			21.98
+AWC Logo Cap						75122			8.99
+Fender Set - Mountain				75123			21.98
+All-Purpose Bike Stand				75123			159
+AWC Logo Cap						75123			8.99
 (121317 rows affected)
 ```
 
@@ -130,11 +138,30 @@ Water Bottle - 30 oz.   75122       4.99
 **Output (truncated):** 266 rows — one per product with its total revenue.
 
 ```
-ProductName            Total_Sales_By_Product_Name
-AWC Logo Cap           51,229.44
-Chain                  9,377.71
-Full-Finger Gloves, L  155,321.46
+Name                         Total_Sales_By_Product_Name
+All-Purpose Bike Stand       39,591
+AWC Logo Cap                 51,229.44
+Bike Wash - Dissolver        18,406.97
+Cable Lock                   16,240.22
+Chain                        9,377.71
+Classic Vest, L              12,839.7
+Classic Vest, M              15,522.34
+Classic Vest, S              11,622.55
+Fender Set - Mountain        33,748.91
+Full-Finger Gloves, L        155,321.46
+Full-Finger Gloves, M        92,413.18
+Full-Finger Gloves, S        47,126.22
+Half-Finger Gloves, L        67,867.26
+Half-Finger Gloves, M        67,530.22
+Half-Finger Gloves, S        19,044.17
+Headset Ball Bearings        12,827.58
 ...
+Women's Mountain Shorts, L   136,774.01
+Women's Mountain Shorts, M   57,685.75
+Women's Mountain Shorts, S   137,164.12
+Women's Tights, L            94,090.64
+Women's Tights, M            17,727.63
+Women's Tights, S            91,330.8
 (266 rows affected)
 ```
 
