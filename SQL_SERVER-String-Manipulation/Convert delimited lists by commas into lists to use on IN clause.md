@@ -395,7 +395,7 @@ This keeps only rows like `,Bendigo,...` and `,Cloverdale,...` — i.e. rows whe
 
 ```
 Row #	SUBSTDelimCityName					Position2ndComma		LengthParam3	lenSUBSTDelimCityName	CityName
-1		,Bendigo,Cloverdale,Port .....		9						7				421						Bendigo			<--- Kept
+1		,Bendigo,Cloverdale,Port .....		9						7				421						Bendigo			**<--- Kept**
 2		Bendigo,Cloverdale,Port M.....		8						6				420						endigo			<--- Removed by filter (WHERE clause)
 3		endigo,Cloverdale,Port Ma.....		7						5				419						ndigo			<--- Removed by filter (WHERE clause)
 4		ndigo,Cloverdale,Port Mac.....		6						4				418						digo			<--- Removed by filter (WHERE clause)
@@ -415,20 +415,8 @@ Row #	SUBSTDelimCityName					Position2ndComma		LengthParam3	lenSUBSTDelimCityNam
 18		le,Port Macquarie,South M.....		3						1				404						e	  			<--- Removed by filter (WHERE clause)
 19		e,Port Macquarie,South Me.....		2						0				403							  			<--- Removed by filter (WHERE clause)
 20		,Port Macquarie,South Mel.....		16						14				402						Port Macquarie	<--- Kept
-....................................................... TRUNCATED RESULTS ...............................................................
+...
 (5657 rows affected)
-
-
-
-
-Row  SUBSTDelimCityName                    Kept?   CityName
-1    ,Bendigo,Cloverdale,...               ✓       Bendigo
-2    Bendigo,Cloverdale,...                ✗
-3    endigo,Cloverdale,...                 ✗
-...
-9    ,Cloverdale,Port Macquarie,...        ✓       Cloverdale
-10   Cloverdale,Port Macquarie,...         ✗
-...
 ```
 
 **Output:** 579 rows — one city name per row, ready for use in an `IN` clause.
