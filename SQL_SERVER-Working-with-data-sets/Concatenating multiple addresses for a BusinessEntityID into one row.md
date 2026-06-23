@@ -146,6 +146,7 @@ For example: `4098 Woodcrest Dr., Everett, WA`
 `STRING_AGG(AddressLine1CityProvinceName, ';')` groups all address rows per person and concatenates them into one semicolon-separated string. The outer `GROUP BY` ensures one row per person.
 
 ---
+<br>
 
 ## 💡 Solution 2 — Concatenate addresses in alphabetical order
 
@@ -166,7 +167,58 @@ Solution 2 (alphabetical order):
 4293 Concord Ct., Everett, WA ;6696 Anchor Drive, Bothell, WA
 ```
 
-**Full output:** 24 rows — identical persons as Solution 1, with addresses sorted alphabetically within each person's concatenated string.
+---
+
+### T-SQL code for Solution 2
+```sql
+SELECT X.BusinessEntityID
+, X.FirstName
+, X.MiddleName
+, X.LastName
+, STRING_AGG (X.AddressLine1CityProvinceName, ';') WITHIN GROUP (ORDER BY X.AddressLine1CityProvinceName ASC) AS Addresses
+, X.CountryRegionCode
+FROM 
+	(
+	SELECT Person.BusinessEntityID				-- OriginalTablesFilteredLevel2
+	, Person.FirstName
+	, Person.MiddleName
+	, Person.LastName
+	, PersonAddress.AddressID
+	, PersonAddress.AddressLine1
+	, PhoneNumber.PhoneNumber
+	, PersonAddress.City
+	, PersonAddress.AddressLine1 + ', ' + PersonAddress.City + ', ' + StateID.StateProvinceCode AS AddressLine1CityProvinceName
+	, PersonAddress.StateProvinceID
+	, StateID.StateProvinceCode
+	, StateID.Name AS StateProvinceName
+	, StateID.TerritoryID
+	, SalesTerritory.Name AS TerritoryName
+	, SalesTerritory.CountryRegionCode 
+	FROM [AdventureWorks2022].[Person].[Person] AS Person
+	LEFT JOIN [AdventureWorks2022].[Person].[BusinessEntityAddress] AS BEAddress
+		ON Person.BusinessEntityID = BEAddress.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[Person].[Address] AS PersonAddress
+		ON BEAddress.AddressID = PersonAddress.AddressID
+	LEFT JOIN [AdventureWorks2022].[Person].[PersonPhone] AS PhoneNumber
+		ON Person.BusinessEntityID = PhoneNumber.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+		ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+		ON StateID.TerritoryID = SalesTerritory.TerritoryID
+	WHERE Person.BusinessEntityID IN 
+		(
+		SELECT Person.BusinessEntityID								-- FilterDuplicatesLevel1
+		FROM [AdventureWorks2022].[Person].[Person] AS Person
+		LEFT JOIN [AdventureWorks2022].[Person].[BusinessEntityAddress] AS BEAddress
+			ON Person.BusinessEntityID = BEAddress.BusinessEntityID
+		GROUP BY Person.BusinessEntityID
+		HAVING COUNT(*) > 1									-- FilterDuplicatesLevel1
+		)										-- OriginalTablesFilteredLevel2
+	) AS X
+GROUP BY X.BusinessEntityID, X.FirstName, X.MiddleName, X.LastName, X.CountryRegionCode
+```
+
+**Output of Solution 2:** 24 rows — identical persons as Solution 1, with addresses sorted alphabetically within each person's concatenated string.
 
 ---
 
