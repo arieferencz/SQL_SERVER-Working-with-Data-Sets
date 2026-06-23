@@ -147,8 +147,6 @@ AddressID	    City			        StateProvinceID		StateProvinceCode	    CountryRegio
 24231		    Verrieres Le Buisson	177		        	91		            	FR		        	7	        	France
 19637		    Verrieres Le Buisson	177			        91		            	FR		        	7	        	France
 ...
-15589		    Sulzbach Taunus		    70		        	SL 		            	DE		        	8	        	Germany
-19731		    Berlin			        19		        	HE 		            	DE		        	8	        	Germany
 15768		    Neunkirchen		        70		        	SL 		            	DE		        	8	        	Germany
 17393		    Paderborn		        20		        	HH 		            	DE		        	8	        	Germany
 29769		    Berlin			        20		        	HH 		            	DE		        	8	        	Germany
@@ -161,15 +159,42 @@ AddressID	    City			        StateProvinceID		StateProvinceCode	    CountryRegio
 ### Query 1.2 — Remove duplicate city names (`Subquery Y`)
 We apply `SELECT DISTINCT` on city and country to remove duplicate city names, leaving one row per unique city per country.
 
-**Output:** 579 rows — one per unique city.
-
+**T-SQL code of Query 1.2**
+```sql
+SELECT DISTINCT X.City            				                        -- UniqueCityName2 = Y
+	, X.CountryRegionCode
+FROM
+	(
+	SELECT 					                                            -- OriginalTables1 = X
+	PersonAddress.AddressID
+	, PersonAddress.City
+	, PersonAddress.StateProvinceID
+	, StateID.StateProvinceCode
+	, StateID.CountryRegionCode
+	, StateID.TerritoryID
+	, SalesTerritory.Name AS TerritoryName
+	FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+		ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+		ON StateID.TerritoryID = SalesTerritory.TerritoryID		    	-- OriginalTables1 = X
+	) AS X										                        -- UniqueCityName2 = Y
 ```
-City              CountryRegionCode
-Southfield        US
-Seattle           US
-Bendigo           AU
-Chalk Riber       CA
+
+
+**Output of Query 1.2:** 579 rows — one per unique city (Truncated).
+```
+City			        CountryRegionCode
+Southfield		        US
+Seattle			        US
+Bendigo			        AU
+San Mateo		        US
+Saint Matthews        	US
 ...
+Salem			        US
+Brampton		        CA
+Daly City		        US
+Great Falls		        US
 (579 rows affected)
 ```
 
