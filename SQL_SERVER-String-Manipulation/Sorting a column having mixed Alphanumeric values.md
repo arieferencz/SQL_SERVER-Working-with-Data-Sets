@@ -185,6 +185,7 @@ Zoe W Watson 166-555-0180
 
 We create a VIEW named `VIEW_MixedAlphaNumeric_FullnamePhonenumbers` that stores the `AlphaNumericText` column. Sorting queries then reference the VIEW instead of repeating the subquery each time.
 
+**T-SQL code of Query 2**
 ```sql
 IF OBJECT_ID(N'VIEW_MixedAlphaNumeric_FullnamePhonenumbers', N'V') IS NOT NULL
     DROP VIEW VIEW_MixedAlphaNumeric_FullnamePhonenumbers
@@ -212,25 +213,36 @@ FROM (
 ) AS X
 ```
 
+**Output of Query 2:**
+```
+Commands completed successfully.
+```
+
+---
+
 ### Query 2.1 — Sort VIEW by numeric portion
 
+**T-SQL code of Query 2.1**
 ```sql
 SELECT AlphaNumericText
 FROM [AdventureWorks2022].[dbo].[VIEW_MixedAlphaNumeric_FullnamePhonenumbers]
 ORDER BY SUBSTRING(AlphaNumericText, PATINDEX('%[0-9]%', AlphaNumericText), 3)
 ```
 
-**Output:** Identical to Query 1.1.
+**Output of Query 2.1:** Identical to Query 1.1.
+
+---
 
 ### Query 2.2 — Sort VIEW by character portion
 
+**T-SQL code of Query 2.2**
 ```sql
 SELECT AlphaNumericText
 FROM [AdventureWorks2022].[dbo].[VIEW_MixedAlphaNumeric_FullnamePhonenumbers]
 ORDER BY SUBSTRING(AlphaNumericText, 1, LEN(AlphaNumericText))
 ```
 
-**Output:** Identical to Query 1.2.
+**Output of Query 2.2:** Identical to Query 1.2.
 
 ---
 
