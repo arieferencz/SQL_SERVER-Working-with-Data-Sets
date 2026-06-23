@@ -133,7 +133,7 @@ FROM (
 	) AS Iteration                                                                                -- UniqueFirstName2
 ```
 
-**Output of Query 2.1:** 20,331,496 rows (truncated).
+**Output of Query 1.2:** 20,331,496 rows (truncated).
 ```
 Row #		UniqueFirstName        FirstCharacterUniqueFirstName
 1			A.			           A
