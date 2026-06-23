@@ -71,7 +71,7 @@ FROM (
 ) AS X
 ```
 
-**Output (truncated):**
+### Output (truncated):
 
 ```
 FirstName    MiddleName    LastName        FullName                PhoneNumber     AlphaNumericText                    NumStartPos  SortFirst3  SortSecond3  SortLast4  SortCharPortion
