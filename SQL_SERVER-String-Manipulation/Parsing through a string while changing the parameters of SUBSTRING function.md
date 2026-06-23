@@ -33,7 +33,7 @@ This illustrates how `SUBSTRING(string, start, length)` behaves when both `start
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 SELECT DISTINCT
