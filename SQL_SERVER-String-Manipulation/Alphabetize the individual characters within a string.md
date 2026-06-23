@@ -119,7 +119,7 @@ The Cartesian Product creates: **1,018 × 19,972 = 20,331,496 rows**.
 
 At this stage the result includes many empty characters (positions beyond the name's length), which appear as blank values.
 
-**T-SQL code of Query 2.1**
+**T-SQL code of Query 1.2**
 ```sql
 SELECT UniqueFirstName.FirstNameNoSpaces AS UniqueFirstName                                       -- UniqueFirstName2
 , SUBSTRING(UniqueFirstName.FirstNameNoSpaces, Iteration.Position, 1) AS FirstCharacterUniqueFirstName
