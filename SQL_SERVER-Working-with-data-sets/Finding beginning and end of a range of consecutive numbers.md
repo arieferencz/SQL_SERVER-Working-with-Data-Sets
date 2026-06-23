@@ -371,7 +371,7 @@ FROM (
 ```
 
 
-**Output of Query 1.4:**
+**Output of Query 1.4**
 ```
 RowNumber	StartDate		BusinessEntityID	JobTitle							NewGroup
 1			2006-06-30		28					Production Technician - WC60		1
