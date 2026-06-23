@@ -32,7 +32,7 @@ We use a **Cartesian Product** combined with `SUBSTRING()` to split each first n
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 SELECT
