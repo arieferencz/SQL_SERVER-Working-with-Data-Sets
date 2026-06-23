@@ -248,7 +248,7 @@ ORDER BY SUBSTRING(AlphaNumericText, 1, LEN(AlphaNumericText))
 ---
 <br>
 
-## 💡 Solution 3 — Using TRANSLATE and REPLICATE
+## 💡 Solution 3 — Using TRANSLATE and REPLICATE (alternative to Solution 1)
 
 ### Approach
 Instead of using `PATINDEX()` to find the digit start position, we use `TRANSLATE()` to replace all letters with `'z'` and then `REPLACE()` to strip them — leaving only the digits. For character sorting, we do the reverse: replace all digits with `'0'` and strip them.
