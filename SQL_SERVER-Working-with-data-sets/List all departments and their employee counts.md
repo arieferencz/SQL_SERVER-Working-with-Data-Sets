@@ -40,6 +40,7 @@ FROM [AdventureWorks2022].[HumanResources].[Department] AS Department
 LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS Employees
     ON Department.DepartmentID = Employees.DepartmentID
 GROUP BY Department.[Name]
+ORDER BY Department.[Name] ASC
 ```
 
 ---
