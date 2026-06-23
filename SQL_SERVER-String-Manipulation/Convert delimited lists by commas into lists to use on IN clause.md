@@ -203,15 +203,42 @@ Great Falls		        US
 ### Query 1.3 — Build comma-delimited lists per country (`Subquery Z`)
 We use `STRING_AGG()` grouped by `CountryRegionCode` to concatenate all city names per country into a single comma-delimited string. We add a comma at the start and end of each string (`,CityA,CityB,...,CityN,`) to make every city consistently surrounded by commas — this is essential for the extraction logic that follows.
 
-**Output:** 6 rows — one delimited string per country (AU, CA, DE, FR, GB, US).
+**T-SQL code of Query 1.3**
+```sql
+SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName			-- DelimListCities3 = Z
+FROM	
+(
+	SELECT DISTINCT X.City											-- UniqueCityName2 = Y
+		, X.CountryRegionCode
+	FROM
+		(
+		SELECT 														-- OriginalTables1 = X
+		PersonAddress.AddressID
+		, PersonAddress.City
+		, PersonAddress.StateProvinceID
+		, StateID.StateProvinceCode
+		, StateID.CountryRegionCode
+		, StateID.TerritoryID
+		, SalesTerritory.Name AS TerritoryName
+		FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+		LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+			ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+		LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+		ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
+		) AS X														-- UniqueCityName2 = Y
+	) AS Y	
+GROUP BY Y.CountryRegionCode																			-- DelimitedListCities3 = Z
+```
 
+**Output of Query 1.3:** 6 rows — one delimited string per country (AU, CA, DE, FR, GB, US).
 ```
 DelimListCityName
-,Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,...,Wollongong,
-,Brampton,Quebec,Victoria,Montreal,...,Chalk Riber,
-,Augsburg,Erlangen,...,Berlin,...,
-,Dunkerque,Les Ulis,...,Paris,...,
+,Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,Newcastle,St. Leonards,Lane Cove,Brisbane,...,Alexandria,Wollongong,
+,Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,Weston,Ottawa,Edmonton,Dorval,Langford,...,Chalk Riber,
+,Augsburg,Erlangen,Sulzbach Taunus,Solingen,Hamburg,Salzgitter,Ingolstadt,Werne,Saarbrücken,Eilenburg,Münster,...,Bad Soden,Grevenbroich,
+,Dunkerque,Les Ulis,Villeneuve-d'Ascq,Boulogne-Billancourt,Orly,Morangis,Saint Ouen,Bordeaux,Colombes,Croix,...,Roncq,Aujan Mournede,
 ...
+,Cedar City,Auburn,Long Beach,Salem,Daly City,Great Falls,Surprise,Lake George,Waterbury,Tacoma,Byron,...,Elk Grove,Carson,
 (6 rows affected)
 ```
 
