@@ -233,10 +233,10 @@ GROUP BY Y.CountryRegionCode																			-- DelimitedListCities3 = Z
 **Output of Query 1.3:** 6 rows — one delimited string per country (AU, CA, DE, FR, GB, US).
 ```
 DelimListCityName
-,Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,Newcastle,St. Leonards,Lane Cove,Brisbane,...,Alexandria,Wollongong,
-,Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,Weston,Ottawa,Edmonton,Dorval,Langford,...,Chalk Riber,
-,Augsburg,Erlangen,Sulzbach Taunus,Solingen,Hamburg,Salzgitter,Ingolstadt,Werne,Saarbrücken,Eilenburg,Münster,...,Bad Soden,Grevenbroich,
-,Dunkerque,Les Ulis,Villeneuve-d'Ascq,Boulogne-Billancourt,Orly,Morangis,Saint Ouen,Bordeaux,Colombes,Croix,...,Roncq,Aujan Mournede,
+,Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,Newcastle,St. Leonards,Lane Cove,...,Alexandria,Wollongong,
+,Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,Weston,Ottawa,Edmonton,Dorval,...,Chalk Riber,
+,Augsburg,Erlangen,Sulzbach Taunus,Solingen,Hamburg,Salzgitter,Ingolstadt,Werne,Saarbrücken,Eilenburg,...,Bad Soden,Grevenbroich,
+,Dunkerque,Les Ulis,Villeneuve-d'Ascq,Boulogne-Billancourt,Orly,Morangis,Saint Ouen,Bordeaux,Colombes,...,Roncq,Aujan Mournede,
 ...
 ,Cedar City,Auburn,Long Beach,Salem,Daly City,Great Falls,Surprise,Lake George,Waterbury,Tacoma,Byron,...,Elk Grove,Carson,
 (6 rows affected)
