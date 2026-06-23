@@ -246,6 +246,7 @@ ORDER BY SUBSTRING(AlphaNumericText, 1, LEN(AlphaNumericText))
 **Output of Query 2.2:** Identical to Query 1.2.
 
 ---
+<br>
 
 ## 💡 Solution 3 — Using TRANSLATE and REPLICATE
 
