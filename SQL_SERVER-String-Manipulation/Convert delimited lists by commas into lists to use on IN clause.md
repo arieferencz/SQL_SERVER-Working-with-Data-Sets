@@ -250,6 +250,7 @@ We use a **Cartesian Product** between Subquery Z (6 rows) and an `Iteration` su
 The Cartesian Product creates: **6 × 19,614 = 117,684 rows**. After filtering with `WHERE Iteration.Position <= LEN(Z.DelimListCityName)`, this reduces to **5,657 rows** — the total character count across all 6 country strings.
 
 **How the sliding window works (example for Australia)**
+```
 Row #	SUBSTDelimCityName																CharacterLengthDelimitedLists	CountryRegionCode
 1		,Bendigo,Cloverdale,Port Macquarie,South Melbourne,.........,Wollongong,		421								AU
 2		Bendigo,Cloverdale,Port Macquarie,South Melbourne,S.........,Wollongong,		421								AU
@@ -301,6 +302,7 @@ Row #	SUBSTDelimCityName																CharacterLengthDelimitedLists	CountryReg
 870		,																				449								CA
 ...
 (5657 rows affected)
+```
 
 
 
