@@ -41,7 +41,7 @@ We build the solution in 4 steps:
 
 ---
 
-### T-SQL code — Final query
+### T-SQL code — Full solution
 
 ```sql
 SELECT
@@ -139,15 +139,46 @@ RowNumber  StartDate   BusinessEntityID  JobTitle                        NewGrou
 ### Query 1.1 — Remove duplicate employee records
 Some employees have multiple rows in `EmployeeDepartmentHistory` due to department changes. We use `ROW_NUMBER()` partitioned by `BusinessEntityID` ordered by `StartDate DESC` to keep only the most recent record per employee. The outer `WHERE RowNumberRemovingDuplicates = 1` filters to 289 unique employees ordered by `StartDate`.
 
-**Output:** 289 rows — one per employee with their most recent start date.
+**T-SQL code of Query 1.1**
+```sql
+SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber		    -- RemovingDuplicatesLevel2
+, OriginalTables.BusinessEntityID	
+, OriginalTables.JobTitle
+, OriginalTables.DepartmentID
+, OriginalTables.DepartmentName
+, OriginalTables.StartDate
+FROM (
+	SELECT																		-- OriginalTablesLevel1
+	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+	, Employee.BusinessEntityID	
+	, Employee.JobTitle
+	, EmployeeDepartmentHistory.DepartmentID
+	, Department.[Name] AS DepartmentName
+	, EmployeeDepartmentHistory.StartDate
+	, EmployeeDepartmentHistory.EndDate
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	WHERE Employee.BusinessEntityID <> 1								        -- OriginalTablesLevel1
+) AS OriginalTables
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1
+ORDER BY OriginalTables.StartDate                                                   -- RemovingDuplicatesLevel2
+```
+
+
+**Output of Query 1.1:** 289 rows — one per employee with their most recent start date.
 
 ```
-RowNumber  BusinessEntityID  JobTitle                        DepartmentID    DepartmentName    StartDate
-1          28                Production Technician - WC60    7               Production        2006-06-30
-2          17                Marketing Assistant             4               Marketing         2007-01-26
-3          3                 Engineering Manager             1               Engineering       2007-11-11
+RowNumber	BusinessEntityID	JobTitle                        DepartmentID    DepartmentName		StartDate
+1			28					Production Technician - WC60	7               Production			2006-06-30
+2			17					Marketing Assistant             4               Marketing			2007-01-26
+3			3					Engineering Manager             1               Engineering			2007-11-11
 ...
-289        234               Chief Financial Officer         16              Executive         2013-11-14
+287			286					Sales Representative			3				Sales				2013-05-30
+288			288					Sales Representative			3				Sales				2013-05-30
+289			234					Chief Financial Officer         16              Executive			2013-11-14
 (289 rows affected)
 ```
 
@@ -156,22 +187,50 @@ RowNumber  BusinessEntityID  JobTitle                        DepartmentID    Dep
 ### Query 1.2 — Calculate days between consecutive start dates
 We add `LAG(StartDate)` to retrieve the previous row's start date, and `DATEDIFF(DAY, previous, current)` to calculate the number of days between them. A value of `0` means two employees share the same start date. The first row has `NULL` since there is no previous row.
 
-**Output:** 289 rows — each with its previous start date and day difference (truncated).
+**T-SQL code of Query 1.2**
+```sql
+SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber		-- CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate) AS PreviousStartDate
+, OriginalTables.StartDate
+, DATEDIFF(DAY, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate), OriginalTables.StartDate) AS DatediffStartDate
+, OriginalTables.BusinessEntityID	
+, OriginalTables.JobTitle
+, OriginalTables.DepartmentID
+, OriginalTables.DepartmentName
+FROM (
+	SELECT												                        -- OriginalTablesLevel1
+	ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+	, Employee.BusinessEntityID	
+	, Employee.JobTitle
+	, EmployeeDepartmentHistory.DepartmentID
+	, Department.[Name] AS DepartmentName
+	, EmployeeDepartmentHistory.StartDate
+	, EmployeeDepartmentHistory.EndDate
+	FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+		ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+	LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+		ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+	WHERE Employee.BusinessEntityID <> 1								        -- OriginalTablesLevel1
+) AS OriginalTables
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1				            -- RemovingDuplicatesLevel2 /  CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+```
+
+**Output of Query 1.2:** 289 rows — each with its previous start date and day difference (truncated).
 
 ```
-RowNumber  PreviousStartDate  StartDate   DatediffStartDate  BusinessEntityID  JobTitle
-1          NULL               2006-06-30  NULL               28                Production Technician - WC60
-2          2006-06-30         2007-01-26  210                17                Marketing Assistant
-3          2007-01-26         2007-11-11  289                3                 Engineering Manager
+RowNumber	PreviousStartDate	StartDate		DatediffStartDate		BusinessEntityID	JobTitle						DepartmentID		DepartmentName
+1			NULL				2006-06-30		NULL					28					Production Technician - WC60	7					Production
+2			2006-06-30			2007-01-26		210						17					Marketing Assistant				4					Marketing
+3			2007-01-26			2007-11-11		289						3					Engineering Manager				1					Engineering
 ...
-6          2007-12-26         2008-01-06  11                 48                Production Technician - WC10
-7          2008-01-06         2008-01-06  0                  5                 Design Engineer
-8          2008-01-06         2008-01-07  1                  49                Production Technician - WC10
+6			2007-12-26			2008-01-06		11						48					Production Technician - WC10	7					Production
+7			2008-01-06			2008-01-06		0						5					Design Engineer					1					Engineering
+8			2008-01-06			2008-01-07		1						49					Production Technician - WC10	7					Production
 ...
-271        2011-02-15         2011-05-31  105                275               Sales Representative
-272        2011-05-31         2011-05-31  0                  276               Sales Representative
-273        2011-05-31         2011-05-31  0                  277               Sales Representative
-...
+287			2013-03-14			2013-05-30		77						286					Sales Representative			3					Sales
+288			2013-05-30			2013-05-30		0						288					Sales Representative			3					Sales
+289			2013-05-30			2013-11-14		168						234					Chief Financial Officer			16					Executive
 (289 rows affected)
 ```
 
