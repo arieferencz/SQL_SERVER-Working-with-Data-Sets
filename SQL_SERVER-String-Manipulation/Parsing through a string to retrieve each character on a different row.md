@@ -106,8 +106,9 @@ For each combination, `SUBSTRING(FirstNameNoSpaces, Position, 1)` extracts the c
 ---
 
 ### Query 1.1 — How the iteration works (single name example)
-To illustrate how the iteration steps through a string, here is the result for `FirstName = 'Janaina Barreiro Gambaro'` (22 characters after removing spaces):
+To illustrate how the iteration steps through a string, here is the result for `FirstName = 'Janaina Barreiro Gambaro'` (22 characters after removing spaces).
 
+**T-SQL code of Query 1.1**
 ```sql
 SELECT
     Person.FirstNameNoSpaces
@@ -125,8 +126,8 @@ FROM (
 WHERE Iteration.Position <= LEN(REPLACE(Person.FirstNameNoSpaces, ' ', ''))
 ```
 
-**Output:** 22 rows — one per character, stopping exactly at position 22.
 
+**Output of Query 1.1:** 22 rows — one per character, stopping exactly at position 22.
 ```
 FirstNameNoSpaces       IterationPosition  FirstNameCharacter
 JanainaBarreiroGambaro  1                  J
