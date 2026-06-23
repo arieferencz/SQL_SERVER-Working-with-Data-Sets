@@ -136,15 +136,40 @@ AddressID	City	                StateProvinceID	    StateProvinceCode	    Country
 ### Query 1.2 — Remove duplicate city names (`Subquery Y`)
 We apply `SELECT DISTINCT` on city and country to remove duplicate city entries, leaving only one row per unique city per country.
 
-**Output:** 579 rows — one per unique city-country combination.
-
+**T-SQL code of Query 1.2**
+```sql
+SELECT DISTINCT X.City	-- UniqueCityName
+, X.CountryRegionCode
+FROM
+	(
+	SELECT PersonAddress.AddressID
+	, PersonAddress.City
+	, PersonAddress.StateProvinceID
+	, StateID.StateProvinceCode
+	, StateID.CountryRegionCode
+	, StateID.TerritoryID
+	, SalesTerritory.Name AS TerritoryName
+	FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+		ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+		ON StateID.TerritoryID = SalesTerritory.TerritoryID
+	) AS X 
 ```
-City              CountryRegionCode
-Southfield        US
-Seattle           US
-Bendigo           AU
-Chalk Riber       CA
+
+
+**Output of Query 1.2:** 579 rows — one per unique city-country combination.
+```
+City				CountryRegionCode
+Southfield			US
+Seattle				US
+Bendigo				AU
+San Mateo			US
+Saint Matthews		US
 ...
+Brampton			CA
+Daly City			US
+Great Falls			US
 (579 rows affected)
 ```
 
