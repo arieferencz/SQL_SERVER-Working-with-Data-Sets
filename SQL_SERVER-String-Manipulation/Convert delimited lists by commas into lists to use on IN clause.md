@@ -39,7 +39,7 @@ We build a comma-delimited list of all unique city names grouped by country. We 
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 SELECT AddressLine1
