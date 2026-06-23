@@ -186,7 +186,7 @@ Zoe W Watson 166-555-0180
 
 We create a VIEW named `VIEW_MixedAlphaNumeric_FullnamePhonenumbers` that stores the `AlphaNumericText` column. Sorting queries then reference the VIEW instead of repeating the subquery each time.
 
-**T-SQL code of Query 2**
+**T-SQL code of Solution 2**
 ```sql
 IF OBJECT_ID(N'VIEW_MixedAlphaNumeric_FullnamePhonenumbers', N'V') IS NOT NULL
     DROP VIEW VIEW_MixedAlphaNumeric_FullnamePhonenumbers
@@ -214,7 +214,7 @@ FROM (
 ) AS X
 ```
 
-**Output of Query 2:**
+**Output of Solution 2:**
 ```
 Commands completed successfully.
 ```
@@ -253,61 +253,87 @@ ORDER BY SUBSTRING(AlphaNumericText, 1, LEN(AlphaNumericText))
 ### Approach
 Instead of using `PATINDEX()` to find the digit start position, we use `TRANSLATE()` to replace all letters with `'z'` and then `REPLACE()` to strip them — leaving only the digits. For character sorting, we do the reverse: replace all digits with `'0'` and strip them.
 
-### T-SQL code — Build the sorting columns
+### T-SQL code — Full solution: Build the sorting columns
 
+**T-SQL code of Solution 3**
 ```sql
-SELECT
-    X.AlphaNumericText
-  , LTRIM(REPLACE(REPLACE(REPLACE(
-      TRANSLATE(LOWER(X.AlphaNumericText),
-        'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)),
-      'z', ''), '-', ''), CHAR(39), ''))       AS SortNumericOnly
-  , SUBSTRING(LTRIM(REPLACE(REPLACE(REPLACE(
-      TRANSLATE(LOWER(X.AlphaNumericText),
-        'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)),
-      'z', ''), '-', ''), CHAR(39), '')), 1, 3) AS SortFirst3Numbers
-  , SUBSTRING(LTRIM(REPLACE(REPLACE(REPLACE(
-      TRANSLATE(LOWER(X.AlphaNumericText),
-        'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)),
-      'z', ''), '-', ''), CHAR(39), '')), 4, 3) AS SortSecond3Numbers
-  , SUBSTRING(LTRIM(REPLACE(REPLACE(REPLACE(
-      TRANSLATE(LOWER(X.AlphaNumericText),
-        'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)),
-      'z', ''), '-', ''), CHAR(39), '')), 7, 4) AS SortLast4Numbers
-  , RTRIM(REPLACE(REPLACE(
-      TRANSLATE(X.AlphaNumericText, '0123456789', '0000000000'),
-      '-', ''), '0', ''))                       AS SortCharacterOnly
-FROM ( ... ) AS X
+SELECT X.FirstName
+, X.MiddleName
+, X.LastName
+, X.FullName
+, X.PhoneNumber
+, X.AlphaNumericText 
+, LTRIM(REPLACE(REPLACE(REPLACE(TRANSLATE(LOWER(X.AlphaNumericText), 'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)), 'z',''), '-',''),CHAR(39),'')) AS SortNumericOnly
+, SUBSTRING(LTRIM(REPLACE(REPLACE(REPLACE(TRANSLATE(LOWER(X.AlphaNumericText), 'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)), 'z',''), '-',''),CHAR(39),'')), 1, 3) AS SortFirst3Numbers
+, SUBSTRING(LTRIM(REPLACE(REPLACE(REPLACE(TRANSLATE(LOWER(X.AlphaNumericText), 'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)), 'z',''), '-',''),CHAR(39),'')), 4, 3) AS SortSecond3Numbers
+, SUBSTRING(LTRIM(REPLACE(REPLACE(REPLACE(TRANSLATE(LOWER(X.AlphaNumericText), 'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)), 'z',''), '-',''),CHAR(39),'')), 7, 4) AS SortLast4Numbers
+, RTRIM(REPLACE(REPLACE(TRANSLATE(X.AlphaNumericText, '0123456789', '0000000000'), '-',''), '0','')) SortCharacterOnly
+FROM (
+    SELECT  E.FirstName
+    , CASE E.MiddleName 
+    WHEN NULL THEN ''
+    ELSE E.MiddleName
+    END AS MiddleName 
+    , E.LastName AS LastName
+    , PN.PhoneNumber AS PhoneNumberOriginal
+    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') AS FullName
+    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') + ' ' + REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS AlphaNumericText
+    , REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS PhoneNumber
+    FROM [AdventureWorks2022].[Person].[Person] AS E
+    INNER JOIN [AdventureWorks2022].[Person].[PersonPhone] AS PN
+		ON E.BusinessEntityID = PN.BusinessEntityID
+    ) AS X
 ```
 
-**Output (truncated):**
 
+**Output  of Solution 3 (truncated):**
 ```
-AlphaNumericText                   SortNumericOnly    SortFirst3    SortCharacterOnly
-Ken J Sánchez 697-555-0142         6975550142         697           Ken J Sánchez
-Terri Lee Duffy 819-555-0175       8195550175         819           Terri Lee Duffy
-Roberto Tamburello 212-555-0187    2125550187         212           Roberto Tamburello
+FirstName	MiddleName	LastName	FullName	PhoneNumber	AlphaNumericText	SortNumericOnly	SortFirst3Numbers	SortSecond3Numbers	SortLast4Numbers	SortCharacterOnly
+Ken	J	Sánchez	Ken J Sánchez	697-555-0142	Ken J Sánchez 697-555-0142	6975550142	697	555	0142	Ken J Sánchez
+Terri	Lee	Duffy	Terri Lee Duffy	819-555-0175	Terri Lee Duffy 819-555-0175	8195550175	819	555	0175	Terri Lee Duffy
+Roberto	NULL	Tamburello	Roberto Tamburello	212-555-0187	Roberto Tamburello 212-555-0187	2125550187	212	555	0187	Roberto Tamburello
+Rob	NULL	Walters	Rob Walters	612-555-0100	Rob Walters 612-555-0100	6125550100	612	555	0100	Rob Walters
+Gail	A	Erickson	Gail A Erickson	849-555-0139	Gail A Erickson 849-555-0139	8495550139	849	555	0139	Gail A Erickson
+Jossef	H	Goldberg	Jossef H Goldberg	122-555-0189	Jossef H Goldberg 122-555-0189	1225550189	122	555	0189	Jossef H Goldberg
+Dylan	A	Miller	Dylan A Miller	181-555-0156	Dylan A Miller 181-555-0156	1815550156	181	555	0156	Dylan A Miller
 ...
+(19972 rows affected)
 ```
 
+---
 ### How TRANSLATE works for numeric sorting
 `TRANSLATE(LOWER(string), 'abcde...z...special chars', REPLICATE('z', 37))` replaces every letter and special character with `'z'`. Then `REPLACE(..., 'z', '')` removes all the `'z'`s, and `REPLACE(..., '-', '')` removes the hyphens — leaving only the raw digits.
+
+---
 
 ### How TRANSLATE works for character sorting
 `TRANSLATE(string, '0123456789', '0000000000')` replaces every digit with `'0'`. Then `REPLACE(..., '-', '')` removes hyphens and `REPLACE(..., '0', '')` removes all the `'0'`s — leaving only the letters and spaces.
 
+---
+
 ### Query 3.1 — Sort by all 10 digits of phone number
 
 ```sql
-SELECT X.AlphaNumericText
-FROM ( ... ) AS X
-ORDER BY LTRIM(REPLACE(REPLACE(REPLACE(
-    TRANSLATE(LOWER(X.AlphaNumericText),
-      'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)),
-    'z', ''), '-', ''), CHAR(39), ''))
+SELECT X.AlphaNumericText 
+FROM (
+    SELECT  E.FirstName
+    , CASE E.MiddleName 
+    WHEN NULL THEN ''
+    ELSE E.MiddleName
+    END AS MiddleName 
+    , E.LastName AS LastName
+    , PN.PhoneNumber AS PhoneNumberOriginal
+    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') AS FullName
+    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') + ' ' + REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS AlphaNumericText
+    , REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS PhoneNumber
+    FROM [AdventureWorks2022].[Person].[Person] AS E
+    INNER JOIN [AdventureWorks2022].[Person].[PersonPhone] AS PN
+	ON E.BusinessEntityID = PN.BusinessEntityID
+    ) AS X 
+ORDER BY LTRIM(REPLACE(REPLACE(REPLACE(TRANSLATE(LOWER(X.AlphaNumericText), 'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)), 'z',''), '-',''),CHAR(39),''))
 ```
 
-**Output (truncated):**
+**Output of Query 3.1 (truncated):**
 
 ```
 Isabella Roberts 100-555-0115
@@ -322,8 +348,11 @@ Cassidy Griffin 999-555-0198
 (19972 rows affected)
 ```
 
-### Query 3.2 — Sort by character portion only
+> **Note:** We can also sort Query 3.1 using "SortFirst3Numbers", "SortSecond3Numbers" or "SortLast4Numbers" from Query 3.
 
+---
+
+### Query 3.2 — Sort by character portion only
 ```sql
 SELECT X.AlphaNumericText
 FROM ( ... ) AS X
@@ -332,7 +361,7 @@ ORDER BY RTRIM(REPLACE(REPLACE(
     '-', ''), '0', ''))
 ```
 
-**Output:** Identical to Queries 1.2 and 2.2.
+**Output of Query 3.2:** Identical to Queries 1.2 and 2.2.
 
 ---
 
