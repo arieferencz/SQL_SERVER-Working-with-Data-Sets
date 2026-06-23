@@ -186,6 +186,7 @@ Zoe W Watson 166-555-0180
 
 We create a VIEW named `VIEW_MixedAlphaNumeric_FullnamePhonenumbers` that stores the `AlphaNumericText` column. Sorting queries then reference the VIEW instead of repeating the subquery each time.
 
+### T-SQL code of Solution 2
 **T-SQL code of Solution 2**
 ```sql
 IF OBJECT_ID(N'VIEW_MixedAlphaNumeric_FullnamePhonenumbers', N'V') IS NOT NULL
@@ -253,9 +254,8 @@ ORDER BY SUBSTRING(AlphaNumericText, 1, LEN(AlphaNumericText))
 ### Approach
 Instead of using `PATINDEX()` to find the digit start position, we use `TRANSLATE()` to replace all letters with `'z'` and then `REPLACE()` to strip them — leaving only the digits. For character sorting, we do the reverse: replace all digits with `'0'` and strip them.
 
-### T-SQL code — Full solution: Build the sorting columns
+### T-SQL code of of Solution 3: Build the sorting columns
 
-**T-SQL code of Solution 3**
 ```sql
 SELECT X.FirstName
 , X.MiddleName
