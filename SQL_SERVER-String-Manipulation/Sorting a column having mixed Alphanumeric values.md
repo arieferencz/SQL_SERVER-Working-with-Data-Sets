@@ -71,7 +71,7 @@ FROM (
 ) AS X
 ```
 
-### Output (truncated):
+### Output (truncated)
 
 ```
 FirstName    MiddleName    LastName        FullName                PhoneNumber     AlphaNumericText                    NumStartPos  SortFirst3  SortSecond3  SortLast4  SortCharPortion
@@ -215,7 +215,7 @@ FROM (
 ) AS X
 ```
 
-**Output of Solution 2**
+### Output of Solution 2
 ```
 Commands completed successfully.
 ```
@@ -286,7 +286,7 @@ FROM (
 ```
 
 
-**Output  of Solution 3 (truncated):**
+### Output  of Solution 3 (truncated)
 ```
 FirstName	MiddleName	LastName	FullName	PhoneNumber	AlphaNumericText	SortNumericOnly	SortFirst3Numbers	SortSecond3Numbers	SortLast4Numbers	SortCharacterOnly
 Ken	J	Sánchez	Ken J Sánchez	697-555-0142	Ken J Sánchez 697-555-0142	6975550142	697	555	0142	Ken J Sánchez
@@ -313,6 +313,7 @@ Dylan	A	Miller	Dylan A Miller	181-555-0156	Dylan A Miller 181-555-0156	181555015
 
 ### Query 3.1 — Sort by all 10 digits of phone number
 
+**T-SQL code of Query 3.1**
 ```sql
 SELECT X.AlphaNumericText 
 FROM (
@@ -333,7 +334,7 @@ FROM (
 ORDER BY LTRIM(REPLACE(REPLACE(REPLACE(TRANSLATE(LOWER(X.AlphaNumericText), 'abcdefghijklmnopqrstuvwxyzáéíóúñ.¡ãçø', REPLICATE('z', 37)), 'z',''), '-',''),CHAR(39),''))
 ```
 
-**Output of Query 3.1 (truncated):**
+**Output of Query 3.1 (truncated)**
 
 ```
 Isabella Roberts 100-555-0115
@@ -353,17 +354,32 @@ Cassidy Griffin 999-555-0198
 ---
 
 ### Query 3.2 — Sort by character portion only
+
+**T-SQL code of Query 3.2**
 ```sql
 SELECT X.AlphaNumericText
-FROM ( ... ) AS X
-ORDER BY RTRIM(REPLACE(REPLACE(
-    TRANSLATE(X.AlphaNumericText, '0123456789', '0000000000'),
-    '-', ''), '0', ''))
+FROM (
+    SELECT  E.FirstName
+	, CASE E.MiddleName 
+	WHEN NULL THEN ''
+	ELSE E.MiddleName
+	END AS MiddleName 
+	, E.LastName AS LastName
+	, PN.PhoneNumber AS PhoneNumberOriginal
+	, REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') AS FullName
+	, REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') + ' ' + REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS AlphaNumericText
+	, REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS PhoneNumber
+    FROM [AdventureWorks2022].[Person].[Person] AS E
+    INNER JOIN [AdventureWorks2022].[Person].[PersonPhone] AS PN
+	ON E.BusinessEntityID = PN.BusinessEntityID
+    ) AS X
+ORDER BY RTRIM(REPLACE(REPLACE(TRANSLATE(X.AlphaNumericText, '0123456789', '0000000000'), '-',''), '0','')) 
 ```
 
 **Output of Query 3.2:** Identical to Queries 1.2 and 2.2.
 
 ---
+<br>
 
 ## 💡 Solution 4 — Using the VIEW from Solution 2 with TRANSLATE
 
