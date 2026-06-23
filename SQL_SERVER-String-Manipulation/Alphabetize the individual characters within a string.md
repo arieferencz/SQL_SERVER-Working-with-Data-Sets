@@ -33,7 +33,6 @@ We use a **Cartesian Product** combined with `SUBSTRING()` to split each first n
 ---
 
 ### T-SQL code — Full solution
-
 ```sql
 SELECT
     X.FirstNames AS OriginalFirstName
@@ -61,25 +60,24 @@ ORDER BY X.FirstNames
 ---
 
 ### Output (truncated)
-
 ```
-OriginalFirstName  NewFirstName
-A.                 .A
-A.SCOTT            .ACOSTT
-AARON              AANOR
-ABBY               ABBY
-ABE                ABE
-ABHIJIT            ABHIIJT
+OriginalFirstName		NewFirstName
+A.                 		.A
+A.SCOTT            		.ACOSTT
+AARON              		AANOR
+ABBY               		ABBY
+ABE                		ABE
+ABHIJIT            		ABHIIJT
 ...
-FRANÇOIS           AÇFINORS
+FRANÇOIS           		AÇFINORS
 ...
-DEENA              ADEEN
-DEEPAK             ADEEKP
+DEENA              		ADEEN
+DEEPAK             		ADEEKP
 ...
-ZACHARY            AACHRYZ
-ZAINAL             AAILNZ
-ZHENG              EGHNZ
-ZOE                EOZ
+ZACHARY            		AACHRYZ
+ZAINAL             		AAILNZ
+ZHENG              		EGHNZ
+ZOE                		EOZ
 (1018 rows affected)
 ```
 
@@ -174,40 +172,60 @@ Row #		UniqueFirstName			FirstCharacterUniqueFirstName
 ### Query 1.2.1 — Filter out empty positions using `WHERE`
 We add a `WHERE` clause that keeps only rows where `Iteration.Position` is less than or equal to the length of the name. This removes all empty character positions.
 
-**Output of Query 1.2.1:** 5,880 rows — only the valid characters for all 1,018 names(truncated).
-
+**T-SQL code of Query 1.2**
+```sql
+SELECT UniqueFirstName.FirstNameNoSpaces AS UniqueFirstName										  -- UniqueFirstName2
+, SUBSTRING(UniqueFirstName.FirstNameNoSpaces, Iteration.Position, 1) AS FirstCharacterUniqueFirstName
+FROM (
+	SELECT DISTINCT REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-','') AS FirstNameNoSpaces        -- UniqueFirstNameNoSpaces1
+	FROM [AdventureWorks2022].[Person].[Person] AS UniqueFirstNameNoSpaces						  -- UniqueFirstNameNoSpaces1
+	) AS UniqueFirstName,	
+	(
+	SELECT ROW_NUMBER() OVER(ORDER BY LEN(REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-',''))) AS Position        -- Iteration1
+	FROM [AdventureWorks2022].[Person].[Person]																	 -- Iteration1
+	) AS Iteration																				  -- UniqueFirstName2
+WHERE Iteration.Position <= LEN(REPLACE(UniqueFirstName.FirstNameNoSpaces, ' ',''))				  -- UniqueFirstName2.1
 ```
-FirstName  CharactersFirstNameNoSpaces
-A.         A
-A.         .
-A.SCOTT    A
-A.SCOTT    .
-A.SCOTT    S
-A.SCOTT    C
-A.SCOTT    O
-A.SCOTT    T
-A.SCOTT    T
-AARON      A
-AARON      A
-AARON      R
-AARON      O
-AARON      N
+
+
+**Output of Query 1.2.1:** 5,880 rows — only the valid characters for all 1,018 names (truncated).
+```
+FirstName		CharactersFirstNameNoSpaces
+A.				A
+A.				.
+A.SCOTT			A
+A.SCOTT			.
+A.SCOTT			S
+A.SCOTT			C
+A.SCOTT			O
+A.SCOTT			T
+A.SCOTT			T
+AARON			A
+AARON			A
+AARON			R
+AARON			O
+AARON			N
 ...
-ZOE        Z
-ZOE        O
-ZOE        E
+ZHENG			Z
+ZHENG			H
+ZHENG			E
+ZHENG			N
+ZHENG			G
+ZOE				Z
+ZOE				O
+ZOE				E
 (5880 rows affected)
 ```
 
 ---
 
-### Final Query (Query 1.3) — Reassemble characters alphabetically using `STRING_AGG()`
+### Full solution (Query 1.3) — Reassemble characters alphabetically using `STRING_AGG()`
 We group all character rows by their original first name and use `STRING_AGG()` with `WITHIN GROUP (ORDER BY CharactersFirstNameNoSpaces)` to concatenate the characters back into a single string — sorted alphabetically. The separator is set to `''` (empty string) so no separator appears between characters.
 
 **Final output:** 1,018 rows — each original first name alongside its alphabetised version.
 
 ```
-OriginalFirstName  NewFirstName
+OriginalFirstName		NewFirstName
 ABRAHAM            AAABHMR
 ADINA              AADIN
 ADRIENNE           ADEEINNR
