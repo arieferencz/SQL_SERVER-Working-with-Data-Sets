@@ -163,28 +163,6 @@ Row #		UniqueFirstName        FirstCharacterUniqueFirstName
 39950		AARON	
 .................................................................. TRUNCATED RESULTS .....
 (20331496 rows affected)
-
-
-
-
-
-
-UniqueFirstName  FirstCharacterUniqueFirstName
-A.               A
-A.               .
-A.               (empty)
-A.               (empty)
-...
-A.SCOTT          A
-A.SCOTT          .
-A.SCOTT          S
-A.SCOTT          C
-A.SCOTT          O
-A.SCOTT          T
-A.SCOTT          T
-A.SCOTT          (empty)
-...
-(20331496 rows affected)
 ```
 
 ---
