@@ -96,7 +96,7 @@ SELECT REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-','') AS FirstNameNoSpaces   
 FROM [AdventureWorks2022].[Person].[Person] AS UniqueFirstNameNoSpaces                   -- UniqueFirstNameNoSpaces1
 ```
 
-**Output:** 1,018 unique first names (truncated).
+**Output of Query 1.1:** 1,018 unique first names (truncated).
 ```
 FirstNameNoSpaces
 A.
