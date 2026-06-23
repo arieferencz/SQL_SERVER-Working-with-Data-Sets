@@ -249,6 +249,61 @@ We use a **Cartesian Product** between Subquery Z (6 rows) and an `Iteration` su
 
 The Cartesian Product creates: **6 × 19,614 = 117,684 rows**. After filtering with `WHERE Iteration.Position <= LEN(Z.DelimListCityName)`, this reduces to **5,657 rows** — the total character count across all 6 country strings.
 
+**How the sliding window works (example for Australia)**
+Row #	SUBSTDelimCityName																CharacterLengthDelimitedLists	CountryRegionCode
+1		,Bendigo,Cloverdale,Port Macquarie,South Melbourne,.........,Wollongong,		421								AU
+2		Bendigo,Cloverdale,Port Macquarie,South Melbourne,S.........,Wollongong,		421								AU
+3		endigo,Cloverdale,Port Macquarie,South Melbourne,Sy.........,Wollongong,		421								AU
+4		ndigo,Cloverdale,Port Macquarie,South Melbourne,Syd.........,Wollongong,		421								AU
+5		digo,Cloverdale,Port Macquarie,South Melbourne,Sydn.........,Wollongong,		421								AU
+6		igo,Cloverdale,Port Macquarie,South Melbourne,Sydne.........,Wollongong,		421								AU
+7		go,Cloverdale,Port Macquarie,South Melbourne,Sydney.........,Wollongong,		421								AU
+8		o,Cloverdale,Port Macquarie,South Melbourne,Sydney,.........,Wollongong,		421								AU
+9		,Cloverdale,Port Macquarie,South Melbourne,Sydney,M.........,Wollongong,		421								AU
+10		Cloverdale,Port Macquarie,South Melbourne,Sydney,Ma.........,Wollongong,		421								AU
+11		loverdale,Port Macquarie,South Melbourne,Sydney,Mat.........,Wollongong,		421								AU
+12		overdale,Port Macquarie,South Melbourne,Sydney,Matr.........,Wollongong,		421								AU
+13		verdale,Port Macquarie,South Melbourne,Sydney,Matra.........,Wollongong,		421								AU
+14		erdale,Port Macquarie,South Melbourne,Sydney,Matrav.........,Wollongong,		421								AU
+15		rdale,Port Macquarie,South Melbourne,Sydney,Matravi.........,Wollongong,		421								AU
+16		dale,Port Macquarie,South Melbourne,Sydney,Matravil.........,Wollongong,		421								AU
+17		ale,Port Macquarie,South Melbourne,Sydney,Matravill.........,Wollongong,		421								AU
+18		le,Port Macquarie,South Melbourne,Sydney,Matraville.........,Wollongong,		421								AU
+19		e,Port Macquarie,South Melbourne,Sydney,Matraville,.........,Wollongong,		421								AU
+...
+410		,Wollongong,																	421								AU
+411		Wollongong,																		421								AU
+412		ollongong,																		421								AU
+413		llongong,																		421								AU
+414		longong,																		421								AU
+415		ongong,																			421								AU
+416		ngong,																			421								AU
+417		gong,																			421								AU
+418		ong,																			421								AU
+419		ng,																				421								AU
+420		g,																				421								AU
+421		,																				421								AU
+...
+422		,Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,Chalk Riber,		449								CA	
+423		Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,.........,,Chalk Riber,		449								CA	
+...
+859		Chalk Riber,																	449								CA
+860		halk Riber,																		449								CA
+861		alk Riber,																		449								CA
+862		lk Riber,																		449								CA
+863		k Riber,																		449								CA
+864		 Riber,																			449								CA
+865		Riber,																			449								CA
+866		iber,																			449								CA
+867		ber,																			449								CA
+868		er,																				449								CA
+869		r,																				449								CA
+870		,																				449								CA
+...
+(5657 rows affected)
+
+
+
 **T-SQL code of Query 1.4**
 ```sql
 SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName		-- SubstringOne4
@@ -286,7 +341,7 @@ WHERE Iteration.Position <= LEN(Z.DelimListCityName)					-- SubstringOne4
 ```
 
 
-**Output of Query 1.4: How the sliding window works (example for Australia):**
+**Output of Query 1.4**: 5657 rows.
 ```
 SUBSTDelimCityName							
 ,Bendigo,Cloverdale,Port Macquarie,South Melbourne,.........,Wollongong,
