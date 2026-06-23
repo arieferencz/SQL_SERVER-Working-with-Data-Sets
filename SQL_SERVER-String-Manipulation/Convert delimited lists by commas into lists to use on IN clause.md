@@ -426,7 +426,7 @@ FROM (
 	SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName		-- SubstringOne4
 	FROM 
 	(	
-	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName					-- DelimListCities3 = Z
+	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName			-- DelimListCities3 = Z
 	FROM	
 		(
 		SELECT DISTINCT X.City				-- UniqueCityName2 = Y
@@ -448,15 +448,15 @@ FROM (
 				ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
 			) AS X															-- UniqueCityName2 = Y
 		) AS Y	
-		GROUP BY Y.CountryRegionCode										-- DelimitedListCities3 = Z 
+		GROUP BY Y.CountryRegionCode																		-- DelimitedListCities3 = Z 
 		) AS Z,
 		(
 		SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position			-- Iteration3
 		FROM [AdventureWorks2022].[Person].[Address]
 		) AS Iteration														-- Iteration3
-	WHERE Iteration.Position <= LEN(Z.DelimListCityName)									-- SubstringOne4
+	WHERE Iteration.Position <= LEN(Z.DelimListCityName)															-- SubstringOne4
 	) AS SubstringOne
-WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','				-- SubstringTwo5
+WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','										-- SubstringTwo5
 ```
 
 
