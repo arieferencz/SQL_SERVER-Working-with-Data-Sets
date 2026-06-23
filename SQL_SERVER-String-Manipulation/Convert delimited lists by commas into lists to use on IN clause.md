@@ -205,7 +205,7 @@ We use `STRING_AGG()` grouped by `CountryRegionCode` to concatenate all city nam
 
 **T-SQL code of Query 1.3**
 ```sql
-SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName			-- DelimListCities3 = Z
+SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName		-- DelimListCities3 = Z
 FROM	
 (
 	SELECT DISTINCT X.City											-- UniqueCityName2 = Y
@@ -227,7 +227,7 @@ FROM
 		ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
 		) AS X														-- UniqueCityName2 = Y
 	) AS Y	
-GROUP BY Y.CountryRegionCode																			-- DelimitedListCities3 = Z
+GROUP BY Y.CountryRegionCode										-- DelimitedListCities3 = Z
 ```
 
 **Output of Query 1.3:** 6 rows — one delimited string per country (AU, CA, DE, FR, GB, US).
@@ -249,22 +249,80 @@ We use a **Cartesian Product** between Subquery Z (6 rows) and an `Iteration` su
 
 The Cartesian Product creates: **6 × 19,614 = 117,684 rows**. After filtering with `WHERE Iteration.Position <= LEN(Z.DelimListCityName)`, this reduces to **5,657 rows** — the total character count across all 6 country strings.
 
-**How the sliding window works (example for Australia):**
-
+**T-SQL code of Query 1.4**
+```sql
+SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName		-- SubstringOne4
+FROM 
+(	
+SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName					-- DelimListCities3 = Z
+FROM	
+	(
+	SELECT DISTINCT X.City												-- UniqueCityName2 = Y
+		, X.CountryRegionCode
+	FROM
+		(
+		SELECT 															-- OriginalTables1 = X
+		PersonAddress.AddressID
+		, PersonAddress.City
+		, PersonAddress.StateProvinceID
+		, StateID.StateProvinceCode
+		, StateID.CountryRegionCode
+		, StateID.TerritoryID
+		, SalesTerritory.Name AS TerritoryName
+		FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+		LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+			ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+		LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+			ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
+		) AS X															-- UniqueCityName2 = Y
+	) AS Y	
+	GROUP BY Y.CountryRegionCode										-- DelimitedListCities3 = Z 
+	) AS Z,
+	(
+	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position			-- Iteration3
+	FROM [AdventureWorks2022].[Person].[Address]
+	) AS Iteration							-- Iteration3
+WHERE Iteration.Position <= LEN(Z.DelimListCityName)					-- SubstringOne4
 ```
-Row  SUBSTDelimCityName
-1    ,Bendigo,Cloverdale,Port Macquarie,...,Wollongong,
-2    Bendigo,Cloverdale,Port Macquarie,...,Wollongong,
-3    endigo,Cloverdale,Port Macquarie,...,Wollongong,
+
+
+**Output of Query 1.3: How the sliding window works (example for Australia):**
+```
+SUBSTDelimCityName							
+,Bendigo,Cloverdale,Port Macquarie,South Melbourne,.........,Wollongong,
+Bendigo,Cloverdale,Port Macquarie,South Melbourne,S.........,Wollongong,
+endigo,Cloverdale,Port Macquarie,South Melbourne,Sy.........,Wollongong,
+ndigo,Cloverdale,Port Macquarie,South Melbourne,Syd.........,Wollongong,
+digo,Cloverdale,Port Macquarie,South Melbourne,Sydn.........,Wollongong,
+igo,Cloverdale,Port Macquarie,South Melbourne,Sydne.........,Wollongong,
+go,Cloverdale,Port Macquarie,South Melbourne,Sydney.........,Wollongong,
+o,Cloverdale,Port Macquarie,South Melbourne,Sydney,.........,Wollongong,
+,Cloverdale,Port Macquarie,South Melbourne,Sydney,M.........,Wollongong,
+Cloverdale,Port Macquarie,South Melbourne,Sydney,Ma.........,Wollongong,
+loverdale,Port Macquarie,South Melbourne,Sydney,Mat.........,Wollongong,
+overdale,Port Macquarie,South Melbourne,Sydney,Matr.........,Wollongong,
+verdale,Port Macquarie,South Melbourne,Sydney,Matra.........,Wollongong,
+erdale,Port Macquarie,South Melbourne,Sydney,Matrav.........,Wollongong,
+rdale,Port Macquarie,South Melbourne,Sydney,Matravi.........,Wollongong,
+dale,Port Macquarie,South Melbourne,Sydney,Matravil.........,Wollongong,
+ale,Port Macquarie,South Melbourne,Sydney,Matravill.........,Wollongong,
+le,Port Macquarie,South Melbourne,Sydney,Matraville.........,Wollongong,
+e,Port Macquarie,South Melbourne,Sydney,Matraville,.........,Wollongong,
 ...
-9    ,Cloverdale,Port Macquarie,...,Wollongong,
-10   Cloverdale,Port Macquarie,...,Wollongong,
+,Wollongong,								
+Wollongong,								
+ollongong,								
+llongong,								
+longong,								
+ongong,									
+ngong,									
+gong,									
+ong,									
+ng,									
+g,									
+,
 ...
-410  ,Wollongong,
-411  Wollongong,
-...
-421  ,
-(5657 rows affected across all countries)
+(5657 rows affected)
 ```
 
 ---
