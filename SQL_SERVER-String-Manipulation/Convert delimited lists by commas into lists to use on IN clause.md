@@ -558,7 +558,6 @@ ORDER BY City
 This is a small variation of Solution 2. The city name column in `SubstringTwo5` is stored as a named variable `CitiesforINclause`, making the final `WHERE ... IN (...)` clause more readable.
 
 The only difference from Solution 2 is in the `SubstringTwo5` CTE and the final `SELECT`:
-
 ```sql
 -- Inside SubstringTwo5 CTE:
 SELECT CitiesforINclause = SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2,
@@ -577,7 +576,65 @@ WHERE City IN (
 ORDER BY City
 ```
 
-**Output:** Identical to Solution 1 — 19,614 rows affected.
+
+**T-SQL code of Solution 2.1**
+```sql
+WITH
+Subquery_X AS																	-- OriginalTables1 = X
+( 
+	SELECT PersonAddress.AddressID 
+	, PersonAddress.City
+	, PersonAddress.StateProvinceID
+	, StateID.StateProvinceCode
+	, StateID.CountryRegionCode
+	, StateID.TerritoryID
+	, SalesTerritory.Name AS TerritoryName
+	FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+	ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+	ON StateID.TerritoryID = SalesTerritory.TerritoryID	
+), 
+Subquery_Y AS																	-- UniqueCityName2 = Y
+(
+	SELECT DISTINCT Subquery_X.City	
+		, Subquery_X.CountryRegionCode
+	FROM Subquery_X 
+), 
+Subquery_Z AS																	-- DelimListCities3 = Z
+(
+	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName
+	FROM Subquery_Y
+	GROUP BY Subquery_Y.CountryRegionCode 
+), 
+Iteration AS 																	-- Iteration3
+(
+	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position 
+	FROM [AdventureWorks2022].[Person].[Address] 
+), 
+SubstringOne4 AS																-- SubstringOne4
+(
+	SELECT SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position, LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName	
+	FROM Subquery_Z, Iteration
+	WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName) 
+),
+SubstringTwo5 AS 																-- SubstringTwo5
+( 
+	SELECT CitiesforINclause = SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) -- AS CityName 
+	FROM SubstringOne4
+	WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ',' 
+) 
+SELECT AddressLine1
+FROM [AdventureWorks2022].[Person].[Address] 
+WHERE City IN	(
+		SELECT CitiesforINclause
+		FROM SubstringTwo5
+		)
+ORDER BY City
+```
+
+
+**Output of Solution 2.1:** Identical to Solution 1 — 19,614 rows affected.
 
 ---
 
