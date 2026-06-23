@@ -129,29 +129,29 @@ WHERE Iteration.Position <= LEN(REPLACE(Person.FirstNameNoSpaces, ' ', ''))
 
 **Output of Query 1.1:** 22 rows — one per character, stopping exactly at position 22.
 ```
-FirstNameNoSpaces       IterationPosition  FirstNameCharacter
-JanainaBarreiroGambaro  1                  J
-JanainaBarreiroGambaro  2                  a
-JanainaBarreiroGambaro  3                  n
-JanainaBarreiroGambaro  4                  a
-JanainaBarreiroGambaro  5                  i
-JanainaBarreiroGambaro  6                  n
-JanainaBarreiroGambaro  7                  a
-JanainaBarreiroGambaro  8                  B
-JanainaBarreiroGambaro  9                  a
-JanainaBarreiroGambaro  10                 r
-JanainaBarreiroGambaro  11                 r
-JanainaBarreiroGambaro  12                 e
-JanainaBarreiroGambaro  13                 i
-JanainaBarreiroGambaro  14                 r
-JanainaBarreiroGambaro  15                 o
-JanainaBarreiroGambaro  16                 G
-JanainaBarreiroGambaro  17                 a
-JanainaBarreiroGambaro  18                 m
-JanainaBarreiroGambaro  19                 b
-JanainaBarreiroGambaro  20                 a
-JanainaBarreiroGambaro  21                 r
-JanainaBarreiroGambaro  22                 o
+FirstNameNoSpaces       	IterationPosition  		FirstNameCharacter
+JanainaBarreiroGambaro  	1						J
+JanainaBarreiroGambaro  	2						a
+JanainaBarreiroGambaro  	3						n
+JanainaBarreiroGambaro  	4						a
+JanainaBarreiroGambaro  	5						i
+JanainaBarreiroGambaro  	6						n
+JanainaBarreiroGambaro  	7						a
+JanainaBarreiroGambaro  	8						B
+JanainaBarreiroGambaro  	9						a
+JanainaBarreiroGambaro  	10						r
+JanainaBarreiroGambaro  	11						r
+JanainaBarreiroGambaro  	12						e
+JanainaBarreiroGambaro  	13						i
+JanainaBarreiroGambaro  	14						r
+JanainaBarreiroGambaro  	15						o
+JanainaBarreiroGambaro  	16						G
+JanainaBarreiroGambaro  	17						a
+JanainaBarreiroGambaro  	18						m
+JanainaBarreiroGambaro  	19						b
+JanainaBarreiroGambaro  	20						a
+JanainaBarreiroGambaro  	21						r
+JanainaBarreiroGambaro  	22						o
 (22 rows affected)
 ```
 
