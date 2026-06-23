@@ -27,7 +27,7 @@ We use a **Cartesian Product** between the `Person` table and an `Iteration` sub
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 SELECT
@@ -53,36 +53,42 @@ ORDER BY LEN(Person.FirstNameNoSpaces) DESC
 ### Output (truncated)
 
 ```
-BusinessEntityID  FirstNameNoSpaces       FirstNameCharacter
-565               JanainaBarreiroGambaro  J
-565               JanainaBarreiroGambaro  a
-565               JanainaBarreiroGambaro  n
-565               JanainaBarreiroGambaro  a
-565               JanainaBarreiroGambaro  i
-565               JanainaBarreiroGambaro  n
-565               JanainaBarreiroGambaro  a
-565               JanainaBarreiroGambaro  B
-565               JanainaBarreiroGambaro  a
-565               JanainaBarreiroGambaro  r
-565               JanainaBarreiroGambaro  r
-565               JanainaBarreiroGambaro  e
-565               JanainaBarreiroGambaro  i
-565               JanainaBarreiroGambaro  r
-565               JanainaBarreiroGambaro  o
-565               JanainaBarreiroGambaro  G
-565               JanainaBarreiroGambaro  a
-565               JanainaBarreiroGambaro  m
-565               JanainaBarreiroGambaro  b
-565               JanainaBarreiroGambaro  a
-565               JanainaBarreiroGambaro  r
-565               JanainaBarreiroGambaro  o
+BusinessEntityID		FirstNameNoSpaces			FirstNameCharacter
+565						JanainaBarreiroGambaro		J
+565						JanainaBarreiroGambaro  	a
+565						JanainaBarreiroGambaro  	n
+565						JanainaBarreiroGambaro  	a
+565						JanainaBarreiroGambaro  	i
+565						JanainaBarreiroGambaro  	n
+565						JanainaBarreiroGambaro  	a
+565						JanainaBarreiroGambaro  	B
+565						JanainaBarreiroGambaro  	a
+565						JanainaBarreiroGambaro  	r
+565						JanainaBarreiroGambaro  	r
+565						JanainaBarreiroGambaro  	e
+565						JanainaBarreiroGambaro  	i
+565						JanainaBarreiroGambaro  	r
+565						JanainaBarreiroGambaro  	o
+565						JanainaBarreiroGambaro  	G
+565						JanainaBarreiroGambaro  	a
+565						JanainaBarreiroGambaro  	m
+565						JanainaBarreiroGambaro  	b
+565						JanainaBarreiroGambaro  	a
+565						JanainaBarreiroGambaro  	r
+565						JanainaBarreiroGambaro  	o
 ...
-829               Ed                      E
-829               Ed                      d
-39                Ed                      E
-39                Ed                      d
-231               Jo                      J
-231               Jo                      o
+829						Ed                          E
+829						Ed							d
+39						Ed							E
+39						Ed							d
+231						Jo							J
+231						Jo							o
+539						Jo							J
+539						Jo							o
+2324					Jo							J
+2324					Jo							o
+27						Jo							J
+27						Jo							o
 (117894 rows affected)
 ```
 
