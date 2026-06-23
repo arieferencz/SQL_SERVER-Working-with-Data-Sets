@@ -58,7 +58,6 @@ ORDER BY X.FirstNames
 ```
 
 ---
-
 ### Output (truncated)
 ```
 OriginalFirstName		NewFirstName
@@ -226,12 +225,22 @@ We group all character rows by their original first name and use `STRING_AGG()` 
 
 ```
 OriginalFirstName		NewFirstName
-ABRAHAM            AAABHMR
-ADINA              AADIN
-ADRIENNE           ADEEINNR
-AIDAN              AADIN
-AIMEE              AEEIM
-ABE                ABE
+A.                 		.A
+A.SCOTT            		.ACOSTT
+AARON              		AANOR
+ABBY               		ABBY
+ABE                		ABE
+ABHIJIT            		ABHIIJT
+...
+FRANÇOIS           		AÇFINORS
+...
+DEENA              		ADEEN
+DEEPAK             		ADEEKP
+...
+ZACHARY            		AACHRYZ
+ZAINAL             		AAILNZ
+ZHENG              		EGHNZ
+ZOE                		EOZ
 (1018 rows affected)
 ```
 
@@ -241,20 +250,21 @@ ABE                ABE
 
 This solution produces the same result as Solution 1 but uses **Common Table Expressions (CTEs)** instead of nested subqueries, making each step easier to read and follow individually.
 
+**T-SQL code of Solution 2**
 ```sql
 WITH
-UniqueFirstName AS
+UniqueFirstName AS																	-- CTE 1: UniqueFirstNameNoSpaces1
 (
     SELECT DISTINCT
         REPLACE(REPLACE(UPPER(FirstName), ' ', ''), '-', '') AS DistinctFirstNameNoSpaces
     FROM [AdventureWorks2022].[Person].[Person] AS UniqueFirstNameNoSpaces
 ),
-Iteration AS
+Iteration AS																		-- CTE 2: Iteration1
 (
     SELECT ROW_NUMBER() OVER (ORDER BY LEN(REPLACE(REPLACE(UPPER(FirstName), ' ', ''), '-', ''))) AS Position
     FROM [AdventureWorks2022].[Person].[Person]
 ),
-IteratedUniqueFirstName AS
+IteratedUniqueFirstName AS															-- CTE 3: UniqueFirstName2.1
 (
     SELECT
         UniqueFirstName.DistinctFirstNameNoSpaces AS FirstNames
@@ -271,7 +281,7 @@ GROUP BY FirstNames
 ORDER BY FirstNames
 ```
 
-**Output:** Identical to Solution 1 — 1,018 rows affected.
+**Output of Solution 2:** Identical to Solution 1 — 1,018 rows affected.
 
 ---
 
