@@ -394,6 +394,33 @@ This keeps only rows like `,Bendigo,...` and `,Cloverdale,...` — i.e. rows whe
 **How the filter works:**
 
 ```
+Row #	SUBSTDelimCityName					Position2ndComma		LengthParam3	lenSUBSTDelimCityName	CityName
+1		,Bendigo,Cloverdale,Port .....		9						7				421						Bendigo			<--- Kept
+2		Bendigo,Cloverdale,Port M.....		8						6				420						endigo			<--- Removed by filter (WHERE clause)
+3		endigo,Cloverdale,Port Ma.....		7						5				419						ndigo			<--- Removed by filter (WHERE clause)
+4		ndigo,Cloverdale,Port Mac.....		6						4				418						digo			<--- Removed by filter (WHERE clause)
+5		digo,Cloverdale,Port Macq.....		5						3				417						igo				<--- Removed by filter (WHERE clause)
+6		igo,Cloverdale,Port Macqu.....		4						2				416						go				<--- Removed by filter (WHERE clause)
+7		go,Cloverdale,Port Macqua.....		3						1				415						o				<--- Removed by filter (WHERE clause)
+8		o,Cloverdale,Port Macquar.....		2						0				414										<--- Removed by filter (WHERE clause)
+9		,Cloverdale,Port Macquari.....		12						10				413						Cloverdale		<--- Kept
+10		Cloverdale,Port Macquarie.....		11						9				412						loverdale 		<--- Removed by filter (WHERE clause)
+11		loverdale,Port Macquarie,.....		10						8				411						overdale  		<--- Removed by filter (WHERE clause)
+12		overdale,Port Macquarie,S.....		9						7				410						verdale	  		<--- Removed by filter (WHERE clause)
+13		verdale,Port Macquarie,So.....		8						6				409						erdale	  		<--- Removed by filter (WHERE clause)
+14		erdale,Port Macquarie,Sou.....		7						5				408						rdale	 		<--- Removed by filter (WHERE clause)
+15		rdale,Port Macquarie,Sout.....		6						4				407						dale	  		<--- Removed by filter (WHERE clause)
+16		dale,Port Macquarie,South.....		5						3				406						ale	  			<--- Removed by filter (WHERE clause)
+17		ale,Port Macquarie,South .....		4						2				405						le	  			<--- Removed by filter (WHERE clause)
+18		le,Port Macquarie,South M.....		3						1				404						e	  			<--- Removed by filter (WHERE clause)
+19		e,Port Macquarie,South Me.....		2						0				403							  			<--- Removed by filter (WHERE clause)
+20		,Port Macquarie,South Mel.....		16						14				402						Port Macquarie	<--- Kept
+....................................................... TRUNCATED RESULTS ...............................................................
+(5657 rows affected)
+
+
+
+
 Row  SUBSTDelimCityName                    Kept?   CityName
 1    ,Bendigo,Cloverdale,...               ✓       Bendigo
 2    Bendigo,Cloverdale,...                ✗
