@@ -76,22 +76,47 @@ Tool Design                 4
 
 We join `Department` to `EmployeeDepartmentHistory` on `DepartmentID`. The `LEFT JOIN` ensures that all 16 departments are returned — even if a department has no rows in `EmployeeDepartmentHistory`. In that case, `BusinessEntityID` would be `NULL` for that department's row.
 
-**Output (truncated):** One row per department-employee combination.
+**T-SQL code of Query 1.1**
+```sql
+SELECT
+    Department.[Name] AS DepartmentName
+  , Department.DepartmentID AS DepartmentID
+  , Employees.[BusinessEntityID] AS BusinessEntityID
+FROM [AdventureWorks2022].[HumanResources].[Department] AS Department
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS Employees
+    ON Department.DepartmentID = Employees.DepartmentID
+ORDER BY Department.[Name] ASC
+```
+
+**Output of Query 1.1 (truncated):** One row per department-employee combination.
 
 ```
-Department.Name   Department.DepartmentID  Employees.BusinessEntityID
-Engineering       1                        2
-Engineering       1                        3
-Engineering       1                        5
-Engineering       1                        6
+DepartmentName				DepartmentID	BusinessEntityID
+Document Control			12				217
+Document Control			12				218
+Document Control			12				219
+Document Control			12				220
+Document Control			12				221
+Engineering					1				2
+Engineering					1				3
+Engineering					1				4
+Engineering					1				5
+Engineering					1				6
+Engineering					1				14
+Engineering					1				15
 ...
-Production        7                        28
-Production        7                        29
-...
-Executive         11                       1
-Executive         11                       25
-[Hypothetical]    17                       NULL   ← would appear if dept had no employees
-(295 rows affected — includes all department-employee combinations)
+Shipping and Receiving		15				121
+Shipping and Receiving		15				122
+Shipping and Receiving		15				123
+Shipping and Receiving		15				124
+Shipping and Receiving		15				125
+Shipping and Receiving		15				126
+Tool Design					2				4
+Tool Design					2				11
+Tool Design					2				12
+Tool Design					2				13
+[Hypothetical]                17			NULL   ← would appear if dept had no employees
+(296 rows affected — includes all department-employee combinations)
 ```
 
 ---
