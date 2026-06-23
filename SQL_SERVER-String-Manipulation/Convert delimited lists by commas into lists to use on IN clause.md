@@ -392,10 +392,9 @@ We apply a `WHERE` clause that keeps only rows where:
 This keeps only rows like `,Bendigo,...` and `,Cloverdale,...` — i.e. rows where the window has just landed on a new city boundary. `SUBSTRING()` then extracts the city name between position 2 and the next comma.
 
 **How the filter works:**
-
 ```
 Row #	SUBSTDelimCityName					Position2ndComma		LengthParam3	lenSUBSTDelimCityName	CityName
-1		,Bendigo,Cloverdale,Port .....		9						7				421						Bendigo			**<--- Kept**
+1		,Bendigo,Cloverdale,Port .....		9						7				421						Bendigo			<--- Kept
 2		Bendigo,Cloverdale,Port M.....		8						6				420						endigo			<--- Removed by filter (WHERE clause)
 3		endigo,Cloverdale,Port Ma.....		7						5				419						ndigo			<--- Removed by filter (WHERE clause)
 4		ndigo,Cloverdale,Port Mac.....		6						4				418						digo			<--- Removed by filter (WHERE clause)
@@ -419,8 +418,49 @@ Row #	SUBSTDelimCityName					Position2ndComma		LengthParam3	lenSUBSTDelimCityNam
 (5657 rows affected)
 ```
 
-**Output:** 579 rows — one city name per row, ready for use in an `IN` clause.
 
+**T-SQL code of Query 1.5**
+```sql
+SELECT SUBSTRING(SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne.SUBSTDelimCityName, 2) - 2) AS CityName			-- SubstringTwo5
+FROM (
+	SELECT SUBSTRING(Z.DelimListCityName, Iteration.Position, LEN(Z.DelimListCityName)) AS SUBSTDelimCityName		-- SubstringOne4
+	FROM 
+	(	
+	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Y.City), CHAR(44)) + ',' AS DelimListCityName					-- DelimListCities3 = Z
+	FROM	
+		(
+		SELECT DISTINCT X.City				-- UniqueCityName2 = Y
+			, X.CountryRegionCode
+		FROM
+			(
+			SELECT 					-- OriginalTables1 = X
+			PersonAddress.AddressID
+			, PersonAddress.City
+			, PersonAddress.StateProvinceID
+			, StateID.StateProvinceCode
+			, StateID.CountryRegionCode
+			, StateID.TerritoryID
+			, SalesTerritory.Name AS TerritoryName
+			FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+			LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+				ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+			LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+				ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
+			) AS X															-- UniqueCityName2 = Y
+		) AS Y	
+		GROUP BY Y.CountryRegionCode										-- DelimitedListCities3 = Z 
+		) AS Z,
+		(
+		SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position			-- Iteration3
+		FROM [AdventureWorks2022].[Person].[Address]
+		) AS Iteration														-- Iteration3
+	WHERE Iteration.Position <= LEN(Z.DelimListCityName)									-- SubstringOne4
+	) AS SubstringOne
+WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','				-- SubstringTwo5
+```
+
+
+**Output of Query 1.5:** 579 rows — one city name per row, ready for use in an `IN` clause.
 ```
 CityName
 Bendigo
@@ -429,6 +469,10 @@ Port Macquarie
 South Melbourne
 Sydney
 ...
+Casper
+Carol Stream
+Elk Grove
+Carson
 (579 rows affected)
 ```
 
