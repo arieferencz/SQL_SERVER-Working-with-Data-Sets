@@ -52,9 +52,7 @@ GROUP BY Departments.[Name]
 ```
 
 ---
-
 ### Output
-
 ```
 Name                        MaleCount  FemaleCount  NumberEmployees
 Document Control            4          1            5
@@ -84,26 +82,49 @@ Tool Design                 3          1            4
 
 The `LEFT JOIN` between `Department` and `EmployeeDepartmentHistory` preserves all departments. The `INNER JOIN` to `Employee` retrieves the `Gender` value for each employee. At this stage the result contains one row per department-employee combination with the employee's gender.
 
-**Output (truncated):** One row per department-employee combination.
+**T-SQL code of Query 1.1**
+```sql
+SELECT
+    Departments.[Name] AS DepartmentName
+  , Employees.[BusinessEntityID] AS BusinessEntityID
+  , Employees.[Gender] AS Gender
+FROM [AdventureWorks2022].[HumanResources].[Department] AS Departments
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeesHistorical
+    ON Departments.[DepartmentID] = EmployeesHistorical.[DepartmentID]
+INNER JOIN [AdventureWorks2022].[HumanResources].[Employee] AS Employees
+    ON Employees.[BusinessEntityID] = EmployeesHistorical.[BusinessEntityID]
+ORDER BY Departments.[Name]
+```
+
+**Output of Query 1.1 (truncated):** One row per department-employee combination.
 
 ```
-DepartmentName   BusinessEntityID  Gender
-Engineering      2                 M
-Engineering      3                 M
-Engineering      5                 F
-Engineering      6                 M
-Engineering      7                 M
-Engineering      14                M
-Engineering      15                F
-Engineering      11                M
+DepartmentName				BusinessEntityID	Gender
+Document Control			217					M
+Document Control			218					M
+Document Control			219					M
+Document Control			220					F
+Document Control			221					M
+Engineering					2					F
+Engineering					3					M
+Engineering					4					M
+Engineering					5					F
+Engineering					6					M
+Engineering					14					M
+Engineering					15					F
+Executive					1					M
 ...
-Production       28                M
-Production       29                M
-...
-Finance          84                F
-Finance          83                M
-...
-(295 rows affected)
+Shipping and Receiving		121					M
+Shipping and Receiving		122					F
+Shipping and Receiving		123					M
+Shipping and Receiving		124					F
+Shipping and Receiving		125					M
+Shipping and Receiving		126					M
+Tool Design					4					M
+Tool Design					11					M
+Tool Design					12					M
+Tool Design					13					F
+(296 rows affected)
 ```
 
 ---
@@ -117,25 +138,34 @@ For each row we add two `CASE WHEN` expressions:
 
 Since `COUNT()` ignores `NULL` values, wrapping `COUNT()` around each `CASE` expression counts only the rows where the condition is `TRUE` — effectively counting males and females independently in the same query.
 
-**How the conditional aggregation works — example for Engineering:**
+**T-SQL code of Query 1.2: How the conditional aggregation works — example for Engineering:**
 
+```sql
+SELECT
+    Employees.[BusinessEntityID] AS BusinessEntityID
+  , Employees.[Gender] AS Gender
+  , CASE WHEN Employees.[Gender] = 'M' THEN 1 END AS "'CASE Gender='M'"
+  , CASE WHEN Employees.[Gender] = 'F' THEN 1 END AS "'CASE Gender='F'"
+FROM [AdventureWorks2022].[HumanResources].[Department] AS Departments
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeesHistorical
+    ON Departments.[DepartmentID] = EmployeesHistorical.[DepartmentID]
+INNER JOIN [AdventureWorks2022].[HumanResources].[Employee] AS Employees
+    ON Employees.[BusinessEntityID] = EmployeesHistorical.[BusinessEntityID]
+WHERE Departments.[Name] = 'Engineering'
+ORDER BY Departments.[Name]
 ```
-BusinessEntityID  Gender  CASE Gender='M'  CASE Gender='F'
-2                 M       1                NULL
-3                 M       1                NULL
-5                 F       NULL             1
-6                 M       1                NULL
-7                 M       1                NULL
-14                M       1                NULL
-15                F       NULL             1
-11                M       1                NULL
 
-COUNT(CASE Gender='M') = 6   ← counts 6 non-NULL values
-COUNT(CASE Gender='F') = 2   ← counts 2 non-NULL values
-COUNT(BusinessEntityID) = 8  ← but wait — output shows 7
+**Output of Query 1.2:**
 ```
-
-> **Note:** The total `NumberEmployees` column may differ slightly from `MaleCount + FemaleCount` for some departments — this is because `EmployeeDepartmentHistory` includes historical records for employees who have since changed departments. The deduplication logic used in other exercises (removing duplicate records using `ROW_NUMBER()`) is not applied here — so an employee who has worked in two departments will be counted in both.
+BusinessEntityID	Gender	'CASE Gender='M'	'CASE Gender='F'
+2					F		NULL				1
+3					M		1					NULL
+4					M		1					NULL
+5					F		NULL				1
+6					M		1					NULL
+14					M		1					NULL
+15					F		NULL				1
+```
 
 ---
 
