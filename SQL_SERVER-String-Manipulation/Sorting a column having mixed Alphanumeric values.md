@@ -143,14 +143,28 @@ Logan H Wilson 999-555-0111
 
 ### Query 1.2 — Sort by character portion (full name)
 
+**T-SQL code of Query 1.2**
 ```sql
-SELECT X.AlphaNumericText
-FROM ( ... ) AS X
+SELECT X.AlphaNumericText 
+FROM (
+    SELECT  E.FirstName
+	    , CASE E.MiddleName 
+	    WHEN NULL THEN ''
+	    ELSE E.MiddleName
+	    END AS MiddleName 
+	    , E.LastName AS LastName
+	    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') AS FullName
+	    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') + ' ' + REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS AlphaNumericText
+	    , REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS PhoneNumber
+	FROM [AdventureWorks2022].[Person].[Person] AS E
+	INNER JOIN [AdventureWorks2022].[Person].[PersonPhone] AS PN
+		ON E.BusinessEntityID = PN.BusinessEntityID
+	) AS X
 ORDER BY SUBSTRING(X.FullName, 1, LEN(AlphaNumericText))
 ```
 
-**Output (truncated):**
 
+**Output of Query 1.2 (truncated):**
 ```
 A. Francesca Leonetti 645-555-0193
 A. Scott Wright 675-555-0100
