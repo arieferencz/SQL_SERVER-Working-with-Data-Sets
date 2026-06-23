@@ -99,14 +99,35 @@ US                 ...
 ### Query 1.1 — Retrieve raw address data (`Subquery X`)
 We join the three tables to retrieve each address record with its city, state code, country code, and territory name. This is the base dataset.
 
-**Output:** 19,614 rows — one per address record.
-
+**T-SQL code of Query 1.1**
+```sql
+SELECT PersonAddress.AddressID
+, PersonAddress.City
+, PersonAddress.StateProvinceID
+, StateID.StateProvinceCode
+, StateID.CountryRegionCode
+, StateID.TerritoryID
+, SalesTerritory.Name AS TerritoryName
+FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+	ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+	ON StateID.TerritoryID = SalesTerritory.TerritoryID
 ```
-AddressID  City                    StateProvinceCode  CountryRegionCode  TerritoryName
-532        Ottawa                  ON                 CA                 Canada
-497        Burnaby                 BC                 CA                 Canada
-29781      Dunkerque               59                 FR                 France
+
+
+**Output of Query 1.1:** 19,614 rows — one per address record.
+```
+AddressID	City	                StateProvinceID	    StateProvinceCode	    CountryRegionCode	    TerritoryID	    TerritoryName
+532	        Ottawa	                57	                ON 	                    CA	                    6	            Canada
+497	        Burnaby	                7	                BC 	                    CA	                    6	            Canada
+29781	    Dunkerque	            145	                59 	                    FR	                    7	            France
+24231	    Verrieres Le Buisson	177	                91 	                    FR	                    7	            France
+19637	    Verrieres Le Buisson	177	                91 	                    FR	                    7	            France
 ...
+17393	    Paderborn	            20	                HH 	                    DE	                    8	            Germany
+29769	    Berlin	                20	                HH 	                    DE	                    8	            Germany
+18050	    München	                53	                NW 	                    DE	                    8	            Germany
 (19614 rows affected)
 ```
 
