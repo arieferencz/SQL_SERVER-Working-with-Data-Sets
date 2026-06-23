@@ -90,8 +90,13 @@ ZOE                EOZ
 ### Query 1.1 — Get unique first names with no spaces or hyphens
 We use `UPPER()` to capitalise all characters, then `REPLACE()` twice to remove spaces and hyphens. `SELECT DISTINCT` removes duplicate names, leaving only 1 row per unique first name.
 
-**Output:** 1,018 unique first names (truncated).
+**T-SQL code of Query 1.1**
+```sql
+SELECT REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-','') AS FirstNameNoSpaces            -- UniqueFirstNameNoSpaces1
+FROM [AdventureWorks2022].[Person].[Person] AS UniqueFirstNameNoSpaces                   -- UniqueFirstNameNoSpaces1
+```
 
+**Output:** 1,018 unique first names (truncated).
 ```
 FirstNameNoSpaces
 A.
@@ -114,9 +119,56 @@ The Cartesian Product creates: **1,018 × 19,972 = 20,331,496 rows**.
 
 At this stage the result includes many empty characters (positions beyond the name's length), which appear as blank values.
 
-**Output:** 20,331,496 rows (truncated).
-
+**T-SQL code of Query 2.1**
+```sql
+SELECT UniqueFirstName.FirstNameNoSpaces AS UniqueFirstName                                       -- UniqueFirstName2
+, SUBSTRING(UniqueFirstName.FirstNameNoSpaces, Iteration.Position, 1) AS FirstCharacterUniqueFirstName
+FROM (
+	SELECT DISTINCT REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-','') AS FirstNameNoSpaces        -- UniqueFirstNameNoSpaces1
+	FROM [AdventureWorks2022].[Person].[Person] AS UniqueFirstNameNoSpaces                        -- UniqueFirstNameNoSpaces1
+	) AS UniqueFirstName,	
+	(
+	SELECT ROW_NUMBER() OVER(ORDER BY LEN(REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-',''))) AS Position        -- Iteration1
+	FROM [AdventureWorks2022].[Person].[Person]                                                                  -- Iteration1
+	) AS Iteration                                                                                -- UniqueFirstName2
 ```
+
+**Output of Query 2.1:** 20,331,496 rows (truncated).
+```
+Row #		UniqueFirstName        FirstCharacterUniqueFirstName
+1			A.			           A
+2			A.			           .        
+3			A.			           (emt
+4			A.                     			
+5			A.                     			
+.................................................................. TRUNCATED RESULTS .....
+19971		A.	
+19972		A.	
+19973		A.SCOTT			A
+19974		A.SCOTT			.
+19975		A.SCOTT			S
+19976		A.SCOTT			C
+19977		A.SCOTT			O
+19978		A.SCOTT			T
+19979		A.SCOTT			T
+19980		A.SCOTT	
+19981		A.SCOTT	
+.................................................................. TRUNCATED RESULTS .....
+39944		A.SCOTT			
+39945		AARON			A
+39946		AARON			A
+39947		AARON			R
+39948		AARON			O
+39949		AARON			N
+39950		AARON	
+.................................................................. TRUNCATED RESULTS .....
+(20331496 rows affected)
+
+
+
+
+
+
 UniqueFirstName  FirstCharacterUniqueFirstName
 A.               A
 A.               .
