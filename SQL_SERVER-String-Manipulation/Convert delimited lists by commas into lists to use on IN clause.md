@@ -286,7 +286,7 @@ WHERE Iteration.Position <= LEN(Z.DelimListCityName)					-- SubstringOne4
 ```
 
 
-**Output of Query 1.3: How the sliding window works (example for Australia):**
+**Output of Query 1.4: How the sliding window works (example for Australia):**
 ```
 SUBSTDelimCityName							
 ,Bendigo,Cloverdale,Port Macquarie,South Melbourne,.........,Wollongong,
