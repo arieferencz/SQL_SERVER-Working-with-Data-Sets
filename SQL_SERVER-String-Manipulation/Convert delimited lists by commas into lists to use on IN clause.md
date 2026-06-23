@@ -140,17 +140,17 @@ ON StateID.TerritoryID = SalesTerritory.TerritoryID
 
 **Output of Query 1.1:** 19,614 rows (Truncated).
 ```
-AddressID	    City			        StateProvinceID		StateProvinceCode	    CountryRegionCode	TerritoryID	    TerritoryName
-532		        Ottawa			        57			        ON 			            CA		        	6		        Canada
-497		        Burnaby			        7			        BC 		            	CA		        	6	        	Canada
-29781		    Dunkerque		        145			        59		            	FR		        	7	        	France
-24231		    Verrieres Le Buisson	177		        	91		            	FR		        	7	        	France
-19637		    Verrieres Le Buisson	177			        91		            	FR		        	7	        	France
+AddressID	    City			        StateProvinceID		StateProvinceCode	CountryRegionCode	TerritoryID	    TerritoryName
+532		        Ottawa			        57			        ON					CA		        	6		        Canada
+497		        Burnaby			        7			        BC					CA		        	6	        	Canada
+29781		    Dunkerque		        145			        59					FR		        	7	        	France
+24231		    Verrieres Le Buisson	177		        	91					FR		        	7	        	France
+19637		    Verrieres Le Buisson	177			        91					FR		        	7	        	France
 ...
-15768		    Neunkirchen		        70		        	SL 		            	DE		        	8	        	Germany
-17393		    Paderborn		        20		        	HH 		            	DE		        	8	        	Germany
-29769		    Berlin			        20		        	HH 		            	DE		        	8	        	Germany
-18050		    München			        53		        	NW 		            	DE		        	8	        	Germany
+15768		    Neunkirchen		        70		        	SL					DE		        	8	        	Germany
+17393		    Paderborn		        20		        	HH					DE		        	8	        	Germany
+29769		    Berlin			        20		        	HH					DE		        	8	        	Germany
+18050		    München			        53		        	NW					DE		        	8	        	Germany
 (19614 rows affected)
 ```
 
