@@ -227,7 +227,7 @@ FROM
 		ON StateID.TerritoryID = SalesTerritory.TerritoryID			-- OriginalTables1 = X
 		) AS X														-- UniqueCityName2 = Y
 	) AS Y	
-GROUP BY Y.CountryRegionCode										-- DelimitedListCities3 = Z
+GROUP BY Y.CountryRegionCode																		-- DelimitedListCities3 = Z
 ```
 
 **Output of Query 1.3:** 6 rows — one delimited string per country (AU, CA, DE, FR, GB, US).
