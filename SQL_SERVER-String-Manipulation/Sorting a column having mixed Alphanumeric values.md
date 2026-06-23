@@ -290,12 +290,12 @@ FROM (
 ```
 FirstName	MiddleName	LastName	FullName			PhoneNumber		AlphaNumericText					SortNumericOnly		SortFirst3Numbers	SortSecond3Numbers	SortLast4Numbers	SortCharacterOnly
 Ken			J			Sánchez		Ken J Sánchez		697-555-0142	Ken J Sánchez 697-555-0142			6975550142			697					555					0142				Ken J Sánchez
-Terri		Lee			Duffy		Terri Lee Duffy		819-555-0175	Terri Lee Duffy 819-555-0175		8195550175			819	555	0175		Terri Lee Duffy
-Roberto		NULL		Tamburello	Roberto Tamburello	212-555-0187	Roberto Tamburello 212-555-0187		2125550187			212	555	0187		Roberto Tamburello
-Rob			NULL		Walters		Rob Walters			612-555-0100	Rob Walters 612-555-0100			6125550100			612	555	0100		Rob Walters
-Gail		A			Erickson	Gail A Erickson		849-555-0139	Gail A Erickson 849-555-0139		8495550139			849	555	0139		Gail A Erickson
-Jossef		H			Goldberg	Jossef H Goldberg	122-555-0189	Jossef H Goldberg 122-555-0189		1225550189			122	555	0189		Jossef H Goldberg
-Dylan		A			Miller		Dylan A Miller		181-555-0156	Dylan A Miller 181-555-0156			1815550156			181	555	0156		Dylan A Miller
+Terri		Lee			Duffy		Terri Lee Duffy		819-555-0175	Terri Lee Duffy 819-555-0175		8195550175			819					555					0175				Terri Lee Duffy
+Roberto		NULL		Tamburello	Roberto Tamburello	212-555-0187	Roberto Tamburello 212-555-0187		2125550187			212					555					0187				Roberto Tamburello
+Rob			NULL		Walters		Rob Walters			612-555-0100	Rob Walters 612-555-0100			6125550100			612					555					0100				Rob Walters
+Gail		A			Erickson	Gail A Erickson		849-555-0139	Gail A Erickson 849-555-0139		8495550139			849					555					0139				Gail A Erickson
+Jossef		H			Goldberg	Jossef H Goldberg	122-555-0189	Jossef H Goldberg 122-555-0189		1225550189			122					555					0189				Jossef H Goldberg
+Dylan		A			Miller		Dylan A Miller		181-555-0156	Dylan A Miller 181-555-0156			1815550156			181					555					0156				Dylan A Miller
 ...
 (19972 rows affected)
 ```
