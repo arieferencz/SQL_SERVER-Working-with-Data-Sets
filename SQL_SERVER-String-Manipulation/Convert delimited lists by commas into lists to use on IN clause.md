@@ -1,4 +1,4 @@
-# Convert delimited lists by commas into lists to use on IN clause
+<img width="371" height="146" alt="image" src="https://github.com/user-attachments/assets/749dc7c8-1dfc-4cbd-a8e1-b690005b851f" /># Convert delimited lists by commas into lists to use on IN clause
 
 ## 🎯 Exercise
 Convert a comma-delimited list of city names into individual row values that can be passed to a `WHERE ... IN (...)` clause — and use it to retrieve all addresses for those cities.
@@ -94,24 +94,24 @@ ORDER BY City
 ### Output (truncated)
 
 ```
-City        AddressLine1
-Abingdon    New Millhouse, 2583 Milton Park
-Albany      1619 Mills Dr.
-Albany      2255 254th Avenue Se
-Albany      9098 Story Lane
-Albany      Heritage Mall
+AddressLine1
+New Millhouse, 2583 Milton Park
+1619 Mills Dr.
+2255 254th Avenue Se
+9098 Story Lane
+Heritage Mall
 ...
-Berlin      8783 Detroit Ave.
-Berlin      Alderstr 3955
+8783 Detroit Ave.
+Alderstr 3955
 ...
-London      1005 Valley Oak Plaza
-London      1019 Mt. Davidson Court
+1005 Valley Oak Plaza
+1050 Greenhills Circle
 ...
-New York    123 Union Square South
-New York    2596 Big Canyon Road
+123 Union Square South
+2596 Big Canyon Road
 ...
-York        2050 B Avenue I
-Zeeland     855 East Main Avenue
+2050 B Avenue I
+855 East Main Avenue
 (19614 rows affected)
 ```
 
