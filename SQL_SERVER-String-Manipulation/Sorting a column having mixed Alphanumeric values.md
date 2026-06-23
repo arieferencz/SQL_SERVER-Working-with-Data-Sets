@@ -180,7 +180,7 @@ Zoe W Watson 166-555-0180
 ```
 
 ---
-
+<br>
 ## 💡 Solution 2 — Using a VIEW (alternative to Solution 1)
 
 We create a VIEW named `VIEW_MixedAlphaNumeric_FullnamePhonenumbers` that stores the `AlphaNumericText` column. Sorting queries then reference the VIEW instead of repeating the subquery each time.
