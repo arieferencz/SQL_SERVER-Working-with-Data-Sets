@@ -302,11 +302,10 @@ RowNumber	PreviousStartDate	StartDate		DatediffStartDate		StartDateGroup		Busine
 
 ---
 
-### Final Query (Query 1.4) — Convert flags to group numbers using running `SUM()`
+### Query 1.4 — Convert flags to group numbers using running `SUM()`
 `SUM(StartDateGroup) OVER (ORDER BY RowNumber)` computes a running total of the `0/1` flags. Each time a `1` appears, the running total increases by 1 — incrementing the group number. Each time a `0` appears, the total stays the same — keeping the same group number for employees sharing the same date.
 
 **How the running sum builds group numbers:**
-
 ```
 RowNumber  StartDateGroup  Running SUM  → NewGroup
 1          1               1            → 1
@@ -321,6 +320,82 @@ RowNumber  StartDateGroup  Running SUM  → NewGroup
 272        0               158          → 158  ← same group
 273        0               158          → 158  ← same group
 ...
+```
+
+**T-SQL code of Query 1.4**
+```sql
+SELECT StartDateGroupNumber.RowNumber														-- EmployeesGroupedByHiringDateLevel5
+, StartDateGroupNumber.StartDate
+, StartDateGroupNumber.BusinessEntityID
+, StartDateGroupNumber.JobTitle
+, SUM(StartDateGroupNumber.StartDateGroup) OVER (ORDER BY StartDateGroupNumber.RowNumber) AS NewGroup
+FROM (
+	SELECT DatediffHireDates.RowNumber														-- DatediffHireDatesLevel4
+	, DatediffHireDates.PreviousStartDate
+	, DatediffHireDates.StartDate
+	, DatediffHireDates.DatediffStartDate
+	, CASE	WHEN DatediffHireDates.DatediffStartDate = 0 
+			THEN 0
+			ELSE 1
+			END AS StartDateGroup
+	, DatediffHireDates.BusinessEntityID
+	, DatediffHireDates.JobTitle
+	FROM (
+		SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber			-- RemovingDuplicatesLevel2
+		, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate) AS PreviousStartDate
+		, OriginalTables.StartDate
+		, DATEDIFF(DAY, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate), OriginalTables.StartDate) AS DatediffStartDate
+		, OriginalTables.BusinessEntityID	
+		, OriginalTables.JobTitle
+		, OriginalTables.DepartmentID
+		, OriginalTables.DeparmentName
+		FROM (
+			SELECT																			-- OriginalTablesLevel1
+			ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+			, Employee.BusinessEntityID	
+			, Employee.JobTitle
+			, EmployeeDepartmentHistory.DepartmentID
+			, Department.[Name] AS DeparmentName
+			, EmployeeDepartmentHistory.StartDate
+			, EmployeeDepartmentHistory.EndDate
+			FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+			LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+				ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+			LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+				ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+			WHERE Employee.BusinessEntityID <> 1											-- OriginalTablesLevel1
+		) AS OriginalTables
+		WHERE OriginalTables.RowNumberRemovingDuplicates = 1								-- RemovingDuplicatesLevel2 / CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+	) AS DatediffHireDates																	-- DatediffHireDatesLevel4
+) AS StartDateGroupNumber																	-- EmployeesGroupedByHiringDateLevel5
+```
+
+
+**Output of Query 1.4:**
+```
+RowNumber	StartDate		BusinessEntityID	JobTitle							NewGroup
+1			2006-06-30		28					Production Technician - WC60		1
+2			2007-01-26		17					Marketing Assistant					2
+3			2007-11-11		3					Engineering Manager					3
+4			2007-12-11		12					Tool Designer						4
+5			2007-12-26		40					Production Supervisor - WC60		5
+6			2008-01-06		48					Production Technician - WC10		6
+7			2008-01-06		5					Design Engineer						6
+8			2008-01-07		49					Production Technician - WC10		7
+...
+270			2011-02-15		273					Vice President of Sales				157
+271			2011-05-31		275					Sales Representative				158
+272			2011-05-31		276					Sales Representative				158
+273			2011-05-31		277					Sales Representative				158
+274			2011-05-31		278					Sales Representative				158
+275			2011-05-31		279					Sales Representative				158
+276			2011-05-31		280					Sales Representative				158
+277			2011-05-31		281					Sales Representative				158
+278			2011-05-31		282					Sales Representative				158
+279			2011-05-31		283					Sales Representative				158
+280			2011-09-01		224					Scheduling Assistant				159
+...
+(289 rows affected)
 ```
 
 ---
