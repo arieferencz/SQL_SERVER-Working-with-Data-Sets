@@ -124,7 +124,7 @@ We join three tables to retrieve each address with its city, state, country, and
 
 **T-SQL code of Query 1.1**
 ```sql
-SELECT PersonAddress.AddressID					-- OriginalTables1 = X
+SELECT PersonAddress.AddressID									-- OriginalTables1 = X
 , PersonAddress.City
 , PersonAddress.StateProvinceID
 , StateID.StateProvinceCode
@@ -135,7 +135,7 @@ FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
 LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
 ON PersonAddress.StateProvinceID = StateID.StateProvinceID
 LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-ON StateID.TerritoryID = SalesTerritory.TerritoryID	
+ON StateID.TerritoryID = SalesTerritory.TerritoryID				-- OriginalTables1 = X	
 ```
 
 **Output of Query 1.1:** 19,614 rows (Truncated).
