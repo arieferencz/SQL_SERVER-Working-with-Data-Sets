@@ -229,8 +229,54 @@ Tool Design			        5			        6		    1		    7					...		4				18				6					4
 ### Query 2.1 — Select the correct count per department using `CASE`
 We add a `CASE` statement that checks the department name on each row and returns only the matching employee count column — all other columns are discarded. This collapses the 16 count columns into a single `CountEmployeeByDept` column with the correct value for each department.
 
-**Final output:** 16 rows × 2 columns — one row per department with its employee count.
+**T-SQL code of Query 2.1**
+```sql
+SELECT Department.[Name]
+, CASE Department.[Name]
+	WHEN 'Document Control' THEN           VIEW_CountNumberEmployeesByDepartment.dept_DocControl
+	WHEN 'Engineering' THEN                VIEW_CountNumberEmployeesByDepartment.dept_Engin
+	WHEN 'Executive' THEN                  VIEW_CountNumberEmployeesByDepartment.dept_Exec
+	WHEN 'Facilities and Maintenance' THEN VIEW_CountNumberEmployeesByDepartment.dept_FacILMaint
+	WHEN 'Finance' THEN                    VIEW_CountNumberEmployeesByDepartment.dept_Finance
+	WHEN 'Human Resources' THEN            VIEW_CountNumberEmployeesByDepartment.dept_HR
+	WHEN 'Information Services' THEN       VIEW_CountNumberEmployeesByDepartment.dept_IT
+	WHEN 'Marketing' THEN                  VIEW_CountNumberEmployeesByDepartment.dept_Marketing
+	WHEN 'Production' THEN                 VIEW_CountNumberEmployeesByDepartment.dept_Prod
+	WHEN 'Production Control' THEN         VIEW_CountNumberEmployeesByDepartment.dept_ProdControl
+	WHEN 'Purchasing' THEN                 VIEW_CountNumberEmployeesByDepartment.dept_Purch
+	WHEN 'Quality Assurance' THEN          VIEW_CountNumberEmployeesByDepartment.dept_QA
+	WHEN 'Research and Development' THEN   VIEW_CountNumberEmployeesByDepartment.dept_R_and_D
+	WHEN 'Sales' THEN                      VIEW_CountNumberEmployeesByDepartment.dept_Sales
+	WHEN 'Shipping and Receiving' THEN     VIEW_CountNumberEmployeesByDepartment.dept_ShipReceiv
+	WHEN 'Tool Design' THEN                VIEW_CountNumberEmployeesByDepartment.dept_ToolDesign
+	END AS CountEmployeeByDept
+FROM VIEW_CountNumberEmployeesByDepartment
+, [AdventureWorks2022].[HumanResources].[Department]
+```
 
+**Output of Query 2:** 16 rows, each containing 2 columns, the department name and the employee count.
+```
+Name				            CountEmployeeByDept
+Document Control		        5
+Engineering			            6
+Executive			            1
+Facilities and Maintenance    	7
+Finance				            10
+Human Resources			        6
+Information Services		    10
+Marketing			            9
+Production			            179
+Production Control		        6
+Purchasing			            12
+Quality Assurance		        6
+Research and Development	    4
+Sales				            18
+Shipping and Receiving		    6
+Tool Design			            4
+(16 rows affected)
+```
+
+**Final output:** 16 rows × 2 columns — one row per department with its employee count.
 ---
 
 ## 🔗 Back to repository
