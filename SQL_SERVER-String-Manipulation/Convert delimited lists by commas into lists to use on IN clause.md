@@ -580,7 +580,7 @@ ORDER BY City
 **T-SQL code of Solution 2.1**
 ```sql
 WITH
-Subquery_X AS																	-- OriginalTables1 = X
+Subquery_X AS																	-- CTE 1: OriginalTables1 = X
 ( 
 	SELECT PersonAddress.AddressID 
 	, PersonAddress.City
@@ -595,30 +595,30 @@ Subquery_X AS																	-- OriginalTables1 = X
 	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
 	ON StateID.TerritoryID = SalesTerritory.TerritoryID	
 ), 
-Subquery_Y AS																	-- UniqueCityName2 = Y
+Subquery_Y AS																	-- CTE 2: UniqueCityName2 = Y
 (
 	SELECT DISTINCT Subquery_X.City	
 		, Subquery_X.CountryRegionCode
 	FROM Subquery_X 
 ), 
-Subquery_Z AS																	-- DelimListCities3 = Z
+Subquery_Z AS																	-- CTE 3: DelimListCities3 = Z
 (
 	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName
 	FROM Subquery_Y
 	GROUP BY Subquery_Y.CountryRegionCode 
 ), 
-Iteration AS 																	-- Iteration3
+Iteration AS 																	-- CTE 4: Iteration3
 (
 	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position 
 	FROM [AdventureWorks2022].[Person].[Address] 
 ), 
-SubstringOne4 AS																-- SubstringOne4
+SubstringOne4 AS																-- CTE 5: SubstringOne4
 (
 	SELECT SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position, LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName	
 	FROM Subquery_Z, Iteration
 	WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName) 
 ),
-SubstringTwo5 AS 																-- SubstringTwo5
+SubstringTwo5 AS 																-- CTE 6: SubstringTwo5
 ( 
 	SELECT CitiesforINclause = SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) -- AS CityName 
 	FROM SubstringOne4
