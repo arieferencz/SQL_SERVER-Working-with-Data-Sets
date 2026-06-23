@@ -338,7 +338,7 @@ FROM
 	(
 	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position			-- Iteration3
 	FROM [AdventureWorks2022].[Person].[Address]
-	) AS Iteration							-- Iteration3
+	) AS Iteration														-- Iteration3
 WHERE Iteration.Position <= LEN(Z.DelimListCityName)					-- SubstringOne4
 ```
 
