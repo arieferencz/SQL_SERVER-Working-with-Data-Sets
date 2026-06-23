@@ -118,7 +118,7 @@ FROM (
 ORDER BY SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%',X.AlphaNumericText), 3)
 ```
 
-**Output (truncated):**
+**Output of Query 1.1 (truncated):**
 
 ```
 Elijah Alexander 100-555-0155
