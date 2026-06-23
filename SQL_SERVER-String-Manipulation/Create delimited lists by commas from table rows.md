@@ -47,7 +47,7 @@ We join three tables to get each city with its country code, apply `SELECT DISTI
 
 ---
 
-### T-SQL code
+### T-SQL code — Full solution
 
 ```sql
 SELECT
