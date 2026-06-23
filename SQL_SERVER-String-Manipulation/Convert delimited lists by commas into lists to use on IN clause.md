@@ -490,62 +490,56 @@ Same logic as Solution 1 but rewritten with **Common Table Expressions (CTEs)** 
 ```sql
 WITH
 Subquery_X AS
-(
-    SELECT
-        PersonAddress.AddressID
-      , PersonAddress.City
-      , PersonAddress.StateProvinceID
-      , StateID.StateProvinceCode
-      , StateID.CountryRegionCode
-      , StateID.TerritoryID
-      , SalesTerritory.Name AS TerritoryName
-    FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
-    LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
-        ON PersonAddress.StateProvinceID = StateID.StateProvinceID
-    LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
-        ON StateID.TerritoryID = SalesTerritory.TerritoryID
-),
+( 
+	SELECT PersonAddress.AddressID								-- OriginalTables1 = X
+	, PersonAddress.City
+	, PersonAddress.StateProvinceID
+	, StateID.StateProvinceCode
+	, StateID.CountryRegionCode
+	, StateID.TerritoryID
+	, SalesTerritory.Name AS TerritoryName
+	FROM [AdventureWorks2022].[Person].[Address] AS PersonAddress
+	LEFT JOIN [AdventureWorks2022].[Person].[StateProvince] AS StateID
+	ON PersonAddress.StateProvinceID = StateID.StateProvinceID
+	LEFT JOIN [AdventureWorks2022].[Sales].[SalesTerritory] AS SalesTerritory
+	ON StateID.TerritoryID = SalesTerritory.TerritoryID					-- OriginalTables1 = X
+), 
 Subquery_Y AS
 (
-    SELECT DISTINCT
-        Subquery_X.City
-      , Subquery_X.CountryRegionCode
-    FROM Subquery_X
-),
+	SELECT DISTINCT Subquery_X.City					-- UniqueCityName2 = Y
+		, Subquery_X.CountryRegionCode
+	FROM Subquery_X							-- UniqueCityName2 = Y
+), 
 Subquery_Z AS
 (
-    SELECT
-        ',' + STRING_AGG(CONVERT(NVARCHAR(max), Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName
-    FROM Subquery_Y
-    GROUP BY Subquery_Y.CountryRegionCode
-),
-Iteration AS
+	SELECT ',' + STRING_AGG (CONVERT(NVARCHAR(max),Subquery_Y.City), CHAR(44)) + ',' AS DelimListCityName		-- DelimListCities3 = Z
+	FROM Subquery_Y
+	GROUP BY Subquery_Y.CountryRegionCode					-- DelimitedListCities3 = Z 
+), 
+Iteration AS 
 (
-    SELECT ROW_NUMBER() OVER (ORDER BY AddressID) AS Position
-    FROM [AdventureWorks2022].[Person].[Address]
-),
-SubstringOne4 AS
+	SELECT ROW_NUMBER() OVER(ORDER BY AddressID) AS Position			-- Iteration3
+	FROM [AdventureWorks2022].[Person].[Address]					-- Iteration3
+), 
+SubstringOne4 AS 
 (
-    SELECT
-        SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position,
-            LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName
-    FROM Subquery_Z, Iteration
-    WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName)
+	SELECT SUBSTRING(Subquery_Z.DelimListCityName, Iteration.Position, LEN(Subquery_Z.DelimListCityName)) AS SUBSTDelimCityName	-- SubstringOne4
+	FROM Subquery_Z, Iteration
+	WHERE Iteration.Position <= LEN(Subquery_Z.DelimListCityName)					-- SubstringOne4
 ),
-SubstringTwo5 AS
-(
-    SELECT
-        SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2,
-            CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) AS CityName
-    FROM SubstringOne4
-    WHERE LEN(SUBSTDelimCityName) > 1
-      AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','
-)
+SubstringTwo5 AS 
+( 
+	SELECT SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) AS CityName		-- SubstringTwo5
+	FROM SubstringOne4
+	WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','								-- SubstringTwo5
+) 
 SELECT AddressLine1
-FROM [AdventureWorks2022].[Person].[Address]
-WHERE City IN (
-    SELECT CityName FROM SubstringTwo5
-)
+FROM [AdventureWorks2022].[Person].[Address] 
+WHERE City IN	(
+		SELECT SUBSTRING(SubstringOne4.SUBSTDelimCityName, 2, CHARINDEX(',', SubstringOne4.SUBSTDelimCityName, 2) - 2) AS CityName	-- SubstringTwo5
+		FROM SubstringOne4
+		WHERE LEN(SUBSTDelimCityName) > 1 AND SUBSTRING(SUBSTDelimCityName, 1, 1) = ','
+		)																-- SubstringTwo5
 ORDER BY City
 ```
 
