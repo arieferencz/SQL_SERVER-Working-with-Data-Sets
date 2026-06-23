@@ -37,7 +37,7 @@ We build the mixed alphanumeric column `AlphaNumericText` by concatenating each 
 
 ---
 
-### T-SQL code — Build the mixed alphanumeric column and sorting columns
+### T-SQL code — Full solution: Build the mixed alphanumeric column and sorting columns
 
 ```sql
 SELECT
@@ -47,11 +47,11 @@ SELECT
   , X.FullName
   , X.PhoneNumber
   , X.AlphaNumericText
-  , PATINDEX('%[0-9]%', AlphaNumericText)                                          AS NumStartPosition
-  , SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%', X.AlphaNumericText), 3)      AS SortFirst3Numbers
-  , SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%', X.AlphaNumericText) + 4, 3)  AS SortSecond3Numbers
-  , SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%', X.AlphaNumericText) + 8, 4)  AS SortLast4Numbers
-  , SUBSTRING(X.FullName, 1, LEN(AlphaNumericText))                                AS SortCharPortion
+  , PATINDEX('%[0-9]%', AlphaNumericText) AS NumStartPosition
+  , SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%', X.AlphaNumericText), 3) AS SortFirst3Numbers
+  , SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%', X.AlphaNumericText) + 4, 3) AS SortSecond3Numbers
+  , SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%', X.AlphaNumericText) + 8, 4) AS SortLast4Numbers
+  , SUBSTRING(X.FullName, 1, LEN(AlphaNumericText)) AS SortCharPortion
 FROM (
     SELECT
         E.FirstName
@@ -98,10 +98,24 @@ The full name is built by concatenating `FirstName + MiddleName + LastName`. The
 
 ### Query 1.1 — Sort by numeric portion (first 3 digits of phone number)
 
+**T-SQL code of Query 1.1**
 ```sql
-SELECT X.AlphaNumericText
-FROM ( ... ) AS X
-ORDER BY SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%', X.AlphaNumericText), 3)
+SELECT X.AlphaNumericText 
+FROM (
+    SELECT  E.FirstName
+	    , CASE E.MiddleName 
+	    WHEN NULL THEN ''
+	    ELSE E.MiddleName
+	    END AS MiddleName 
+	    , E.LastName AS LastName
+	    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') AS FullName
+	    , REPLACE(REPLACE(REPLACE(E.FirstName + ' ' + COALESCE(E.MiddleName, '') + ' ' +  E.LastName,' ','<>'),'><',''),'<>',' ') + ' ' + REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS AlphaNumericText
+	    , REPLACE(LTRIM(SUBSTRING(PN.PhoneNumber, PATINDEX('%)%', PN.PhoneNumber) + 1, LEN(PN.PhoneNumber))), ' ','-') AS PhoneNumber
+	FROM [AdventureWorks2022].[Person].[Person] AS E
+	INNER JOIN [AdventureWorks2022].[Person].[PersonPhone] AS PN
+		ON E.BusinessEntityID = PN.BusinessEntityID
+	) AS X
+ORDER BY SUBSTRING(X.AlphaNumericText, PATINDEX('%[0-9]%',X.AlphaNumericText), 3)
 ```
 
 **Output (truncated):**
