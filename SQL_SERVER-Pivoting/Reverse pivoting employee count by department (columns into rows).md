@@ -254,7 +254,7 @@ FROM VIEW_CountNumberEmployeesByDepartment
 , [AdventureWorks2022].[HumanResources].[Department]
 ```
 
-**Output of Query 2:** 16 rows, each containing 2 columns, the department name and the employee count.
+**Output of Query 2.1:** 16 rows, each containing 2 columns, the department name and the employee count.
 ```
 Name				            CountEmployeeByDept
 Document Control		        5
