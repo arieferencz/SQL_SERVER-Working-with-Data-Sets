@@ -160,6 +160,7 @@ JanainaBarreiroGambaro  	22						o
 ### Query 1.2 — What happens without the `WHERE` clause
 Removing the `WHERE` clause lets the iteration continue all the way to position 19,972, producing empty characters for all positions beyond the name's length.
 
+**T-SQL code of Query 1.2**
 ```sql
 SELECT                                                -- This is the same query as Query 1.1 but WITHOUT the WHERE clause
     Person.FirstNameNoSpaces
@@ -176,7 +177,8 @@ FROM (
 ) AS Iteration
 ```
 
-**Output:** 19,972 rows — 22 valid characters followed by 19,950 empty rows.
+
+**Output of Query 1.2:** 19,972 rows — 22 valid characters followed by 19,950 empty rows.
 
 ```
 FirstNameNoSpaces           IterationPosition       FirstNameCharacter
