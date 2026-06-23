@@ -96,7 +96,7 @@ SELECT REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-','') AS FirstNameNoSpaces   
 FROM [AdventureWorks2022].[Person].[Person] AS UniqueFirstNameNoSpaces                   -- UniqueFirstNameNoSpaces1
 ```
 
-**Output of Query 1.1:** 1,018 unique first names (truncated).
+**Output of Query 1.1 (truncated):** 1,018 unique first names (truncated).
 ```
 FirstNameNoSpaces
 A.
@@ -170,7 +170,7 @@ Row #		UniqueFirstName			FirstCharacterUniqueFirstName
 ### Query 1.2.1 — Filter out empty positions using `WHERE`
 We add a `WHERE` clause that keeps only rows where `Iteration.Position` is less than or equal to the length of the name. This removes all empty character positions.
 
-**Output:** 5,880 rows — only the valid characters for all 1,018 names.
+**Output of Query 1.2.1 (truncated):** 5,880 rows — only the valid characters for all 1,018 names.
 
 ```
 FirstName  CharactersFirstNameNoSpaces
