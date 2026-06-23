@@ -121,7 +121,7 @@ At this stage the result includes many empty characters (positions beyond the na
 
 **T-SQL code of Query 1.2**
 ```sql
-SELECT UniqueFirstName.FirstNameNoSpaces AS UniqueFirstName                                       -- UniqueFirstName2
+SELECT UniqueFirstName.FirstNameNoSpaces AS UniqueFirstName										  -- UniqueFirstName2
 , SUBSTRING(UniqueFirstName.FirstNameNoSpaces, Iteration.Position, 1) AS FirstCharacterUniqueFirstName
 FROM (
 	SELECT DISTINCT REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-','') AS FirstNameNoSpaces        -- UniqueFirstNameNoSpaces1
@@ -130,38 +130,38 @@ FROM (
 	(
 	SELECT ROW_NUMBER() OVER(ORDER BY LEN(REPLACE(REPLACE(UPPER(FirstName), ' ',''),'-',''))) AS Position        -- Iteration1
 	FROM [AdventureWorks2022].[Person].[Person]                                                                  -- Iteration1
-	) AS Iteration                                                                                -- UniqueFirstName2
+	) AS Iteration																				  -- UniqueFirstName2
 ```
 
-**Output of Query 1.2:** 20,331,496 rows (truncated).
+**Output of Query 1.2 (Truncated):** 20,331,496 rows (truncated).
 ```
-Row #		UniqueFirstName        FirstCharacterUniqueFirstName
-1			A.			           A
-2			A.			           .        
-3			A.			           (emt
-4			A.                     			
-5			A.                     			
-.................................................................. TRUNCATED RESULTS .....
-19971		A.	
-19972		A.	
-19973		A.SCOTT			A
-19974		A.SCOTT			.
-19975		A.SCOTT			S
-19976		A.SCOTT			C
-19977		A.SCOTT			O
-19978		A.SCOTT			T
-19979		A.SCOTT			T
-19980		A.SCOTT	
-19981		A.SCOTT	
-.................................................................. TRUNCATED RESULTS .....
-39944		A.SCOTT			
-39945		AARON			A
-39946		AARON			A
-39947		AARON			R
-39948		AARON			O
-39949		AARON			N
-39950		AARON	
-.................................................................. TRUNCATED RESULTS .....
+Row #		UniqueFirstName			FirstCharacterUniqueFirstName
+1			A.						A
+2			A.						.        
+3			A.						(empty)
+4			A.						(empty)
+5			A.						(empty)
+...
+19971		A.						(empty)
+19972		A.						(empty)
+19973		A.SCOTT					A
+19974		A.SCOTT					.
+19975		A.SCOTT					S
+19976		A.SCOTT					C
+19977		A.SCOTT					O
+19978		A.SCOTT					T
+19979		A.SCOTT					T
+19980		A.SCOTT					(empty)
+19981		A.SCOTT					(empty)
+...
+39944		A.SCOTT					(empty)
+39945		AARON					A
+39946		AARON					A
+39947		AARON					R
+39948		AARON					O
+39949		AARON					N
+39950		AARON					(empty)	
+...
 (20331496 rows affected)
 ```
 
