@@ -185,7 +185,44 @@ Facilities and Maintenance   5                            (Facilities and Mainte
 ... (16 combinations total)
 ```
 
+**T-SQL code of Query 2**
+```sql
+SELECT Department.[Name]
+, VIEW_CountNumberEmployeesByDepartment.dept_DocControl
+, VIEW_CountNumberEmployeesByDepartment.dept_Engin
+, VIEW_CountNumberEmployeesByDepartment.dept_Exec
+, VIEW_CountNumberEmployeesByDepartment.dept_FacILMaint
+, VIEW_CountNumberEmployeesByDepartment.dept_Finance
+, VIEW_CountNumberEmployeesByDepartment.dept_HR
+, VIEW_CountNumberEmployeesByDepartment.dept_IT
+, VIEW_CountNumberEmployeesByDepartment.dept_Marketing
+, VIEW_CountNumberEmployeesByDepartment.dept_Prod
+, VIEW_CountNumberEmployeesByDepartment.dept_ProdControl
+, VIEW_CountNumberEmployeesByDepartment.dept_Purch
+, VIEW_CountNumberEmployeesByDepartment.dept_QA
+, VIEW_CountNumberEmployeesByDepartment.dept_R_and_D
+, VIEW_CountNumberEmployeesByDepartment.dept_Sales
+, VIEW_CountNumberEmployeesByDepartment.dept_ShipReceiv
+, VIEW_CountNumberEmployeesByDepartment.dept_ToolDesign
+FROM VIEW_CountNumberEmployeesByDepartment
+, [AdventureWorks2022].[HumanResources].[Department]
+```
+
 **Output of Query 2:** 16 rows, each containing the department name and all 16 employee count columns repeated.
+```
+Name				        dept_DocControl		dept_Engin	dept_Exec	dept_FacILMaint		...		dept_R_and_D	dept_Sales		dept_ShipReceiv		dept_ToolDesign
+Document Control		    5			        6		    1		    7			        ...		4				18				6					4
+Engineering			        5			        6		    1		    7					...		4				18				6					4
+Executive			        5			        6		    1		    7					...		4				18				6					4
+Facilities and Maintenance	5			        6		    1		    7					...		4				18				6					4
+Finance				        5			        6		    1		    7					...		4				18				6					4
+...
+Research and Development	5			        6			1		    7					...		4				18				6					4
+Sales				        5			        6		    1		    7					...		4				18				6					4
+Shipping and Receiving		5			        6		    1		    7					...		4				18				6					4
+Tool Design			        5			        6		    1		    7					...		4				18				6					4
+(16 rows affected)
+```
 
 ---
 
