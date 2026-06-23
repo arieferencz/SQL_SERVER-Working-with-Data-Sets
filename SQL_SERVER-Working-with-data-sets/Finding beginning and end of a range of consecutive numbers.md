@@ -241,20 +241,61 @@ We add a `CASE` statement on `DatediffStartDate`:
 - `0` → same date as the previous row → same group → flag = `0`
 - Any other value (or `NULL`) → new date → new group → flag = `1`
 
-**Output:** 289 rows — each with a `StartDateGroup` flag of `0` or `1`.
-
+**T-SQL code of Query 1.3**
+```sql
+SELECT DatediffHireDates.RowNumber													-- DatediffHireDatesLevel4
+, DatediffHireDates.PreviousStartDate
+, DatediffHireDates.StartDate
+, DatediffHireDates.DatediffStartDate
+, CASE	WHEN DatediffHireDates.DatediffStartDate = 0 
+		THEN 0
+		ELSE 1
+		END AS StartDateGroup
+, DatediffHireDates.BusinessEntityID
+, DatediffHireDates.JobTitle
+FROM (
+	SELECT ROW_NUMBER() OVER (ORDER BY OriginalTables.StartDate) AS RowNumber		-- CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+	, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate) AS PreviousStartDate
+	, OriginalTables.StartDate
+	, DATEDIFF(DAY, LAG(OriginalTables.StartDate) OVER (ORDER BY OriginalTables.StartDate), OriginalTables.StartDate) AS DatediffStartDate
+	, OriginalTables.BusinessEntityID	
+	, OriginalTables.JobTitle
+	, OriginalTables.DepartmentID
+	, OriginalTables.DepartmentName
+	FROM (
+		SELECT																		-- OriginalTablesLevel1
+		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+		, Employee.BusinessEntityID	
+		, Employee.JobTitle
+		, EmployeeDepartmentHistory.DepartmentID
+		, Department.[Name] AS DepartmentName
+		, EmployeeDepartmentHistory.StartDate
+		, EmployeeDepartmentHistory.EndDate
+		FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+		WHERE Employee.BusinessEntityID <> 1										-- OriginalTablesLevel1
+	) AS OriginalTables
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1							-- RemovingDuplicatesLevel2 / CalculateNumDaysBetweenConsecutiveStartDatesLevel3
+) AS DatediffHireDates																-- DatediffHireDatesLevel4
 ```
-RowNumber  PreviousStartDate  StartDate   DatediffStartDate  StartDateGroup  BusinessEntityID  JobTitle
-1          NULL               2006-06-30  NULL               1               28                Production Technician - WC60
-2          2006-06-30         2007-01-26  210                1               17                Marketing Assistant
+
+
+**Output of Query 1.3:** 289 rows — each with a `StartDateGroup` flag of `0` or `1`.
+```
+RowNumber	PreviousStartDate	StartDate		DatediffStartDate		StartDateGroup		BusinessEntityID	JobTitle
+1			NULL				2006-06-30		NULL					1					28					Production Technician - WC60
+2			2006-06-30			2007-01-26		210						1					17					Marketing Assistant
 ...
-6          2007-12-26         2008-01-06  11                 1               48                Production Technician - WC10
-7          2008-01-06         2008-01-06  0                  0               5                 Design Engineer
-8          2008-01-06         2008-01-07  1                  1               49                Production Technician - WC10
+6			2007-12-26			2008-01-06		11						1					48					Production Technician - WC10
+7			2008-01-06			2008-01-06		0						0					5					Design Engineer
+8			2008-01-06			2008-01-07		1						1					49					Production Technician - WC10
 ...
-271        2011-02-15         2011-05-31  105                1               275               Sales Representative
-272        2011-05-31         2011-05-31  0                  0               276               Sales Representative
-273        2011-05-31         2011-05-31  0                  0               277               Sales Representative
+271			2011-02-15			2011-05-31		105						1					275					Sales Representative
+272			2011-05-31			2011-05-31		0						0					276					Sales Representative
+273			2011-05-31			2011-05-31		0						0					277					Sales Representative
 ...
 (289 rows affected)
 ```
