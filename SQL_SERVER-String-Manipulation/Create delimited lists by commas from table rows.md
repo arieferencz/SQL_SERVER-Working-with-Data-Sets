@@ -181,13 +181,13 @@ We group by `CountryRegionCode` and use `STRING_AGG()` to concatenate all city n
 **Final output:** 6 rows — one comma-delimited list of cities per country.
 
 ```
-CountryRegionCode  DelimitedListCityName
-AU	Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,Newcastle,St. Leonards,...,Alexandria,Wollongong
-CA	Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,Weston,Ottawa,Edmonton,...,Pnot-Rouge,Chalk Riber
-DE	Augsburg,Erlangen,Sulzbach Taunus,Solingen,Hamburg,Salzgitter,Ingolstadt,Werne,Saarbrücken,...,Bad Soden,Grevenbroich
-FR	Dunkerque,Les Ulis,Villeneuve-d'Ascq,Boulogne-Billancourt,Orly,Morangis,Saint Ouen,Bordeaux,...,Roncq,Aujan Mournede
-GB	Abingdon,Maidenhead,Kirkby,Woolston,W. York,Cambridge,Gloucestershire,Wokingham,Liverpool,...,Oxford,West Sussex
-US	Cedar City,Auburn,Long Beach,Salem,Daly City,Great Falls,Surprise,Lake George,Waterbury,Tacoma,...,Elk Grove,Carson
+CountryRegionCode	DelimitedListCityName
+AU					Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,...,Alexandria,Wollongong
+CA					Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,...,Pnot-Rouge,Chalk Riber
+DE					Augsburg,Erlangen,Sulzbach Taunus,Solingen,Hamburg,Salzgitter,Ingolstadt,...,Bad Soden,Grevenbroich
+FR					Dunkerque,Les Ulis,Villeneuve-d'Ascq,Boulogne-Billancourt,Orly,Morangis,...,Roncq,Aujan Mournede
+GB					Abingdon,Maidenhead,Kirkby,Woolston,W. York,Cambridge,Gloucestershire,...,Oxford,West Sussex
+US					Cedar City,Auburn,Long Beach,Salem,Daly City,Great Falls,Surprise,Lake George,...,Elk Grove,Carson
 (6 rows affected)
 ```
 
