@@ -175,19 +175,19 @@ Great Falls			US
 
 ---
 
-### Final Query (Query 1) — Concatenate cities into a delimited list using `STRING_AGG()`
+### Full Solution (Query 1) — Concatenate cities into a delimited list using `STRING_AGG()`
 We group by `CountryRegionCode` and use `STRING_AGG()` to concatenate all city names within each country into a single string, separated by `CHAR(44)` (the comma character). `CONVERT(NVARCHAR(max), ...)` is required because `STRING_AGG()` does not accept implicit conversion from some data types.
 
 **Final output:** 6 rows — one comma-delimited list of cities per country.
 
 ```
 CountryRegionCode  DelimitedListCityName
-AU                 Bendigo,Cloverdale,Port Macquarie,...,Wollongong
-CA                 Brampton,Quebec,...,Chalk Riber
-DE                 Augsburg,...,Berlin,...
-FR                 Dunkerque,...,Paris,...
-GB                 ...
-US                 ...
+AU	Bendigo,Cloverdale,Port Macquarie,South Melbourne,Sydney,Matraville,Newcastle,St. Leonards,Lane Cove,Brisbane,...,Alexandria,Wollongong
+CA	Brampton,Quebec,Victoria,Montreal,Waterloo,Langley,Hull,Newton,Shawnee,Weston,Ottawa,Edmonton,Dorval,Langford,...,Pnot-Rouge,Chalk Riber
+DE	Augsburg,Erlangen,Sulzbach Taunus,Solingen,Hamburg,Salzgitter,Ingolstadt,Werne,Saarbrücken,Eilenburg,Münster,...,Bad Soden,Grevenbroich
+FR	Dunkerque,Les Ulis,Villeneuve-d'Ascq,Boulogne-Billancourt,Orly,Morangis,Saint Ouen,Bordeaux,Colombes,Croix,...,Roncq,Aujan Mournede
+GB	Abingdon,Maidenhead,Kirkby,Woolston,W. York,Cambridge,Gloucestershire,Wokingham,Liverpool,Billericay,...,Oxford,West Sussex
+US	Cedar City,Auburn,Long Beach,Salem,Daly City,Great Falls,Surprise,Lake George,Waterbury,Tacoma,Byron,Gaffney,...,Elk Grove,Carson
 (6 rows affected)
 ```
 
