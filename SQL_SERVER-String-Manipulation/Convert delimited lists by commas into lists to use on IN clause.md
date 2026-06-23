@@ -1,4 +1,4 @@
-<img width="371" height="146" alt="image" src="https://github.com/user-attachments/assets/749dc7c8-1dfc-4cbd-a8e1-b690005b851f" /># Convert delimited lists by commas into lists to use on IN clause
+# Convert delimited lists by commas into lists to use on IN clause
 
 ## 🎯 Exercise
 Convert a comma-delimited list of city names into individual row values that can be passed to a `WHERE ... IN (...)` clause — and use it to retrieve all addresses for those cities.
