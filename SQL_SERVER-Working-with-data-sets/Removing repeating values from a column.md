@@ -50,7 +50,7 @@ We use `LAG()` to retrieve the previous row's department name and compare it wit
 
 ---
 
-### T-SQL code — Final query
+### T-SQL code — Full solution
 
 ```sql
 SELECT
@@ -146,7 +146,37 @@ Executive               Laura       F           Norman      ← only 1 employee 
 ### Query 1.1 — Remove duplicate employee records
 Some employees have changed departments, creating multiple rows per employee in `EmployeeDepartmentHistory`. We use `ROW_NUMBER()` partitioned by `BusinessEntityID` ordered by `StartDate DESC` to keep only the most recent department per employee. `ISNULL()` replaces any `NULL` name values with empty strings.
 
-**Output:** 289 rows — one per employee with their current department name and full name.
+**T-SQL code of Query 1.1**
+```sql
+SELECT OriginalTables.BusinessEntityID															-- RemovingDuplicatesLevel2
+, OriginalTables.DepartmentID	
+, OriginalTables.DepartmentName
+, OriginalTables.FirstName
+, OriginalTables.MiddleName
+, OriginalTables.LastName
+FROM (
+SELECT																															-- OriginalTablesLevel1
+ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+, Employee.BusinessEntityID	
+, EmployeeDepartmentHistory.DepartmentID
+, Department.[Name] AS DepartmentName
+, ISNULL(Person.FirstName, '') AS [FirstName]
+, ISNULL(Person.MiddleName, '') AS [MiddleName]
+, ISNULL(Person.LastName, '') AS [LastName]
+FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+	ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+LEFT JOIN [AdventureWorks2022].[Person].[Person] AS Person
+	ON Employee.BusinessEntityID = Person.BusinessEntityID
+WHERE Employee.BusinessEntityID <> 1																-- OriginalTablesLevel1
+) AS OriginalTables
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1                -- RemovingDuplicatesLevel2
+```
+
+
+**Output of Query 1.1:** 289 rows — one per employee with their current department name and full name.
 
 ```
 BusinessEntityID  DepartmentID  DepartmentName            FirstName  MiddleName  LastName
