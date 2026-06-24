@@ -111,7 +111,6 @@ ORDER BY UniqueDepartmentName.DepartmentID, UniqueDepartmentName.FirstName
 ---
 
 ### Output (truncated)
-
 ```
 NewDepartmentName       FirstName   MiddleName  LastName
 Engineering             Gail        A           Erickson
@@ -255,30 +254,30 @@ FROM (
 
 **Output of Query 1.2:**
 ```
-LAGDepartmentNumber		DepartmentName			NewDepartmentName		FirstName	MiddleName	LastName
-NULL				Document Control		Document Control		Zainal		T		Arifin
-Document Control		Document Control						Tengiz		N		Kharatishvili
-Document Control		Document Control						Sean		N		Chai
-Document Control		Document Control						Karen		R		Berge
-Document Control		Document Control						Chris		K		Norred			<--- Last employee from DepartmentName = Document Control
-Document Control		Engineering			Engineering			Gail		A		Erickson	
+LAGDepartmentNumber			DepartmentName					NewDepartmentName				FirstName	MiddleName	LastName
+NULL						Document Control				Document Control				Zainal		T			Arifin
+Document Control			Document Control												Tengiz		N			Kharatishvili
+Document Control			Document Control												Sean		N			Chai
+Document Control			Document Control												Karen		R			Berge
+Document Control			Document Control												Chris		K			Norred				<--- Last employee, Document Control
+Document Control			Engineering						Engineering						Gail		A			Erickson	
 ...
-Engineering			Engineering							Roberto				Tamburello		<--- Last employee from DepartmentName = Engineering
-Engineering			Executive			Executive			Laura		F		Norman			<--- DepartmentName = Executive has only 1 employee
-Executive			Facilities and Maintenance	Facilities and Maintenance	Gary		E.		Altman
-Facilities and Maintenance	Facilities and Maintenance					Christian	E		Kleinerman
+Engineering					Engineering														Roberto					Tamburello			<--- Last employee, Engineering
+Engineering					Executive						Executive						Laura		F			Norman				<--- Executive has only 1 employee
+Executive					Facilities and Maintenance		Facilities and Maintenance		Gary		E.			Altman
+Facilities and Maintenance	Facilities and Maintenance										Christian	E			Kleinerman
 ...
-Sales				Sales								Ranjit		R		Varkey Chudukatil	<--- Last employee from DepartmentName = Sales
-Sales				Shipping and Receiving		Shipping and Receiving		Pilar		G		Ackerman
-Shipping and Receiving		Shipping and Receiving						Susan		W		Eaton
-Shipping and Receiving		Shipping and Receiving						Vamsi		N		Kuppa
-Shipping and Receiving		Shipping and Receiving						Kim		T		Ralls
-Shipping and Receiving		Shipping and Receiving						Matthias	T		Berndt
-Shipping and Receiving		Shipping and Receiving						Jimmy		T		Bischoff		<--- Last employee from DepartmentName = Shipping and Receiving	
-Shipping and Receiving		Tool Design			Tool Design			Ovidiu		V		Cracium
-Tool Design			Tool Design							Thierry		B		D'Hers
-Tool Design			Tool Design							Janice		M		Galvin
-Tool Design			Tool Design							Rob				Walters			<--- Last employee from DepartmentName = Tool Design
+Sales						Sales															Ranjit		R			Varkey Chudukatil	<--- Last employee, Sales
+Sales						Shipping and Receiving			Shipping and Receiving			Pilar		G			Ackerman
+Shipping and Receiving		Shipping and Receiving											Susan		W			Eaton
+Shipping and Receiving		Shipping and Receiving											Vamsi		N			Kuppa
+Shipping and Receiving		Shipping and Receiving											Kim			T			Ralls
+Shipping and Receiving		Shipping and Receiving											Matthias	T			Berndt
+Shipping and Receiving		Shipping and Receiving											Jimmy		T			Bischoff			<--- Last employee, Shipping and Receiving	
+Shipping and Receiving		Tool Design						Tool Design						Ovidiu		V		Cracium
+Tool Design					Tool Design														Thierry		B		D'Hers
+Tool Design					Tool Design														Janice		M		Galvin
+Tool Design					Tool Design														Rob				Walters						<--- Last employee, Tool Design
 (end of results)
 (289 rows affected)
 ```
