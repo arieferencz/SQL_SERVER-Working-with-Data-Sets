@@ -148,14 +148,14 @@ Some employees have changed departments, creating multiple rows per employee in 
 
 **T-SQL code of Query 1.1**
 ```sql
-SELECT OriginalTables.BusinessEntityID															-- RemovingDuplicatesLevel2
+SELECT OriginalTables.BusinessEntityID										-- RemovingDuplicatesLevel2
 , OriginalTables.DepartmentID	
 , OriginalTables.DepartmentName
 , OriginalTables.FirstName
 , OriginalTables.MiddleName
 , OriginalTables.LastName
 FROM (
-SELECT																															-- OriginalTablesLevel1
+SELECT																		-- OriginalTablesLevel1
 ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
 , Employee.BusinessEntityID	
 , EmployeeDepartmentHistory.DepartmentID
@@ -170,9 +170,9 @@ LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
 	ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
 LEFT JOIN [AdventureWorks2022].[Person].[Person] AS Person
 	ON Employee.BusinessEntityID = Person.BusinessEntityID
-WHERE Employee.BusinessEntityID <> 1																-- OriginalTablesLevel1
+WHERE Employee.BusinessEntityID <> 1										-- OriginalTablesLevel1
 ) AS OriginalTables
-WHERE OriginalTables.RowNumberRemovingDuplicates = 1                -- RemovingDuplicatesLevel2
+WHERE OriginalTables.RowNumberRemovingDuplicates = 1						-- RemovingDuplicatesLevel2
 ```
 
 
