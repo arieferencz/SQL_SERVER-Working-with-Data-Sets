@@ -201,16 +201,94 @@ We add `LAG(DepartmentName) OVER (ORDER BY DepartmentName)` to retrieve the prev
 **How `LAG()` drives the logic — example for Engineering and Executive:**
 
 ```
-LAGDepartmentNumber       DepartmentName   NewDepartmentName   FirstName
-NULL                      Document Control Document Control    Zainal        ← first row, no LAG
-Document Control          Document Control (empty)             Tengiz        ← same as LAG
-Document Control          Document Control (empty)             Sean          ← same as LAG
-Document Control          Engineering      Engineering         Gail          ← LAG differs → show name
-Engineering               Engineering      (empty)             Roberto       ← same as LAG
-Engineering               Executive        Executive           Laura         ← LAG differs → show name
-Executive                 Facilities...    Facilities...       Gary          ← LAG differs → show name
+LAGDepartmentNumber       DepartmentName   	NewDepartmentName   FirstName
+NULL                      Document Control 	Document Control    Zainal        ← first row, no LAG
+Document Control          Document Control 	(empty)             Tengiz        ← same as LAG
+Document Control          Document Control 	(empty)             Sean          ← same as LAG
+Document Control          Engineering      	Engineering         Gail          ← LAG differs → show name
+Engineering               Engineering      	(empty)             Roberto       ← same as LAG
+Engineering               Executive        	Executive           Laura         ← LAG differs → show name
+Executive                 Facilities...    	Facilities...       Gary          ← LAG differs → show name
 ...
 ```
+
+**T-SQL code of Query 1.2**
+```sql
+SELECT																		-- RemovingDepartmentNamesLevel3
+LAG(RemovingDepartmentNames.DepartmentName) OVER (ORDER BY RemovingDepartmentNames.DepartmentName) AS LAGDepartmentNumber
+, RemovingDepartmentNames.DepartmentName
+, CASE	WHEN LAG(RemovingDepartmentNames.DepartmentName) OVER (ORDER BY RemovingDepartmentNames.DepartmentName) = RemovingDepartmentNames.DepartmentName THEN ''
+		ELSE RemovingDepartmentNames.DepartmentName
+		END AS NewDepartmentName
+, RemovingDepartmentNames.FirstName
+, RemovingDepartmentNames.MiddleName
+, RemovingDepartmentNames.LastName
+FROM (
+	SELECT OriginalTables.BusinessEntityID									-- RemovingDuplicatesLevel2
+	, OriginalTables.DepartmentID	
+	, OriginalTables.DepartmentName
+	, OriginalTables.FirstName
+	, OriginalTables.MiddleName
+	, OriginalTables.LastName
+	FROM (
+		SELECT																-- OriginalTablesLevel1
+		ROW_NUMBER() OVER (PARTITION BY Employee.BusinessEntityID	ORDER BY Employee.BusinessEntityID ASC, EmployeeDepartmentHistory.StartDate DESC) AS RowNumberRemovingDuplicates
+		, Employee.BusinessEntityID	
+		, EmployeeDepartmentHistory.DepartmentID
+		, Department.[Name] AS DepartmentName
+		, ISNULL(Person.FirstName, '') AS [FirstName]
+		, ISNULL(Person.MiddleName, '') AS [MiddleName]
+		, ISNULL(Person.LastName, '') AS [LastName]
+		FROM [AdventureWorks2022].[HumanResources].[Employee] AS Employee
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[EmployeeDepartmentHistory] AS EmployeeDepartmentHistory
+			ON Employee.BusinessEntityID = EmployeeDepartmentHistory.BusinessEntityID
+		LEFT JOIN [AdventureWorks2022].[HumanResources].[Department] AS Department
+			ON EmployeeDepartmentHistory.DepartmentID = Department.DepartmentID	
+		LEFT JOIN [AdventureWorks2022].[Person].[Person] AS Person
+			ON Employee.BusinessEntityID = Person.BusinessEntityID
+		WHERE Employee.BusinessEntityID <> 1								-- OriginalTablesLevel1
+	) AS OriginalTables
+	WHERE OriginalTables.RowNumberRemovingDuplicates = 1					-- RemovingDuplicatesLevel2
+) AS RemovingDepartmentNames												-- RemovingDepartmentNamesLevel3
+```
+
+
+**Output of Query 1.2:**
+```
+LAGDepartmentNumber		DepartmentName			NewDepartmentName		FirstName	MiddleName	LastName
+NULL				Document Control		Document Control		Zainal		T		Arifin
+Document Control		Document Control						Tengiz		N		Kharatishvili
+Document Control		Document Control						Sean		N		Chai
+Document Control		Document Control						Karen		R		Berge
+Document Control		Document Control						Chris		K		Norred			<--- Last employee from DepartmentName = Document Control
+Document Control		Engineering			Engineering			Gail		A		Erickson	
+...
+Engineering			Engineering							Roberto				Tamburello		<--- Last employee from DepartmentName = Engineering
+Engineering			Executive			Executive			Laura		F		Norman			<--- DepartmentName = Executive has only 1 employee
+Executive			Facilities and Maintenance	Facilities and Maintenance	Gary		E.		Altman
+Facilities and Maintenance	Facilities and Maintenance					Christian	E		Kleinerman
+...
+Sales				Sales								Ranjit		R		Varkey Chudukatil	<--- Last employee from DepartmentName = Sales
+Sales				Shipping and Receiving		Shipping and Receiving		Pilar		G		Ackerman
+Shipping and Receiving		Shipping and Receiving						Susan		W		Eaton
+Shipping and Receiving		Shipping and Receiving						Vamsi		N		Kuppa
+Shipping and Receiving		Shipping and Receiving						Kim		T		Ralls
+Shipping and Receiving		Shipping and Receiving						Matthias	T		Berndt
+Shipping and Receiving		Shipping and Receiving						Jimmy		T		Bischoff		<--- Last employee from DepartmentName = Shipping and Receiving	
+Shipping and Receiving		Tool Design			Tool Design			Ovidiu		V		Cracium
+Tool Design			Tool Design							Thierry		B		D'Hers
+Tool Design			Tool Design							Janice		M		Galvin
+Tool Design			Tool Design							Rob				Walters			<--- Last employee from DepartmentName = Tool Design
+(end of results)
+(289 rows affected)
+```
+
+
+
+
+
+
+
 
 ### Final step — clean up and sort
 We remove the intermediate `LAGDepartmentNumber` and `DepartmentName` columns from the output and sort by `DepartmentID` then `FirstName` to produce the final grouped presentation.
