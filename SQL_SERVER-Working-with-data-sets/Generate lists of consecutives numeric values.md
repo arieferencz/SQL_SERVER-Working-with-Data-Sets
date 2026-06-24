@@ -145,11 +145,11 @@ SELECT
 FROM (
     SELECT BusinessEntityID AS Position
     FROM [AdventureWorks2022].[Person].[BusinessEntity]
-    WHERE BusinessEntityID < 2              -- 1 row: Position = 1
+    WHERE BusinessEntityID < 2                                     -- 1 row: Position = 1
 ) AS InitialList,
 (
     SELECT BusinessEntityID AS Position
-    FROM [AdventureWorks2022].[Person].[BusinessEntity]  -- 20,777 rows
+    FROM [AdventureWorks2022].[Person].[BusinessEntity]            -- 20,777 rows
 ) AS Iteration
 ORDER BY CartesianProductDim1X20777
 ```
@@ -183,11 +183,11 @@ SELECT
 FROM (
     SELECT BusinessEntityID AS Position
     FROM [AdventureWorks2022].[Person].[BusinessEntity]
-    WHERE BusinessEntityID < 3              -- 2 rows: Position = 1 and 2
+    WHERE BusinessEntityID < 3                                    -- 2 rows: Position = 1 and 2
 ) AS InitialList,
 (
     SELECT BusinessEntityID AS Position
-    FROM [AdventureWorks2022].[Person].[BusinessEntity]  -- 20,777 rows
+    FROM [AdventureWorks2022].[Person].[BusinessEntity]            -- 20,777 rows
 ) AS Iteration
 ORDER BY Iteration.Position ASC
 ```
