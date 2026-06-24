@@ -232,8 +232,7 @@ We use a CTE with `UNION ALL` to build a consecutive list by starting at `1` and
 ### Query 3 — CTE-based consecutive list
 
 ```sql
--- Up to 19,999 using BusinessEntity
-WITH ConsecutiveNumbers AS
+WITH ConsecutiveNumbers AS                                -- Up to 19,999 using BusinessEntity
 (
     SELECT 1 AS RowNumber
     UNION ALL
@@ -245,8 +244,8 @@ SELECT *
 FROM ConsecutiveNumbers
 ORDER BY RowNumber;
 
--- Up to 99,999 using SalesOrderDetail
-WITH ConsecutiveNumbers AS
+
+WITH ConsecutiveNumbers AS                                -- Up to 99,999 using SalesOrderDetail
 (
     SELECT 1 AS RowNumber
     UNION ALL
